@@ -3,6 +3,10 @@ plugins {
   id("config-android")
 }
 
+android {
+  namespace = "com.episode6.typed2"
+}
+
 dependencies {
   testImplementation(libs.junit.core)
   testImplementation(libs.mockito.core)
