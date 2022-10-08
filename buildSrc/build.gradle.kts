@@ -12,5 +12,9 @@ gradlePlugin {
       id = "config-android"
       implementationClass = "plugins.ConfigureAndroidPlugin"
     }
+    create("ConfigureAndroidDeployablePlugin") {
+      id = "config-android-deploy"
+      implementationClass = "plugins.ConfigureAndroidDeployablePlugin"
+    }
   }
 }

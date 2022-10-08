@@ -2,6 +2,7 @@
 gradle-core = "7.5.1"
 kotlin-core = "1.7.10"
 android-gradle = "7.3.0"
+dokka-core = "1.7.10"
 
 [libraries]
 junit-core = { module = "junit:junit", version = "4.13.2" }

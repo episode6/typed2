@@ -1,6 +1,8 @@
+description = "Core module of typed2: ${rootProject.description}"
+
 plugins {
   id("com.android.library")
-  id("config-android")
+  id("config-android-deploy")
 }
 
 android {
