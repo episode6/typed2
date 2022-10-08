@@ -1,3 +1,4 @@
+enableFeaturePreview("VERSION_CATALOGS")
 pluginManagement {
   repositories {
     gradlePluginPortal()
@@ -11,6 +12,9 @@ dependencyResolutionManagement {
     google()
     mavenCentral()
   }
+  versionCatalogs {
+    create("libs") { from(files("libs.versions.toml")) }
+  }
 }
 rootProject.name = "typed2"
-include ':core'
+include(":core")

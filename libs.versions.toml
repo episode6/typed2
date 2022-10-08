@@ -1,0 +1,10 @@
+[versions]
+gradle-core = "7.5.1"
+kotlin-core = "1.7.10"
+android-gradle = "7.3.0"
+
+[libraries]
+junit-core = { module = "junit:junit", version = "4.13.2" }
+mockito-core = { module = "org.mockito:mockito-core", version = "4.8.0" }
+mockito-kotlin = { module = "org.mockito.kotlin:mockito-kotlin", version = "4.0.0" }
+assertk-core = { module = "com.willowtreeapps.assertk:assertk", version = "0.25" }
