@@ -13,14 +13,8 @@ sealed interface RawType {
   // todo: more
 }
 
-class PrimitiveKey<T : Any?>(
-  override val name: String,
-  override val rawType: RawType,
-  override val nullable: Boolean,
-  override val defaultValue: T?,
-) : KeyData<T>
 
-class TranslateKey<RAW : Any?, T : Any?>(
+class Key<RAW : Any?, T : Any?>(
   override val name: String,
   override val rawType: RawType,
   override val nullable: Boolean,
@@ -31,7 +25,7 @@ class TranslateKey<RAW : Any?, T : Any?>(
   override val defaultValue: RAW? get() = translateToRaw(defaultTranslation)
 }
 
-class AsyncTranslateKey<RAW : Any?, T : Any?>(
+class AsyncKey<RAW : Any?, T : Any?>(
   override val name: String,
   override val rawType: RawType,
   override val nullable: Boolean,

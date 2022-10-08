@@ -34,6 +34,7 @@ class ExampleUnitTest {
   @Test
   fun testGetInt() {
     sharedPrefs.stub {
+      on { contains("com.prefix.intKey") } doReturn true
       on { getInt("com.prefix.intKey", 42) } doReturn 24
     }
 

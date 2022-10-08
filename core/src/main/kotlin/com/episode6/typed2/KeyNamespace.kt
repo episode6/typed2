@@ -9,10 +9,9 @@ open class KeyNamespace(val prefix: String) {
 class KeyBuilder internal constructor(val name: String)
 
 
-fun KeyBuilder.int(defaultValue: Int): PrimitiveKey<Int> =
-  PrimitiveKey(name, RawType.Int, nullable = false, defaultValue)
+fun KeyBuilder.int(defaultValue: Int): PrimitiveKey<Int> = primitiveKey(name, RawType.Int, defaultValue)
 
-fun KeyBuilder.nullableInt(defaultValue: Int? = null): TranslateKey<String?, Int?> = TranslateKey(
+fun KeyBuilder.nullableInt(defaultValue: Int? = null): Key<String?, Int?> = Key(
   name = name,
   rawType = RawType.String,
   nullable = true,
@@ -21,9 +20,22 @@ fun KeyBuilder.nullableInt(defaultValue: Int? = null): TranslateKey<String?, Int
   defaultTranslation = defaultValue
 )
 
-fun KeyBuilder.string(defaultValue: String): PrimitiveKey<String> =
-  PrimitiveKey(name, RawType.String, nullable = false, defaultValue)
+fun KeyBuilder.string(defaultValue: String): PrimitiveKey<String> = primitiveKey(name, RawType.String, defaultValue)
 
-fun KeyBuilder.nullableString(defaultValue: String? = null): PrimitiveKey<String?> =
-  PrimitiveKey(name, RawType.String, nullable = true, defaultValue)
+fun KeyBuilder.nullableString(defaultValue: String? = null): PrimitiveKey<String?> = primitiveKey<String?>(name, RawType.String, defaultValue, nullable = true)
 
+private typealias PrimitiveKey<T> = Key<T, T>
+
+private fun <T: Any?> primitiveKey(
+  name: String,
+  rawType: RawType,
+  defaultValue: T?,
+  nullable: Boolean = false,
+) = Key<T, T>(
+  name = name,
+  rawType = rawType,
+  nullable = nullable,
+  translateToRaw = { it },
+  translateFromRaw = { it },
+  defaultTranslation = defaultValue,
+)

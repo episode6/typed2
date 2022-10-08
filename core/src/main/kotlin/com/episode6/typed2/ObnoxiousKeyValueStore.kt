@@ -11,33 +11,25 @@ interface ObnoxiousKeyValueSetter {
   fun setString(name: String, value: String?)
 }
 
-
-@Suppress("UNCHECKED_CAST") fun <T : Any?> ObnoxiousKeyValueGetter.get(key: PrimitiveKey<T>): T =
-  getObject(key) as T
-
-@Suppress("UNCHECKED_CAST") fun <RAW : Any?, T : Any?> ObnoxiousKeyValueGetter.get(key: TranslateKey<RAW, T>): T {
+@Suppress("UNCHECKED_CAST") fun <RAW : Any?, T : Any?> ObnoxiousKeyValueGetter.get(key: Key<RAW, T>): T {
   if (!contains(key.name)) return key.defaultTranslation as T
   val raw = getObject(key) as RAW?
   return key.translateFromRaw(raw) as T
 }
 
 @Suppress("UNCHECKED_CAST")
-suspend fun <RAW : Any?, T : Any?> ObnoxiousKeyValueGetter.get(key: AsyncTranslateKey<RAW, T>): T {
+suspend fun <RAW : Any?, T : Any?> ObnoxiousKeyValueGetter.get(key: AsyncKey<RAW, T>): T {
   if (!contains(key.name)) return key.defaultTranslation as T
   val raw = getObject(key) as RAW?
   return key.translateFromRaw(raw) as T
 }
 
-fun <T : Any?> ObnoxiousKeyValueSetter.set(key: PrimitiveKey<T>, value: T) {
-  setObject(key, value)
-}
-
-fun <RAW : Any?, T : Any?> ObnoxiousKeyValueSetter.set(key: TranslateKey<RAW, T>, value: T) {
+fun <RAW : Any?, T : Any?> ObnoxiousKeyValueSetter.set(key: Key<RAW, T>, value: T) {
   val raw = key.translateToRaw(value)
   setObject(key, raw)
 }
 
-suspend fun <RAW : Any?, T : Any?> ObnoxiousKeyValueSetter.set(key: AsyncTranslateKey<RAW, T>, value: T) {
+suspend fun <RAW : Any?, T : Any?> ObnoxiousKeyValueSetter.set(key: AsyncKey<RAW, T>, value: T) {
   val raw = key.translateToRaw(value)
   setObject(key, raw)
 }

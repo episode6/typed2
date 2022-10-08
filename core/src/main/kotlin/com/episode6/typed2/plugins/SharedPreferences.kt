@@ -17,8 +17,8 @@ class TypedSharePreferences(private val delegate: SharedPreferences): ObnoxiousK
 fun SharedPreferences.typed(): TypedSharePreferences = TypedSharePreferences(this)
 fun SharedPreferences.Editor.typed(): TypedSharePreferences.Editor = TypedSharePreferences.Editor(this)
 
-fun <T> SharedPreferences.get(key: PrimitiveKey<T>): T = typed().get(key)
-fun <RAW, T> SharedPreferences.get(key: TranslateKey<RAW, T>): T = typed().get(key)
+fun <RAW, T> SharedPreferences.get(key: Key<RAW, T>): T = typed().get(key)
+suspend fun <RAW, T> SharedPreferences.get(key: AsyncKey<RAW, T>): T = typed().get(key)
 
-fun <T> SharedPreferences.Editor.set(key: PrimitiveKey<T>, value: T) = typed().set(key, value)
-fun <RAW, T> SharedPreferences.Editor.set(key: TranslateKey<RAW, T>, value: T) = typed().set(key, value)
+fun <RAW, T> SharedPreferences.Editor.set(key: Key<RAW, T>, value: T) = typed().set(key, value)
+suspend fun <RAW, T> SharedPreferences.Editor.set(key: AsyncKey<RAW, T>, value: T) = typed().set(key, value)

@@ -15,10 +15,8 @@ class TypedBundle(private val delegate: Bundle) : ObnoxiousKeyValueGetter, Obnox
 
 fun Bundle.typed(): TypedBundle = TypedBundle(this)
 
-fun <T> Bundle.get(key: PrimitiveKey<T>): T = typed().get(key)
-fun <RAW, T> Bundle.get(key: TranslateKey<RAW, T>): T = typed().get(key)
-suspend fun <RAW, T> Bundle.get(key: AsyncTranslateKey<RAW, T>): T = typed().get(key)
+fun <RAW, T> Bundle.get(key: Key<RAW, T>): T = typed().get(key)
+suspend fun <RAW, T> Bundle.get(key: AsyncKey<RAW, T>): T = typed().get(key)
 
-fun <T> Bundle.set(key: PrimitiveKey<T>, value: T) = typed().set(key, value)
-fun <RAW, T> Bundle.set(key: TranslateKey<RAW, T>, value: T) = typed().set(key, value)
-suspend fun <RAW, T> Bundle.set(key: AsyncTranslateKey<RAW, T>, value: T) = typed().set(key, value)
+fun <RAW, T> Bundle.set(key: Key<RAW, T>, value: T) = typed().set(key, value)
+suspend fun <RAW, T> Bundle.set(key: AsyncKey<RAW, T>, value: T) = typed().set(key, value)
