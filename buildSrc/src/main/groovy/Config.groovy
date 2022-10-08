@@ -3,6 +3,8 @@
  */
 
 import org.gradle.api.JavaVersion
+import org.gradle.api.Project
+import org.gradle.api.publish.maven.MavenPom
 
 // I'd prefer to do this in kotlin but then its not accessible from our groovy plugins
 class Config {
@@ -17,6 +19,48 @@ class Config {
     static int minSdk = 21
   }
   class Ktx {
-    static String[] compilerArgs = ["-Xcontext-receivers"]
+    static String[] compilerArgs = []
+  }
+
+  class Maven {
+    static void applyPomConfig(Project project, MavenPom pom) {
+      pom.with {
+        name = project.rootProject.name + "-" + project.name
+        url = "https://github.com/episode6/typed2"
+        licenses {
+          license {
+            name = "The MIT License (MIT)"
+            url = "https://github.com/episode6/typed2/blob/main/LICENSE"
+            distribution = "repo"
+          }
+        }
+        developers {
+          developer {
+            id = "episode6"
+            name = "episode6, Inc."
+          }
+        }
+        scm {
+          url = "extensible"
+          connection = "scm:https://github.com/episode6/typed2.git"
+          developerConnection = "scm:https://github.com/episode6/typed2.git"
+        }
+      }
+      project.afterEvaluate {
+        pom.description = project.description ?: project.rootProject.description
+      }
+    }
+
+    public static boolean isReleaseBuild(Project project) {
+      return project.version.contains("SNAPSHOT") == false
+    }
+
+    static String getRepoUrl(Project project) {
+      if (isReleaseBuild(project)) {
+        return "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+      } else {
+        return "https://oss.sonatype.org/content/repositories/snapshots/"
+      }
+    }
   }
 }
