@@ -23,7 +23,7 @@ fun PrimitiveKeyBuilder.int(default: ()->Int): PrimitiveKey<Int> = key(
   set = { setInt(name, it) }
 )
 
-fun PrimitiveKeyBuilder.nullableInt(default: Int?): PrimitiveKey<Int?> = nullableInt { default }
+fun PrimitiveKeyBuilder.nullableInt(default: Int? = null): PrimitiveKey<Int?> = nullableInt { default }
 fun PrimitiveKeyBuilder.nullableInt(default: ()->Int?): PrimitiveKey<Int?> =
   nullableString { default()?.toString() }.mapType(
     default = default,
