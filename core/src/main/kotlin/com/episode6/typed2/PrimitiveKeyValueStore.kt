@@ -1,8 +1,5 @@
 package com.episode6.typed2
 
-typealias PrimitiveKey<T> = Key<T, PrimitiveKeyValueGetter, PrimitiveKeyValueSetter>
-typealias AsyncPrimitiveKey<T> = AsyncKey<T, PrimitiveKeyValueGetter, PrimitiveKeyValueSetter>
-
 interface PrimitiveKeyValueGetter : KeyValueGetter {
   override fun contains(name: String): Boolean
   fun getInt(name: String, default: Int): Int

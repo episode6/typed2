@@ -4,19 +4,18 @@ import android.content.SharedPreferences
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isNull
-import com.episode6.typed2.plugins.SharedPreferencesNamespace
-import com.episode6.typed2.plugins.get
-import com.episode6.typed2.plugins.set
+import com.episode6.typed2.sharedprefs.SharedPreferencesNamespace
+import com.episode6.typed2.sharedprefs.get
+import com.episode6.typed2.sharedprefs.set
+import com.episode6.typed2.sharedprefs.stringSet
 import org.junit.Test
-import org.mockito.kotlin.doReturn
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.stub
-import org.mockito.kotlin.verify
+import org.mockito.kotlin.*
 
 object Keys : SharedPreferencesNamespace("com.prefix.") {
 
   val myInt = key("intKey").int(default = 42)
   val myNullInt = key("nullableInt").nullableInt()
+  val myStringSet = key("stringSet").stringSet()
 }
 
 /**
@@ -80,5 +79,15 @@ class ExampleUnitTest {
     sharedPrefs.edit().set(Keys.myNullInt, 36)
 
     verify(editor).putString("com.prefix.nullableInt", "36")
+  }
+
+  @Test fun testStringSet() {
+    sharedPrefs.stub {
+      on { getStringSet(eq("com.prefix.stringSet"), anyOrNull()) } doReturn setOf("hi")
+    }
+
+    val result = sharedPrefs.get(Keys.myStringSet)
+
+    assertThat(result).isEqualTo(setOf("hi"))
   }
 }
