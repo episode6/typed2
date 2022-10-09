@@ -4,6 +4,7 @@ import android.content.SharedPreferences
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isNull
+import com.episode6.typed2.plugins.SharedPreferencesNamespace
 import com.episode6.typed2.plugins.get
 import com.episode6.typed2.plugins.set
 import org.junit.Test
@@ -12,9 +13,9 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.stub
 import org.mockito.kotlin.verify
 
-object Keys : KeyNamespace("com.prefix.") {
+object Keys : SharedPreferencesNamespace("com.prefix.") {
 
-  val myInt = key("intKey").int(defaultValue = 42)
+  val myInt = key("intKey").int(default = 42)
   val myNullInt = key("nullableInt").nullableInt()
 }
 
@@ -34,7 +35,6 @@ class ExampleUnitTest {
   @Test
   fun testGetInt() {
     sharedPrefs.stub {
-      on { contains("com.prefix.intKey") } doReturn true
       on { getInt("com.prefix.intKey", 42) } doReturn 24
     }
 

@@ -4,7 +4,7 @@ import android.os.Bundle
 import com.episode6.typed2.*
 
 
-class TypedBundle(private val delegate: Bundle) : ObnoxiousKeyValueGetter, ObnoxiousKeyValueSetter {
+class TypedBundle(private val delegate: Bundle) : PrimitiveKeyValueGetter, PrimitiveKeyValueSetter {
   override fun contains(name: String): Boolean = delegate.containsKey(name)
   override fun getInt(name: String, default: Int): Int = delegate.getInt(name, default)
   override fun getString(name: String, default: String?): String? = delegate.getString(name, default)
@@ -15,8 +15,7 @@ class TypedBundle(private val delegate: Bundle) : ObnoxiousKeyValueGetter, Obnox
 
 fun Bundle.typed(): TypedBundle = TypedBundle(this)
 
-fun <RAW, T> Bundle.get(key: Key<RAW, T>): T = typed().get(key)
-suspend fun <RAW, T> Bundle.get(key: AsyncKey<RAW, T>): T = typed().get(key)
-
-fun <RAW, T> Bundle.set(key: Key<RAW, T>, value: T) = typed().set(key, value)
-suspend fun <RAW, T> Bundle.set(key: AsyncKey<RAW, T>, value: T) = typed().set(key, value)
+fun <T> Bundle.get(key: PrimitiveKey<T>): T = typed().get(key)
+fun <T> Bundle.set(key: PrimitiveKey<T>, value: T) = typed().set(key, value)
+suspend fun <T> Bundle.get(key: AsyncPrimitiveKey<T>): T = typed().get(key)
+suspend fun <T> Bundle.set(key: AsyncPrimitiveKey<T>, value: T) = typed().set(key, value)
