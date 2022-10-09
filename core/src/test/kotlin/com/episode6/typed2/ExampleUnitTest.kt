@@ -4,14 +4,14 @@ import android.content.SharedPreferences
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isNull
-import com.episode6.typed2.sharedprefs.SharedPreferencesNamespace
+import com.episode6.typed2.sharedprefs.PrefNamespace
 import com.episode6.typed2.sharedprefs.get
 import com.episode6.typed2.sharedprefs.set
 import com.episode6.typed2.sharedprefs.stringSet
 import org.junit.Test
 import org.mockito.kotlin.*
 
-object Keys : SharedPreferencesNamespace("com.prefix.") {
+object Keys : PrefNamespace("com.prefix.") {
 
   val myInt = key("intKey").int(default = 42)
   val myNullInt = key("nullableInt").nullableInt()
