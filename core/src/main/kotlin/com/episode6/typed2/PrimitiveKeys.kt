@@ -1,7 +1,7 @@
 package com.episode6.typed2
 
-typealias PrimitiveKey<T> = Key<T, PrimitiveKeyValueGetter, PrimitiveKeyValueSetter>
-typealias AsyncPrimitiveKey<T> = AsyncKey<T, PrimitiveKeyValueGetter, PrimitiveKeyValueSetter>
+typealias PrimitiveKey<T> = Key<T, in PrimitiveKeyValueGetter, in PrimitiveKeyValueSetter>
+typealias AsyncPrimitiveKey<T> = AsyncKey<T, in PrimitiveKeyValueGetter, in PrimitiveKeyValueSetter>
 
 interface PrimitiveKeyBuilder : KeyBuilder
 
