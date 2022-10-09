@@ -23,11 +23,11 @@ interface KeyBuilder {
 }
 
 fun <T : Any?, R : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter> Key<T, GETTER, SETTER>.mapType(
-  default: R,
+  default: ()-> R,
   mapGet: (T) -> R,
   mapSet: (R) -> T,
 ): Key<R, GETTER, SETTER> = object : Key<R, GETTER, SETTER> {
   override val name: String = this@mapType.name
-  override fun get(getter: GETTER): R = if (!getter.contains(name)) default else mapGet(this@mapType.get(getter))
+  override fun get(getter: GETTER): R = if (!getter.contains(name)) default() else mapGet(this@mapType.get(getter))
   override fun set(setter: SETTER, value: R) = this@mapType.set(setter, mapSet(value))
 }

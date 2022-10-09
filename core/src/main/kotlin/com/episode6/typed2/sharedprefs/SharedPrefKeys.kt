@@ -13,8 +13,9 @@ open class SharedPreferencesNamespace(private val prefix: String = "") {
   protected fun key(name: String): SharedPreferencesKeyBuilder = Builder(prefix + name)
 }
 
-fun SharedPreferencesKeyBuilder.stringSet(default: Set<String> = emptySet()): SharedPreferencesKey<Set<String>> = key(
-  get = { getStringSet(name, default)!! },
+fun SharedPreferencesKeyBuilder.stringSet(default: Set<String> = emptySet()): SharedPreferencesKey<Set<String>> = stringSet { default }
+fun SharedPreferencesKeyBuilder.stringSet(default: ()->Set<String>): SharedPreferencesKey<Set<String>> = key(
+  get = { getStringSet(name, default())!! },
   set = { setStringSet(name, it) }
 )
 
