@@ -8,19 +8,18 @@ typealias AsyncPrefKey<T> = AsyncKey<T, in PrefValueGetter, in PrefValueSetter>
 interface PrefKeyBuilder : PrimitiveKeyBuilder
 open class PrefNamespace(private val prefix: String = "") {
   private class Builder(override val name: String) : PrefKeyBuilder
+
   protected fun key(name: String): PrefKeyBuilder = Builder(prefix + name)
 }
 
-fun PrefKeyBuilder.stringSet(default: Set<String> = emptySet()): PrefKey<Set<String>> = stringSet { default }
-fun PrefKeyBuilder.stringSet(default: ()->Set<String>): PrefKey<Set<String>> =
-  nullableStringSet(default).mapType(
-    mapGet = { it ?: default() },
-    mapSet = { it }
-  ).withDefault(default)
-
-fun PrefKeyBuilder.nullableStringSet(default: Set<String>? = null): PrefKey<Set<String>?> = nullableStringSet { default }
-fun PrefKeyBuilder.nullableStringSet(default: ()->Set<String>?): PrefKey<Set<String>?> = key(
-  get = { default().let { getStringSet(name, it) ?: it}?.filterNotNull()?.toSet() },
+fun PrefKeyBuilder.stringSet(default: Set<String>): PrefKey<Set<String>> = stringSet { default }
+fun PrefKeyBuilder.stringSet(default: () -> Set<String>): PrefKey<Set<String>> = stringSet().asNonNull(default)
+fun PrefKeyBuilder.stringSet(): PrefKey<Set<String>?> = nullableStringSet().mapType(
+  mapGet = { it?.filterNotNull()?.toSet() },
+  mapSet = { it }
+)
+fun PrefKeyBuilder.nullableStringSet(): PrefKey<Set<String?>?> = key(
+  get = { getStringSet(name, null) },
   set = { setStringSet(name, it) }
 )
 

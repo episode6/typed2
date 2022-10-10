@@ -16,9 +16,9 @@ import org.mockito.kotlin.*
 object Keys : PrefNamespace("com.prefix.") {
 
   val myInt = key("intKey").int(default = 42)
-  val myNullInt = key("nullableInt").nullableInt()
+  val myNullInt = key("nullableInt").int()
   val myStringSet = key("stringSet").stringSet()
-  val myAsyncString = key("asyncString").nullableString().asAsync()
+  val myAsyncString = key("asyncString").string().asAsync()
 }
 
 /**

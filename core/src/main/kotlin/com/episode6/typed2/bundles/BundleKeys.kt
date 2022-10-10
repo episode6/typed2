@@ -12,13 +12,12 @@ open class BundleKeyNamespace(private val prefix: String = "") {
   protected fun key(name: String): BundleKeyBuilder = Builder(prefix + name)
 }
 
-fun BundleKeyBuilder.nullableBundle(): BundleKey<Bundle?> = key(
+fun BundleKeyBuilder.bundle(default: Bundle): BundleKey<Bundle> = bundle { default }
+fun BundleKeyBuilder.bundle(default: () -> Bundle): BundleKey<Bundle> = bundle().asNonNull(default)
+fun BundleKeyBuilder.bundle(): BundleKey<Bundle?> = key(
   get = { getBundle(name) },
   set = { setBundle(name, it) }
 )
-
-fun BundleKeyBuilder.bundle(default: Bundle = Bundle()): BundleKey<Bundle> = bundle { default }
-fun BundleKeyBuilder.bundle(default: ()->Bundle): BundleKey<Bundle> = nullableBundle().asNonNull(default)
 
 private fun <T : Any?> BundleKeyBuilder.key(
   get: BundleValueGetter.() -> T,

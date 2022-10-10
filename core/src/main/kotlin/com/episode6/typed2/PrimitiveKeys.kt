@@ -6,12 +6,9 @@ typealias AsyncPrimitiveKey<T> = AsyncKey<T, in PrimitiveKeyValueGetter, in Prim
 interface PrimitiveKeyBuilder : KeyBuilder
 
 fun PrimitiveKeyBuilder.string(default: String): PrimitiveKey<String> = string { default }
-fun PrimitiveKeyBuilder.string(default: () -> String): PrimitiveKey<String> =
-  nullableString { default() }.asNonNull(default)
-
-fun PrimitiveKeyBuilder.nullableString(default: String? = null): PrimitiveKey<String?> = nullableString { default }
-fun PrimitiveKeyBuilder.nullableString(default: () -> String?): PrimitiveKey<String?> = key(
-  get = { getString(name, default()) },
+fun PrimitiveKeyBuilder.string(default: () -> String): PrimitiveKey<String> = string().asNonNull(default)
+fun PrimitiveKeyBuilder.string(): PrimitiveKey<String?> = key(
+  get = { getString(name, null) },
   set = { setString(name, it) }
 )
 
@@ -20,14 +17,10 @@ fun PrimitiveKeyBuilder.int(default: () -> Int): PrimitiveKey<Int> = key(
   get = { getInt(name, default()) },
   set = { setInt(name, it) }
 )
-
-fun PrimitiveKeyBuilder.nullableInt(default: Int? = null): PrimitiveKey<Int?> = nullableInt { default }
-fun PrimitiveKeyBuilder.nullableInt(default: () -> Int?): PrimitiveKey<Int?> =
-  nullableString { default()?.toString() }
-    .mapType(
-      mapGet = { it?.toInt() },
-      mapSet = { it?.toString() }
-    ).withDefault(default)
+fun PrimitiveKeyBuilder.int(): PrimitiveKey<Int?> = string().mapType(
+  mapGet = { it?.toInt() },
+  mapSet = { it?.toString() }
+)
 
 private fun <T : Any?> PrimitiveKeyBuilder.key(
   get: PrimitiveKeyValueGetter.() -> T,
