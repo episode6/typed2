@@ -13,20 +13,14 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Test
 import org.mockito.kotlin.*
 
-object Keys : PrefNamespace("com.prefix.") {
+class SharedPrefTest {
 
-  val myInt = key("intKey").int(default = 42)
-  val myNullInt = key("nullableInt").int()
-  val myStringSet = key("stringSet").stringSet()
-  val myAsyncString = key("asyncString").string().asAsync()
-}
-
-/**
- * Example local unit test, which will execute on the development machine (host).
- *
- * See [testing documentation](http://d.android.com/tools/testing).
- */
-class ExampleUnitTest {
+  object Keys : PrefNamespace("com.prefix.") {
+    val myInt = key("intKey").int(default = 42)
+    val myNullInt = key("nullableInt").int()
+    val myStringSet = key("stringSet").stringSet()
+    val myAsyncString = key("asyncString").string().asAsync()
+  }
 
   val editor: SharedPreferences.Editor = mock()
   val sharedPrefs: SharedPreferences = mock {
