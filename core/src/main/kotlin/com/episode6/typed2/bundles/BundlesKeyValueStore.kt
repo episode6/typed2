@@ -1,13 +1,14 @@
 package com.episode6.typed2.bundles
 
+import android.os.Bundle
 import com.episode6.typed2.PrimitiveKeyValueGetter
 import com.episode6.typed2.PrimitiveKeyValueSetter
 
 interface BundleValueGetter : PrimitiveKeyValueGetter {
-
+  fun getBundle(name: String): Bundle?
 }
 interface BundleValueSetter : PrimitiveKeyValueSetter {
-
+  fun setBundle(name: String, value: Bundle?)
 }
 
 fun <T> BundleValueGetter.get(key: BundleKey<T>): T = key.get(this)

@@ -14,10 +14,9 @@ open class PrefNamespace(private val prefix: String = "") {
 fun PrefKeyBuilder.stringSet(default: Set<String> = emptySet()): PrefKey<Set<String>> = stringSet { default }
 fun PrefKeyBuilder.stringSet(default: ()->Set<String>): PrefKey<Set<String>> =
   nullableStringSet(default).mapType(
-    default = default,
     mapGet = { it ?: default() },
     mapSet = { it }
-  )
+  ).withDefault(default)
 
 fun PrefKeyBuilder.nullableStringSet(default: Set<String>? = null): PrefKey<Set<String>?> = nullableStringSet { default }
 fun PrefKeyBuilder.nullableStringSet(default: ()->Set<String>?): PrefKey<Set<String>?> = key(
