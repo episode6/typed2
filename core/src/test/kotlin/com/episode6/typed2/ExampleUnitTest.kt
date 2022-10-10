@@ -68,13 +68,11 @@ class ExampleUnitTest {
   @Test
   fun testGetNullInt() {
     sharedPrefs.stub {
-      on { contains("com.prefix.nullableInt") } doReturn false
       on { getString(eq("com.prefix.nullableInt"), anyOrNull()) } doReturn null
     }
 
     val result: Int? = sharedPrefs.get(Keys.myNullInt)
 
-    verify(sharedPrefs).contains("com.prefix.nullableInt")
     assertThat(result).isNull()
   }
 
