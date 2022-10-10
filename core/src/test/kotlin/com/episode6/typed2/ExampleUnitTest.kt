@@ -8,6 +8,7 @@ import com.episode6.typed2.sharedprefs.PrefNamespace
 import com.episode6.typed2.sharedprefs.get
 import com.episode6.typed2.sharedprefs.set
 import com.episode6.typed2.sharedprefs.stringSet
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 import org.mockito.kotlin.*
@@ -94,6 +95,7 @@ class ExampleUnitTest {
     assertThat(result).isEqualTo(setOf("hi"))
   }
 
+  @OptIn(ExperimentalCoroutinesApi::class)
   @Test fun testAsyncString() = runTest {
     sharedPrefs.stub {
       on { getString("com.prefix.asyncString", null) } doReturn "happyString"
