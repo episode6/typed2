@@ -6,12 +6,12 @@ class TypedSharedPreferences(private val delegate: SharedPreferences) : PrefValu
   override fun contains(name: String): Boolean = delegate.contains(name)
   override fun getInt(name: String, default: Int): Int = delegate.getInt(name, default)
   override fun getString(name: String, default: String?): String? = delegate.getString(name, default)
-  override fun getStringSet(name: String, defaultValue: Set<String>?): Set<String>? = delegate.getStringSet(name, defaultValue)?.toSet()
+  override fun getStringSet(name: String, defaultValue: Set<String?>?): Set<String?>? = delegate.getStringSet(name, defaultValue)?.toSet()
 
   class Editor(private val delegate: SharedPreferences.Editor) : PrefValueSetter {
     override fun setString(name: String, value: String?) { delegate.putString(name, value) }
     override fun setInt(name: String, value: Int) { delegate.putInt(name, value) }
-    override fun setStringSet(name: String, value: Set<String>?) { delegate.putStringSet(name, value) }
+    override fun setStringSet(name: String, value: Set<String?>?) { delegate.putStringSet(name, value) }
   }
 }
 

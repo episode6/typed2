@@ -1,8 +1,6 @@
 package com.episode6.typed2.sharedprefs
 
-import com.episode6.typed2.AsyncKey
-import com.episode6.typed2.Key
-import com.episode6.typed2.PrimitiveKeyBuilder
+import com.episode6.typed2.*
 
 typealias PrefKey<T> = Key<T, in PrefValueGetter, in PrefValueSetter>
 typealias AsyncPrefKey<T> = AsyncKey<T, in PrefValueGetter, in PrefValueSetter>
@@ -14,8 +12,16 @@ open class PrefNamespace(private val prefix: String = "") {
 }
 
 fun PrefKeyBuilder.stringSet(default: Set<String> = emptySet()): PrefKey<Set<String>> = stringSet { default }
-fun PrefKeyBuilder.stringSet(default: ()->Set<String>): PrefKey<Set<String>> = key(
-  get = { getStringSet(name, default())!! },
+fun PrefKeyBuilder.stringSet(default: ()->Set<String>): PrefKey<Set<String>> =
+  nullableStringSet(default).mapType(
+    default = default,
+    mapGet = { it.filterNotNull().toSet() },
+    mapSet = { it }
+  )
+
+fun PrefKeyBuilder.nullableStringSet(default: Set<String?> = emptySet()): PrefKey<Set<String?>> = nullableStringSet { default }
+fun PrefKeyBuilder.nullableStringSet(default: ()->Set<String?>): PrefKey<Set<String?>> = key(
+  get = { default().let { getStringSet(name, it) ?: it} },
   set = { setStringSet(name, it) }
 )
 
