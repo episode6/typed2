@@ -15,13 +15,13 @@ fun PrefKeyBuilder.stringSet(default: Set<String> = emptySet()): PrefKey<Set<Str
 fun PrefKeyBuilder.stringSet(default: ()->Set<String>): PrefKey<Set<String>> =
   nullableStringSet(default).mapType(
     default = default,
-    mapGet = { it.filterNotNull().toSet() },
+    mapGet = { it ?: default() },
     mapSet = { it }
   )
 
-fun PrefKeyBuilder.nullableStringSet(default: Set<String?> = emptySet()): PrefKey<Set<String?>> = nullableStringSet { default }
-fun PrefKeyBuilder.nullableStringSet(default: ()->Set<String?>): PrefKey<Set<String?>> = key(
-  get = { default().let { getStringSet(name, it) ?: it} },
+fun PrefKeyBuilder.nullableStringSet(default: Set<String>? = null): PrefKey<Set<String>?> = nullableStringSet { default }
+fun PrefKeyBuilder.nullableStringSet(default: ()->Set<String>?): PrefKey<Set<String>?> = key(
+  get = { default().let { getStringSet(name, it) ?: it}?.filterNotNull()?.toSet() },
   set = { setStringSet(name, it) }
 )
 
