@@ -8,6 +8,7 @@ import com.episode6.typed2.sharedprefs.PrefNamespace
 import com.episode6.typed2.sharedprefs.get
 import com.episode6.typed2.sharedprefs.set
 import com.episode6.typed2.sharedprefs.stringSet
+import kotlinx.coroutines.test.runTest
 import org.junit.Test
 import org.mockito.kotlin.*
 
@@ -16,6 +17,7 @@ object Keys : PrefNamespace("com.prefix.") {
   val myInt = key("intKey").int(default = 42)
   val myNullInt = key("nullableInt").nullableInt()
   val myStringSet = key("stringSet").stringSet()
+  val myAsyncString = key("asyncString").nullableString().asAsync()
 }
 
 /**
@@ -90,5 +92,15 @@ class ExampleUnitTest {
     val result = sharedPrefs.get(Keys.myStringSet)
 
     assertThat(result).isEqualTo(setOf("hi"))
+  }
+
+  @Test fun testAsyncString() = runTest {
+    sharedPrefs.stub {
+      on { getString("com.prefix.asyncString", null) } doReturn "happyString"
+    }
+
+    val result = sharedPrefs.get(Keys.myAsyncString)
+
+    assertThat(result).isEqualTo("happyString")
   }
 }

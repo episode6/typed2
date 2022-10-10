@@ -1,5 +1,9 @@
 package com.episode6.typed2
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import kotlin.coroutines.CoroutineContext
+
 interface KeyValueGetter {
   fun contains(name: String): Boolean
 }
@@ -20,6 +24,14 @@ interface AsyncKey<T : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter> {
 
 interface KeyBuilder {
   val name: String
+}
+
+fun <T : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter> Key<T, GETTER, SETTER>.asAsync(
+  context: CoroutineContext = Dispatchers.Default
+): AsyncKey<T, GETTER, SETTER> = object : AsyncKey<T, GETTER, SETTER> {
+  override val name: String = this@asAsync.name
+  override suspend fun get(getter: GETTER): T = withContext(context) { this@asAsync.get(getter) }
+  override suspend fun set(setter: SETTER, value: T) = withContext(context) { this@asAsync.set(setter, value) }
 }
 
 fun <T : Any?, R : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter> Key<T, GETTER, SETTER>.mapType(

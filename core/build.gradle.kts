@@ -10,8 +10,6 @@ android {
 }
 
 dependencies {
-  testImplementation(libs.junit.core)
-  testImplementation(libs.mockito.core)
-  testImplementation(libs.mockito.kotlin)
-  testImplementation(libs.assertk.core)
+  implementation(libs.kotlinx.coroutines.core)
+  testImplementation(libs.bundles.test.support)
 }
