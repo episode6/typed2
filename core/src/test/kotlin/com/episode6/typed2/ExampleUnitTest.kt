@@ -83,6 +83,7 @@ class ExampleUnitTest {
 
   @Test fun testStringSet() {
     sharedPrefs.stub {
+      on { contains("com.prefix.stringSet") } doReturn true
       on { getStringSet(eq("com.prefix.stringSet"), anyOrNull()) } doReturn setOf("hi")
     }
 
