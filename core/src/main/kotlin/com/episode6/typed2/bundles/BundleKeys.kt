@@ -12,6 +12,8 @@ open class BundleKeyNamespace(private val prefix: String = "") {
   protected fun key(name: String): BundleKeyBuilder = Builder(prefix + name)
 }
 
+fun <T : Any> BundleKey<T?>.asRequired(): BundleKey<T> = asNonNull { throw RequiredBundleKeyMissing(name) }
+
 fun BundleKeyBuilder.bundle(default: Bundle): BundleKey<Bundle> = bundle { default }
 fun BundleKeyBuilder.bundle(default: () -> Bundle): BundleKey<Bundle> = bundle().asNonNull(default)
 fun BundleKeyBuilder.bundle(): BundleKey<Bundle?> = key(
@@ -27,3 +29,5 @@ private fun <T : Any?> BundleKeyBuilder.key(
   override fun get(getter: BundleValueGetter): T = getter.get()
   override fun set(setter: BundleValueSetter, value: T) = setter.set(value)
 }
+
+class RequiredBundleKeyMissing(name: String) : IllegalArgumentException("Required key ($name) missing from bundle")
