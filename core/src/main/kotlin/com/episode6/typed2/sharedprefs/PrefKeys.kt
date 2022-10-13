@@ -30,6 +30,9 @@ private fun <T : Any?> PrefKeyBuilder.key(
   set: PrefValueSetter.(T) -> Unit,
 ) = object : Key<T, PrefValueGetter, PrefValueSetter, T> {
   override val name: String = this@key.name
-  override fun get(getter: PrefValueGetter): T = getter.get()
-  override fun set(setter: PrefValueSetter, value: T) = setter.set(value)
+  override fun mapGet(backedBy: T): T = backedBy
+  override fun mapSet(value: T): T = value
+
+  override fun getBackingData(getter: PrefValueGetter): T = get.invoke(getter)
+  override fun setBackingData(setter: PrefValueSetter, value: T) = set.invoke(setter, value)
 }

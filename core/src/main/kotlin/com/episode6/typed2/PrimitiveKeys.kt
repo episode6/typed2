@@ -28,6 +28,9 @@ private fun <T : Any?> PrimitiveKeyBuilder.key(
   set: PrimitiveKeyValueSetter.(T) -> Unit,
 ) = object : Key<T, PrimitiveKeyValueGetter, PrimitiveKeyValueSetter, T> {
   override val name: String = this@key.name
-  override fun get(getter: PrimitiveKeyValueGetter): T = getter.get()
-  override fun set(setter: PrimitiveKeyValueSetter, value: T) = setter.set(value)
+  override fun mapGet(backedBy: T): T = backedBy
+  override fun mapSet(value: T): T = value
+
+  override fun getBackingData(getter: PrimitiveKeyValueGetter): T = get.invoke(getter)
+  override fun setBackingData(setter: PrimitiveKeyValueSetter, value: T) = set.invoke(setter, value)
 }
