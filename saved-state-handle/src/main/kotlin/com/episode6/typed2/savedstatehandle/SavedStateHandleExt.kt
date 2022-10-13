@@ -15,7 +15,7 @@ class TypedSavedStateHandle(private val delegate: SavedStateHandle) : BundleValu
   override fun contains(name: String): Boolean = delegate.contains(name)
   override fun getBundle(name: String): Bundle? = delegate[name]
   override fun getInt(name: String, default: Int): Int = delegate[name] ?: default
-  override fun getString(name: String, default: String?): String? = delegate[name]
+  override fun getString(name: String, default: String?): String? = delegate[name] ?: default
   override fun setBundle(name: String, value: Bundle?) { delegate[name] = value }
   override fun setInt(name: String, value: Int) { delegate[name] = value }
   override fun setString(name: String, value: String?) { delegate[name] = value }
@@ -31,7 +31,7 @@ suspend fun <T, BACKED_BY> SavedStateHandle.set(key: AsyncBundleKey<T, BACKED_BY
 
 fun <T, BACKED_BY> SavedStateHandle.getLiveData(key: BundleKey<T, BACKED_BY>): MutableLiveData<T> =
   getLiveData<BACKED_BY>(key.name, key.backingDefault())
-    .mapMutable(mapGet = key::mapGet, mapSet = key::mapSet)
+    .mapMutable(mapGet = key.mapGet, mapSet = key.mapSet)
 
 fun <T, BACKED_BY> SavedStateHandle.getStateFlow(scope: CoroutineScope, key: BundleKey<T, BACKED_BY>): StateFlow<T> {
   val stateFlow = getStateFlow<BACKED_BY>(key.name, key.backingDefault())

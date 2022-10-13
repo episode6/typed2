@@ -4,27 +4,27 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlin.coroutines.CoroutineContext
 
-interface AsyncKey<T : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter, BACKED_BY : Any?> {
-  val name: String
-  val backingDefault: DefaultProvider<BACKED_BY>
-  val default: DefaultProvider<T>? get() = null
-  fun getBackingData(getter: GETTER): BACKED_BY
-  suspend fun mapGet(backedBy: BACKED_BY): T
-  fun setBackingData(setter: SETTER, value: BACKED_BY)
-  suspend fun mapSet(value: T): BACKED_BY
-}
+data class AsyncKey<T : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter, BACKED_BY : Any?>(
+  val name: String,
+  val backingDefault: DefaultProvider<BACKED_BY>,
+  val default: DefaultProvider<T>? = null,
+  val getBackingData: (GETTER) -> BACKED_BY,
+  val mapGet: suspend (BACKED_BY) -> T,
+  val setBackingData: (SETTER, BACKED_BY) -> Unit,
+  val mapSet: suspend (T) -> BACKED_BY,
+)
 
 fun <T : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter, BACKED_BY : Any?> Key<T, GETTER, SETTER, BACKED_BY>.asAsync(
   context: CoroutineContext = Dispatchers.Default,
-): AsyncKey<T, GETTER, SETTER, BACKED_BY> = object : AsyncKey<T, GETTER, SETTER, BACKED_BY> {
-  override val name: String = this@asAsync.name
-  override val backingDefault: DefaultProvider<BACKED_BY> = this@asAsync.backingDefault
-  override val default: DefaultProvider<T>? = this@asAsync.default
-  override fun getBackingData(getter: GETTER): BACKED_BY = this@asAsync.getBackingData(getter)
-  override fun setBackingData(setter: SETTER, value: BACKED_BY) = this@asAsync.setBackingData(setter, value)
-  override suspend fun mapGet(backedBy: BACKED_BY): T = withContext(context) { this@asAsync.mapGet(backedBy) }
-  override suspend fun mapSet(value: T): BACKED_BY = withContext(context) { this@asAsync.mapSet(value) }
-}
+): AsyncKey<T, GETTER, SETTER, BACKED_BY> = AsyncKey(
+  name = name,
+  backingDefault = backingDefault,
+  default = default,
+  getBackingData = getBackingData,
+  setBackingData = setBackingData,
+  mapGet = { withContext(context) { mapGet(it) } },
+  mapSet = { withContext(context) { mapSet(it) } },
+)
 
 suspend fun <T : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter, BACKED_BY : Any?> AsyncKey<T, GETTER, SETTER, BACKED_BY>.get(
   getter: GETTER,
