@@ -4,6 +4,8 @@ import com.episode6.typed2.*
 
 typealias PrefKey<T, BACKED_BY> = Key<T, in PrefValueGetter, in PrefValueSetter, BACKED_BY>
 typealias AsyncPrefKey<T, BACKED_BY> = AsyncKey<T, in PrefValueGetter, in PrefValueSetter, BACKED_BY>
+typealias NativePrefKey<T> = PrefKey<T, T>
+typealias NativeAsyncPrefKey<T> = AsyncPrefKey<T, T>
 
 interface PrefKeyBuilder : PrimitiveKeyBuilder
 open class PrefNamespace(private val prefix: String = "") {
@@ -18,15 +20,15 @@ fun PrefKeyBuilder.stringSet(): PrefKey<Set<String>?, Set<String?>?> = nullableS
   mapGet = { it?.filterNotNull()?.toSet() },
   mapSet = { it }
 )
-fun PrefKeyBuilder.nullableStringSet(): PrefKey<Set<String?>?, Set<String?>?> = key(
+fun PrefKeyBuilder.nullableStringSet(): NativePrefKey<Set<String?>?> = key(
   get = { getStringSet(name, null) },
   set = { setStringSet(name, it) }
 )
 
-private fun <T : Any?, BACKED_BY: Any?> PrefKeyBuilder.key(
+private fun <T : Any?> PrefKeyBuilder.key(
   get: PrefValueGetter.() -> T,
   set: PrefValueSetter.(T) -> Unit,
-) = object : Key<T, PrefValueGetter, PrefValueSetter, BACKED_BY> {
+) = object : Key<T, PrefValueGetter, PrefValueSetter, T> {
   override val name: String = this@key.name
   override fun get(getter: PrefValueGetter): T = getter.get()
   override fun set(setter: PrefValueSetter, value: T) = setter.set(value)
