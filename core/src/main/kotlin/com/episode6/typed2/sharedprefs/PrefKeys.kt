@@ -22,5 +22,6 @@ fun PrefKeyBuilder.stringSet(): PrefKey<Set<String>?, Set<String?>?> = nullableS
 )
 fun PrefKeyBuilder.nullableStringSet(): NativePrefKey<Set<String?>?> = nativeKey(
   get = { getStringSet(name, null) },
-  set = { setStringSet(name, it) }
+  set = { setStringSet(name, it) },
+  backingDefault = { null }
 )

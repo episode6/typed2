@@ -23,7 +23,8 @@ fun BundleKeyBuilder.bundle(default: Bundle): BundleKey<Bundle, Bundle?> = bundl
 fun BundleKeyBuilder.bundle(default: () -> Bundle): BundleKey<Bundle, Bundle?> = bundle().withDefault(default)
 fun BundleKeyBuilder.bundle(): NativeBundleKey<Bundle?> = nativeKey(
   get = { getBundle(name) },
-  set = { setBundle(name, it) }
+  set = { setBundle(name, it) },
+  backingDefault = { null }
 )
 
 class RequiredBundleKeyMissing(name: String) : IllegalArgumentException("Required key ($name) missing from bundle")
