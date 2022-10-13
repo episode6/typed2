@@ -15,24 +15,12 @@ open class PrefNamespace(private val prefix: String = "") {
 }
 
 fun PrefKeyBuilder.stringSet(default: Set<String>): PrefKey<Set<String>, Set<String?>?> = stringSet { default }
-fun PrefKeyBuilder.stringSet(default: () -> Set<String>): PrefKey<Set<String>, Set<String?>?> = stringSet().asNonNull(default)
+fun PrefKeyBuilder.stringSet(default: () -> Set<String>): PrefKey<Set<String>, Set<String?>?> = stringSet().withDefault(default)
 fun PrefKeyBuilder.stringSet(): PrefKey<Set<String>?, Set<String?>?> = nullableStringSet().mapType(
   mapGet = { it?.filterNotNull()?.toSet() },
   mapSet = { it }
 )
-fun PrefKeyBuilder.nullableStringSet(): NativePrefKey<Set<String?>?> = key(
+fun PrefKeyBuilder.nullableStringSet(): NativePrefKey<Set<String?>?> = nativeKey(
   get = { getStringSet(name, null) },
   set = { setStringSet(name, it) }
 )
-
-private fun <T : Any?> PrefKeyBuilder.key(
-  get: PrefValueGetter.() -> T,
-  set: PrefValueSetter.(T) -> Unit,
-) = object : Key<T, PrefValueGetter, PrefValueSetter, T> {
-  override val name: String = this@key.name
-  override fun mapGet(backedBy: T): T = backedBy
-  override fun mapSet(value: T): T = value
-
-  override fun getBackingData(getter: PrefValueGetter): T = get.invoke(getter)
-  override fun setBackingData(setter: PrefValueSetter, value: T) = set.invoke(setter, value)
-}
