@@ -11,7 +11,7 @@ interface PrimitiveKeyValueSetter : KeyValueSetter {
   fun setString(name: String, value: String?)
 }
 
-fun <T> PrimitiveKeyValueGetter.get(key: PrimitiveKey<T>): T = key.get(this)
-fun <T> PrimitiveKeyValueSetter.set(key: PrimitiveKey<T>, value: T) = key.set(this, value)
-suspend fun <T> PrimitiveKeyValueGetter.get(key: AsyncPrimitiveKey<T>): T = key.get(this)
-suspend fun <T> PrimitiveKeyValueSetter.set(key: AsyncPrimitiveKey<T>, value: T) = key.set(this, value)
+fun <T, BACKED_BY> PrimitiveKeyValueGetter.get(key: PrimitiveKey<T, BACKED_BY>): T = key.get(this)
+fun <T, BACKED_BY> PrimitiveKeyValueSetter.set(key: PrimitiveKey<T, BACKED_BY>, value: T) = key.set(this, value)
+suspend fun <T, BACKED_BY> PrimitiveKeyValueGetter.get(key: AsyncPrimitiveKey<T, BACKED_BY>): T = key.get(this)
+suspend fun <T, BACKED_BY> PrimitiveKeyValueSetter.set(key: AsyncPrimitiveKey<T, BACKED_BY>, value: T) = key.set(this, value)

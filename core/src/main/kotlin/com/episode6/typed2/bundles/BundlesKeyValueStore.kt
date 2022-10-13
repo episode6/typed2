@@ -11,7 +11,7 @@ interface BundleValueSetter : PrimitiveKeyValueSetter {
   fun setBundle(name: String, value: Bundle?)
 }
 
-fun <T> BundleValueGetter.get(key: BundleKey<T>): T = key.get(this)
-fun <T> BundleValueSetter.set(key: BundleKey<T>, value: T) = key.set(this, value)
-suspend fun <T> BundleValueGetter.get(key: AsyncBundleKey<T>): T = key.get(this)
-suspend fun <T> BundleValueSetter.set(key: AsyncBundleKey<T>, value: T) = key.set(this, value)
+fun <T, BACKED_BY> BundleValueGetter.get(key: BundleKey<T, BACKED_BY>): T = key.get(this)
+fun <T, BACKED_BY> BundleValueSetter.set(key: BundleKey<T, BACKED_BY>, value: T) = key.set(this, value)
+suspend fun <T, BACKED_BY> BundleValueGetter.get(key: AsyncBundleKey<T, BACKED_BY>): T = key.get(this)
+suspend fun <T, BACKED_BY> BundleValueSetter.set(key: AsyncBundleKey<T, BACKED_BY>, value: T) = key.set(this, value)

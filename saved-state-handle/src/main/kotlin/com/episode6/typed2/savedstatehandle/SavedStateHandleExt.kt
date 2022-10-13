@@ -17,7 +17,7 @@ class TypedSavedStateHandle(private val delegate: SavedStateHandle) : BundleValu
 
 fun SavedStateHandle.typed(): TypedSavedStateHandle = TypedSavedStateHandle(this)
 
-fun <T> SavedStateHandle.get(key: BundleKey<T>): T = typed().get(key)
-fun <T> SavedStateHandle.set(key: BundleKey<T>, value: T) = typed().set(key, value)
-suspend fun <T> SavedStateHandle.get(key: AsyncBundleKey<T>): T = typed().get(key)
-suspend fun <T> SavedStateHandle.set(key: AsyncBundleKey<T>, value: T) = typed().set(key, value)
+fun <T, BACKED_BY> SavedStateHandle.get(key: BundleKey<T, BACKED_BY>): T = typed().get(key)
+fun <T, BACKED_BY> SavedStateHandle.set(key: BundleKey<T, BACKED_BY>, value: T) = typed().set(key, value)
+suspend fun <T, BACKED_BY> SavedStateHandle.get(key: AsyncBundleKey<T, BACKED_BY>): T = typed().get(key)
+suspend fun <T, BACKED_BY> SavedStateHandle.set(key: AsyncBundleKey<T, BACKED_BY>, value: T) = typed().set(key, value)

@@ -18,7 +18,7 @@ class TypedSharedPreferences(private val delegate: SharedPreferences) : PrefValu
 fun SharedPreferences.typed(): TypedSharedPreferences = TypedSharedPreferences(this)
 fun SharedPreferences.Editor.typed(): TypedSharedPreferences.Editor = TypedSharedPreferences.Editor(this)
 
-fun <T> SharedPreferences.get(key: PrefKey<T>): T = typed().get(key)
-fun <T> SharedPreferences.Editor.set(key: PrefKey<T>, value: T) = typed().set(key, value)
-suspend fun <T> SharedPreferences.get(key: AsyncPrefKey<T>): T = typed().get(key)
-suspend fun <T> SharedPreferences.Editor.set(key: AsyncPrefKey<T>, value: T) = typed().set(key, value)
+fun <T, BACKED_BY> SharedPreferences.get(key: PrefKey<T, BACKED_BY>): T = typed().get(key)
+fun <T, BACKED_BY> SharedPreferences.Editor.set(key: PrefKey<T, BACKED_BY>, value: T) = typed().set(key, value)
+suspend fun <T, BACKED_BY> SharedPreferences.get(key: AsyncPrefKey<T, BACKED_BY>): T = typed().get(key)
+suspend fun <T, BACKED_BY> SharedPreferences.Editor.set(key: AsyncPrefKey<T, BACKED_BY>, value: T) = typed().set(key, value)
