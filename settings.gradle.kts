@@ -16,4 +16,7 @@ dependencyResolutionManagement {
   }
 }
 rootProject.name = "typed2"
-include(":core")
+include(
+  ":core",
+  ":saved-state-handle",
+)

@@ -4,14 +4,19 @@ kotlin-core = "1.7.10"
 android-gradle = "7.3.0"
 dokka-core = "1.7.10"
 kotlinx-coroutines = "1.6.4"
+androidx-lifecycle = "2.5.1"
+mockito-core = "4.8.0"
 
 [libraries]
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
 
+savedstatehandle = { module = "androidx.lifecycle:lifecycle-viewmodel-savedstate", version.ref = "androidx-lifecycle" }
+
 # test libraries
 junit-core = { module = "junit:junit", version = "4.13.2" }
-mockito-core = { module = "org.mockito:mockito-core", version = "4.8.0" }
+mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito-core" }
+mockito-inline = { module = "org.mockito:mockito-inline", version.ref = "mockito-core" }
 mockito-kotlin = { module = "org.mockito.kotlin:mockito-kotlin", version = "4.0.0" }
 assertk-core = { module = "com.willowtreeapps.assertk:assertk", version = "0.25" }
 
@@ -20,6 +25,7 @@ test-support = [
     "junit-core",
     "mockito-core",
     "mockito-kotlin",
+    "mockito-inline",
     "assertk-core",
     "kotlinx-coroutines-test",
 ]
