@@ -16,8 +16,6 @@ interface Key<T : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter, BACKED
   fun mapGet(backedBy: BACKED_BY): T
   fun setBackingData(setter: SETTER, value: BACKED_BY)
   fun mapSet(value: T): BACKED_BY
-//  fun get(getter: GETTER): T = mapGet(getBackingData(getter))
-//  fun set(setter: SETTER, value: T) = setBackingData(setter, mapSet(value))
 }
 
 fun <T : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter, BACKED_BY : Any?> Key<T, GETTER, SETTER, BACKED_BY>.get(getter: GETTER): T  {
