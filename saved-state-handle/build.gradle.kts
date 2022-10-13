@@ -11,7 +11,8 @@ android {
 
 dependencies {
   api(project(":core"))
-  implementation(libs.savedstatehandle)
+  implementation(libs.androidx.livedata)
+  implementation(libs.androidx.savedstatehandle)
   implementation(libs.kotlinx.coroutines.core)
   testImplementation(libs.bundles.test.support)
 }

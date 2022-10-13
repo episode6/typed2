@@ -1,6 +1,8 @@
 package com.episode6.typed2.savedstatehandle
 
 import android.os.Bundle
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import com.episode6.typed2.bundles.*
 
@@ -21,3 +23,30 @@ fun <T, BACKED_BY> SavedStateHandle.get(key: BundleKey<T, BACKED_BY>): T = typed
 fun <T, BACKED_BY> SavedStateHandle.set(key: BundleKey<T, BACKED_BY>, value: T) = typed().set(key, value)
 suspend fun <T, BACKED_BY> SavedStateHandle.get(key: AsyncBundleKey<T, BACKED_BY>): T = typed().get(key)
 suspend fun <T, BACKED_BY> SavedStateHandle.set(key: AsyncBundleKey<T, BACKED_BY>, value: T) = typed().set(key, value)
+
+fun <T, BACKED_BY> SavedStateHandle.getLiveData(key: BundleKey<T, BACKED_BY>): MutableLiveData<T> =
+  getLiveData<BACKED_BY>(key.name)
+    .mapMutable(mapGet = key::mapGet, mapSet = key::mapSet)
+//
+//fun <T, BACKED_BY> SavedStateHandle.getStateFlow(key: BundleKey<T, BACKED_BY>): StateFlow<T> {
+//  val flow = getStateFlow<BACKED_BY>(key.name, null)
+//}
+
+private fun <BACKED_BY : Any?, T : Any?> MutableLiveData<BACKED_BY>.mapMutable(
+  mapGet: (BACKED_BY) -> T,
+  mapSet: (T) -> BACKED_BY,
+): MutableLiveData<T> {
+  val result = object : MediatorLiveData<T>() {
+    fun setValueInternal(value: T) {
+      super.setValue(value)
+    }
+
+    override fun setValue(value: T) {
+      super.setValue(value)
+      this@mapMutable.value = mapSet(value)
+    }
+  }
+  value?.let { result.setValueInternal(mapGet(it)) }
+  result.addSource(this) { result.setValueInternal(mapGet(it)) }
+  return result
+}
