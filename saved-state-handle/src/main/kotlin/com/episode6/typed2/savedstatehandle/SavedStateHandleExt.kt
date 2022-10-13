@@ -6,10 +6,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import com.episode6.typed2.bundles.*
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 
 class TypedSavedStateHandle(private val delegate: SavedStateHandle) : BundleValueGetter, BundleValueSetter {
   override fun contains(name: String): Boolean = delegate.contains(name)
@@ -30,14 +28,25 @@ suspend fun <T, BACKED_BY> SavedStateHandle.get(key: AsyncBundleKey<T, BACKED_BY
 suspend fun <T, BACKED_BY> SavedStateHandle.set(key: AsyncBundleKey<T, BACKED_BY>, value: T) = typed().set(key, value)
 
 fun <T, BACKED_BY> SavedStateHandle.getLiveData(key: BundleKey<T, BACKED_BY>): MutableLiveData<T> =
-  getLiveData<BACKED_BY>(key.name, key.backingDefault())
+  getLiveData(key.name, key.backingDefault())
     .mapMutable(mapGet = key.mapGet, mapSet = key.mapSet)
 
-fun <T, BACKED_BY> SavedStateHandle.getStateFlow(scope: CoroutineScope, key: BundleKey<T, BACKED_BY>): StateFlow<T> {
-  val stateFlow = getStateFlow<BACKED_BY>(key.name, key.backingDefault())
-  return stateFlow.map { key.mapGet(it) }
-    .stateIn(scope, SharingStarted.Eagerly, initialValue = key.mapGet(stateFlow.value))
-}
+fun <T, BACKED_BY> SavedStateHandle.getStateFlow(scope: CoroutineScope, key: BundleKey<T, BACKED_BY>): StateFlow<T> =
+  getStateFlow(key.name, key.backingDefault()).run {
+    map { key.mapGet(it) }.stateIn(scope, SharingStarted.Eagerly, initialValue = key.mapGet(value))
+  }
+
+fun <T, BACKED_BY> SavedStateHandle.getStateFlow(
+  scope: CoroutineScope,
+  key: AsyncBundleKey<T, BACKED_BY>,
+): StateFlow<T?> = MutableStateFlow<T?>(null)
+  .also { mutableStateFlow ->
+    scope.launch {
+      getStateFlow(key.name, key.backingDefault())
+        .map { key.mapGet(it) }
+        .collect { mutableStateFlow.value = it }
+    }
+  }.asStateFlow()
 
 private fun <BACKED_BY : Any?, T : Any?> MutableLiveData<BACKED_BY>.mapMutable(
   mapGet: (BACKED_BY) -> T,
