@@ -43,14 +43,9 @@ fun <T, BACKED_BY> SavedStateHandle.getStateFlow(scope: CoroutineScope, key: Key
 fun <T, BACKED_BY> SavedStateHandle.getStateFlow(
   scope: CoroutineScope,
   key: AsyncKey<T, *, *, BACKED_BY>,
-): StateFlow<T?> = MutableStateFlow<T?>(null)
-  .also { mutableStateFlow ->
-    scope.launch {
-      getStateFlow(key.name, key.backingDefault())
-        .map { key.mapGet(it) }
-        .collect { mutableStateFlow.value = it }
-    }
-  }.asStateFlow()
+): StateFlow<T?> = getStateFlow(key.name, key.backingDefault())
+    .map { key.mapGet(it) }
+    .stateIn(scope, SharingStarted.Eagerly, null)
 
 private fun <BACKED_BY : Any?, T : Any?> MutableLiveData<BACKED_BY>.mapMutable(
   mapGet: (BACKED_BY) -> T,

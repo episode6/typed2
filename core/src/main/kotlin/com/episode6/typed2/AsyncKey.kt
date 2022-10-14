@@ -8,9 +8,9 @@ data class AsyncKey<T : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter, 
   val name: String,
   val backingDefault: DefaultProvider<BACKED_BY>,
   val default: DefaultProvider<T>? = null,
-  val getBackingData: (GETTER) -> BACKED_BY,
+  val getBackingData: suspend (GETTER) -> BACKED_BY,
   val mapGet: suspend (BACKED_BY) -> T,
-  val setBackingData: (SETTER, BACKED_BY) -> Unit,
+  val setBackingData: suspend (SETTER, BACKED_BY) -> Unit,
   val mapSet: suspend (T) -> BACKED_BY,
 )
 
@@ -20,8 +20,8 @@ fun <T : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter, BACKED_BY : Any
   name = name,
   backingDefault = backingDefault,
   default = default,
-  getBackingData = getBackingData,
-  setBackingData = setBackingData,
+  getBackingData = { withContext(context) { getBackingData(it) } },
+  setBackingData = { setter, backedBy -> withContext(context) { setBackingData(setter, backedBy) } },
   mapGet = { withContext(context) { mapGet(it) } },
   mapSet = { withContext(context) { mapSet(it) } },
 )
