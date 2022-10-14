@@ -17,4 +17,5 @@ dependencies {
 
   testImplementation(libs.bundles.test.support)
   testImplementation(libs.turbine.core)
+  testImplementation(libs.androidx.testing.arch.core)
 }

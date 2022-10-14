@@ -21,6 +21,7 @@ mockito-inline = { module = "org.mockito:mockito-inline", version.ref = "mockito
 mockito-kotlin = { module = "org.mockito.kotlin:mockito-kotlin", version = "4.0.0" }
 assertk-core = { module = "com.willowtreeapps.assertk:assertk", version = "0.25" }
 turbine-core = { module = "app.cash.turbine:turbine", version = "0.12.0" }
+androidx-testing-arch-core = { module = "androidx.arch.core:core-testing", version = "2.1.0" }
 
 [bundles]
 test-support = [

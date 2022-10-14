@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 fun <T, BACKED_BY> SavedStateHandle.getLiveData(key: Key<T, *, *, BACKED_BY>): MutableLiveData<T> {
   val backingLiveData = getLiveData(key.name, key.backingDefault())
   val result = MutableMediatorLiveData<T>(onNewValue = { backingLiveData.value = key.mapSet(it) })
-  backingLiveData.value?.let { result.setValueSkipCallback(key.mapGet(it)) }
+  backingLiveData.value?.let { result.setValueSkipCallback(key.mapGet(it)) } ?: key.default?.invoke()?.let {  result.setValueSkipCallback(it) }
   result.addSource(backingLiveData) { result.setValueSkipCallback(key.mapGet(it)) }
   return result
 }
