@@ -20,6 +20,7 @@ mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito-cor
 mockito-inline = { module = "org.mockito:mockito-inline", version.ref = "mockito-core" }
 mockito-kotlin = { module = "org.mockito.kotlin:mockito-kotlin", version = "4.0.0" }
 assertk-core = { module = "com.willowtreeapps.assertk:assertk", version = "0.25" }
+turbine-core = { module = "app.cash.turbine:turbine", version = "0.12.0" }
 
 [bundles]
 test-support = [
