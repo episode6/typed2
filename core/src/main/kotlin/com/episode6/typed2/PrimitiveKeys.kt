@@ -6,8 +6,12 @@ typealias NativePrimitiveKey<T> = PrimitiveKey<T, T>
 
 interface PrimitiveKeyBuilder : KeyBuilder
 
-fun PrimitiveKeyBuilder.string(default: String): PrimitiveKey<String, String?> = string { default }
-fun PrimitiveKeyBuilder.string(default: () -> String): PrimitiveKey<String, String?> = string().withDefault(default)
+fun PrimitiveKeyBuilder.string(default: String): NativePrimitiveKey<String> = string { default }
+fun PrimitiveKeyBuilder.string(default: () -> String): NativePrimitiveKey<String> = nativeKey(
+  get = { getString(name, default()) ?: default() },
+  set = { setString(name, it) },
+  backingDefault = default
+)
 fun PrimitiveKeyBuilder.string(): NativePrimitiveKey<String?> = nativeKey(
   get = { getString(name, null) },
   set = { setString(name, it) },
