@@ -4,6 +4,10 @@ import android.os.Bundle
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
+import com.episode6.typed2.AsyncKey
+import com.episode6.typed2.Key
+import com.episode6.typed2.KeyValueGetter
+import com.episode6.typed2.KeyValueSetter
 import com.episode6.typed2.bundles.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.*
@@ -27,18 +31,18 @@ fun <T, BACKED_BY> SavedStateHandle.set(key: BundleKey<T, BACKED_BY>, value: T) 
 suspend fun <T, BACKED_BY> SavedStateHandle.get(key: AsyncBundleKey<T, BACKED_BY>): T = typed().get(key)
 suspend fun <T, BACKED_BY> SavedStateHandle.set(key: AsyncBundleKey<T, BACKED_BY>, value: T) = typed().set(key, value)
 
-fun <T, BACKED_BY> SavedStateHandle.getLiveData(key: BundleKey<T, BACKED_BY>): MutableLiveData<T> =
+fun <T, BACKED_BY> SavedStateHandle.getLiveData(key: Key<T, *, *, BACKED_BY>): MutableLiveData<T> =
   getLiveData(key.name, key.backingDefault())
     .mapMutable(mapGet = key.mapGet, mapSet = key.mapSet)
 
-fun <T, BACKED_BY> SavedStateHandle.getStateFlow(scope: CoroutineScope, key: BundleKey<T, BACKED_BY>): StateFlow<T> =
+fun <T, BACKED_BY> SavedStateHandle.getStateFlow(scope: CoroutineScope, key: Key<T, *, *, BACKED_BY>): StateFlow<T> =
   getStateFlow(key.name, key.backingDefault()).run {
     map { key.mapGet(it) }.stateIn(scope, SharingStarted.Eagerly, initialValue = key.mapGet(value))
   }
 
 fun <T, BACKED_BY> SavedStateHandle.getStateFlow(
   scope: CoroutineScope,
-  key: AsyncBundleKey<T, BACKED_BY>,
+  key: AsyncKey<T, *, *, BACKED_BY>,
 ): StateFlow<T?> = MutableStateFlow<T?>(null)
   .also { mutableStateFlow ->
     scope.launch {
