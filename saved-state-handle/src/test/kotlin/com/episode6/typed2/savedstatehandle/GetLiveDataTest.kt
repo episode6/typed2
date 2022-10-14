@@ -73,6 +73,14 @@ class GetLiveDataTest {
         assertThat(awaitItem()).isEqualTo(10)
       }
 
+      backingLiveData.asFlow().test {
+        assertThat(awaitItem()).isEqualTo(10)
+
+        result.value = 11
+
+        assertThat(awaitItem()).isEqualTo(11)
+      }
+
       cancel()
     }
   }
@@ -94,6 +102,14 @@ class GetLiveDataTest {
         backingLiveData.value = "10"
 
         assertThat(awaitItem()).isEqualTo(10)
+      }
+
+      backingLiveData.asFlow().test {
+        assertThat(awaitItem()).isEqualTo("10")
+
+        result.value = 11
+
+        assertThat(awaitItem()).isEqualTo("11")
       }
 
       cancel()
@@ -129,6 +145,15 @@ class GetLiveDataTest {
         assertThat(awaitItem()).isEqualTo(10)
       }
 
+      backingLiveData.asFlow().test {
+        assertThat(awaitItem()).isEqualTo("10")
+
+        result.value = 11
+
+        assertThat(awaitItem()).isEqualTo("11")
+      }
+
+
       cancel()
     }
   }
@@ -160,6 +185,14 @@ class GetLiveDataTest {
         backingLiveData.value = "10"
 
         assertThat(awaitItem()).isEqualTo(10)
+      }
+
+      backingLiveData.asFlow().test {
+        assertThat(awaitItem()).isEqualTo("10")
+
+        result.value = 11
+
+        assertThat(awaitItem()).isEqualTo("11")
       }
 
       cancel()
