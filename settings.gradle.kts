@@ -18,5 +18,6 @@ dependencyResolutionManagement {
 rootProject.name = "typed2"
 include(
   ":core",
+  ":navigation-compose",
   ":saved-state-handle",
 )
