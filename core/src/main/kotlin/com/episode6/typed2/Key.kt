@@ -6,36 +6,69 @@ interface KeyValueGetter {
 
 interface KeyValueSetter
 
-interface Key<T : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter> {
-  val name: String
-  fun get(getter: GETTER): T
-  fun set(setter: SETTER, value: T)
+typealias DefaultProvider<T> = () -> T
+
+data class Key<T : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter, BACKED_BY : Any?>(
+  val name: String,
+  val backingDefault: DefaultProvider<BACKED_BY>,
+  val default: DefaultProvider<T>? = null,
+  val getBackingData: (GETTER) -> BACKED_BY,
+  val mapGet: (BACKED_BY) -> T,
+  val setBackingData: (SETTER, BACKED_BY) -> Unit,
+  val mapSet: (T) -> BACKED_BY,
+)
+
+fun <T : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter, BACKED_BY : Any?> Key<T, GETTER, SETTER, BACKED_BY>.get(
+  getter: GETTER,
+): T {
+  val default = default
+  return if (default != null && !getter.contains(name)) default() else mapGet(getBackingData(getter))
 }
+
+fun <T : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter, BACKED_BY : Any?> Key<T, GETTER, SETTER, BACKED_BY>.set(
+  setter: SETTER,
+  value: T,
+) =
+  setBackingData(setter, mapSet(value))
 
 interface KeyBuilder {
   val name: String
 }
 
-fun <T : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter> Key<T, GETTER, SETTER>.withDefault(
+fun <T : Any, GETTER : KeyValueGetter, SETTER : KeyValueSetter, BACKED_BY : Any?> Key<T?, GETTER, SETTER, BACKED_BY>.withDefault(
   default: () -> T,
-): Key<T, GETTER, SETTER> = object : Key<T, GETTER, SETTER> {
-  override val name: String = this@withDefault.name
-  override fun get(getter: GETTER): T = if (getter.contains(name)) this@withDefault.get(getter) else default()
-  override fun set(setter: SETTER, value: T) = this@withDefault.set(setter, value)
-}
+): Key<T, GETTER, SETTER, BACKED_BY> = Key(
+  name = name,
+  default = default,
+  backingDefault = backingDefault,
+  getBackingData = getBackingData,
+  setBackingData = setBackingData,
+  mapSet = mapSet,
+  mapGet = { mapGet(it) ?: default() }
+)
 
-fun <T : Any?, R : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter> Key<T, GETTER, SETTER>.mapType(
+fun <T : Any?, R : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter, BACKED_BY : Any?> Key<T, GETTER, SETTER, BACKED_BY>.mapType(
   mapGet: (T) -> R,
   mapSet: (R) -> T,
-): Key<R, GETTER, SETTER> = object : Key<R, GETTER, SETTER> {
-  override val name: String = this@mapType.name
-  override fun get(getter: GETTER): R = mapGet(this@mapType.get(getter))
-  override fun set(setter: SETTER, value: R) = this@mapType.set(setter, mapSet(value))
-}
+): Key<R, GETTER, SETTER, BACKED_BY> = Key(
+  name = name,
+  default = default?.let { { mapGet(it()) } },
+  backingDefault = backingDefault,
+  getBackingData = getBackingData,
+  setBackingData = setBackingData,
+  mapSet = { this@mapType.mapSet(mapSet(it)) },
+  mapGet = { mapGet(this@mapType.mapGet(it)) }
+)
 
-fun <T : Any, GETTER : KeyValueGetter, SETTER : KeyValueSetter> Key<T?, GETTER, SETTER>.asNonNull(
-  default: () -> T,
-): Key<T, GETTER, SETTER> = mapType(
-  mapGet = { it ?: default() },
-  mapSet = { it }
-).withDefault(default)
+internal fun <T : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter> KeyBuilder.nativeKey(
+  get: GETTER.() -> T,
+  set: SETTER.(T) -> Unit,
+  backingDefault: DefaultProvider<T>,
+): Key<T, GETTER, SETTER, T> = Key(
+  name = name,
+  backingDefault = backingDefault,
+  mapGet = { it },
+  mapSet = { it },
+  getBackingData = get,
+  setBackingData = set,
+)

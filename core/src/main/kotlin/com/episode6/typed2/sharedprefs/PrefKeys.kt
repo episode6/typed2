@@ -2,8 +2,10 @@ package com.episode6.typed2.sharedprefs
 
 import com.episode6.typed2.*
 
-typealias PrefKey<T> = Key<T, in PrefValueGetter, in PrefValueSetter>
-typealias AsyncPrefKey<T> = AsyncKey<T, in PrefValueGetter, in PrefValueSetter>
+typealias PrefKey<T, BACKED_BY> = Key<T, in PrefValueGetter, in PrefValueSetter, BACKED_BY>
+typealias AsyncPrefKey<T, BACKED_BY> = AsyncKey<T, in PrefValueGetter, in PrefValueSetter, BACKED_BY>
+typealias NativePrefKey<T> = PrefKey<T, T>
+typealias NativeAsyncPrefKey<T> = AsyncPrefKey<T, T>
 
 interface PrefKeyBuilder : PrimitiveKeyBuilder
 open class PrefNamespace(private val prefix: String = "") {
@@ -12,22 +14,14 @@ open class PrefNamespace(private val prefix: String = "") {
   protected fun key(name: String): PrefKeyBuilder = Builder(prefix + name)
 }
 
-fun PrefKeyBuilder.stringSet(default: Set<String>): PrefKey<Set<String>> = stringSet { default }
-fun PrefKeyBuilder.stringSet(default: () -> Set<String>): PrefKey<Set<String>> = stringSet().asNonNull(default)
-fun PrefKeyBuilder.stringSet(): PrefKey<Set<String>?> = nullableStringSet().mapType(
+fun PrefKeyBuilder.stringSet(default: Set<String>): PrefKey<Set<String>, Set<String?>?> = stringSet { default }
+fun PrefKeyBuilder.stringSet(default: () -> Set<String>): PrefKey<Set<String>, Set<String?>?> = stringSet().withDefault(default)
+fun PrefKeyBuilder.stringSet(): PrefKey<Set<String>?, Set<String?>?> = nullableStringSet().mapType(
   mapGet = { it?.filterNotNull()?.toSet() },
   mapSet = { it }
 )
-fun PrefKeyBuilder.nullableStringSet(): PrefKey<Set<String?>?> = key(
+fun PrefKeyBuilder.nullableStringSet(): NativePrefKey<Set<String?>?> = nativeKey(
   get = { getStringSet(name, null) },
-  set = { setStringSet(name, it) }
+  set = { setStringSet(name, it) },
+  backingDefault = { null }
 )
-
-private fun <T : Any?> PrefKeyBuilder.key(
-  get: PrefValueGetter.() -> T,
-  set: PrefValueSetter.(T) -> Unit,
-) = object : Key<T, PrefValueGetter, PrefValueSetter> {
-  override val name: String = this@key.name
-  override fun get(getter: PrefValueGetter): T = getter.get()
-  override fun set(setter: PrefValueSetter, value: T) = setter.set(value)
-}

@@ -16,7 +16,7 @@ class TypedBundle(private val delegate: Bundle) : BundleValueGetter, BundleValue
 
 fun Bundle.typed(): TypedBundle = TypedBundle(this)
 
-fun <T> Bundle.get(key: BundleKey<T>): T = typed().get(key)
-fun <T> Bundle.set(key: BundleKey<T>, value: T) = typed().set(key, value)
-suspend fun <T> Bundle.get(key: AsyncBundleKey<T>): T = typed().get(key)
-suspend fun <T> Bundle.set(key: AsyncBundleKey<T>, value: T) = typed().set(key, value)
+fun <T, BACKED_BY> Bundle.get(key: BundleKey<T, BACKED_BY>): T = typed().get(key)
+fun <T, BACKED_BY> Bundle.set(key: BundleKey<T, BACKED_BY>, value: T) = typed().set(key, value)
+suspend fun <T, BACKED_BY> Bundle.get(key: AsyncBundleKey<T, BACKED_BY>): T = typed().get(key)
+suspend fun <T, BACKED_BY> Bundle.set(key: AsyncBundleKey<T, BACKED_BY>, value: T) = typed().set(key, value)

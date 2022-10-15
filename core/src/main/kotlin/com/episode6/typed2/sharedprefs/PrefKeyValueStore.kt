@@ -10,9 +10,9 @@ interface PrefValueSetter : PrimitiveKeyValueSetter {
   fun setStringSet(name: String, value: Set<String?>?)
 }
 
-fun <T> PrefValueGetter.get(key: PrefKey<T>): T = key.get(this)
-fun <T> PrefValueSetter.set(key: PrefKey<T>, value: T) = key.set(this, value)
-suspend fun <T> PrefValueGetter.get(key: AsyncPrefKey<T>): T = key.get(this)
-suspend fun <T> PrefValueSetter.set(key: AsyncPrefKey<T>, value: T) = key.set(this, value)
+fun <T, BACKED_BY> PrefValueGetter.get(key: PrefKey<T, BACKED_BY>): T = key.get(this)
+fun <T, BACKED_BY> PrefValueSetter.set(key: PrefKey<T, BACKED_BY>, value: T) = key.set(this, value)
+suspend fun <T, BACKED_BY> PrefValueGetter.get(key: AsyncPrefKey<T, BACKED_BY>): T = key.get(this)
+suspend fun <T, BACKED_BY> PrefValueSetter.set(key: AsyncPrefKey<T, BACKED_BY>, value: T) = key.set(this, value)
 
 

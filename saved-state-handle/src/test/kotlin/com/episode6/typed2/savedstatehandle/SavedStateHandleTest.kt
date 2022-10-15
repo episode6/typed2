@@ -6,6 +6,7 @@ import assertk.assertions.hasClass
 import assertk.assertions.isEqualTo
 import assertk.assertions.isFailure
 import assertk.assertions.isNull
+import com.episode6.typed2.asAsync
 import com.episode6.typed2.bundles.BundleKeyNamespace
 import com.episode6.typed2.bundles.RequiredBundleKeyMissing
 import com.episode6.typed2.bundles.asRequired
@@ -21,6 +22,7 @@ class SavedStateHandleTest {
     val intKey = key("intKey").int(default = 2)
     val nullableIntKey = key("nullableInt").int()
     val requiredInt = key("requiredInt").int().asRequired()
+    val asyncRequiredInt = key("asyncRequiredInt").int().asRequired().asAsync()
   }
 
   private val savedStateHandle: SavedStateHandle = mock()
@@ -64,3 +66,5 @@ class SavedStateHandleTest {
       .isFailure().hasClass(RequiredBundleKeyMissing::class)
   }
 }
+
+
