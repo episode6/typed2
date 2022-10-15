@@ -158,7 +158,7 @@ class GetLiveDataTest {
     }
   }
 
-  @Test(expected = RequiredBundleKeyMissing::class) // catches exception in othe coroutine
+  @Test(expected = RequiredBundleKeyMissing::class) // catches exception in other coroutine
   fun testRequiredAsyncIntStateFlow_noValue() = runTest(UnconfinedTestDispatcher()) {
     val backingLiveData: MutableLiveData<String?> = MutableLiveData(Keys.asyncRequiredInt.backingDefault())
     savedStateHandle.stub {
