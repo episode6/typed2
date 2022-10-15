@@ -6,31 +6,33 @@ typealias PrimitiveKey<T, BACKED_BY> = Key<T, in PrimitiveKeyValueGetter, in Pri
 typealias AsyncPrimitiveKey<T, BACKED_BY> = AsyncKey<T, in PrimitiveKeyValueGetter, in PrimitiveKeyValueSetter, BACKED_BY>
 typealias NativePrimitiveKey<T> = PrimitiveKey<T, T>
 
-interface PrimitiveKeyBuilder : KeyBuilder
-
-fun PrimitiveKeyBuilder.string(uriEncoded: Boolean = false, default: String): NativePrimitiveKey<String> = string(uriEncoded) { default }
-fun PrimitiveKeyBuilder.string(uriEncoded: Boolean = false, default: () -> String): NativePrimitiveKey<String> =
-  nativeKey<String, PrimitiveKeyValueGetter, PrimitiveKeyValueSetter>(
-  get = { getString(name, default()) ?: default() },
-  set = { setString(name, it) },
-  backingDefault = default
-).let { key ->
-  when (uriEncoded) {
-    false -> key
-    true  -> key.mapType(
-      mapSet = { it.uriEncode() },
-      mapGet = { it.uriDecode() }
-    )
-  }
+interface PrimitiveKeyBuilder : KeyBuilder {
+  val stringsShouldBeEncoded: Boolean get() = false
 }
 
-fun PrimitiveKeyBuilder.string(uriEncoded: Boolean = false): NativePrimitiveKey<String?> =
+fun PrimitiveKeyBuilder.string(default: String): NativePrimitiveKey<String> = string { default }
+fun PrimitiveKeyBuilder.string(default: () -> String): NativePrimitiveKey<String> =
+  nativeKey<String, PrimitiveKeyValueGetter, PrimitiveKeyValueSetter>(
+    get = { getString(name, default()) ?: default() },
+    set = { setString(name, it) },
+    backingDefault = default
+  ).let { key ->
+    when (stringsShouldBeEncoded) {
+      false -> key
+      true  -> key.mapType(
+        mapSet = { it.uriEncode() },
+        mapGet = { it.uriDecode() }
+      )
+    }
+  }
+
+fun PrimitiveKeyBuilder.string(): NativePrimitiveKey<String?> =
   nativeKey<String?, PrimitiveKeyValueGetter, PrimitiveKeyValueSetter>(
     get = { getString(name, null) },
     set = { setString(name, it) },
     backingDefault = { null }
   ).let { key ->
-    when (uriEncoded) {
+    when (stringsShouldBeEncoded) {
       false -> key
       true  -> key.mapType(
         mapSet = { it?.uriEncode() },
