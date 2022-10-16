@@ -10,10 +10,9 @@ interface PrimitiveKeyBuilder : KeyBuilder {
   val stringsShouldBeEncoded: Boolean get() = false
 }
 
-fun PrimitiveKeyBuilder.string(default: String): NativePrimitiveKey<String> = string { default }
-fun PrimitiveKeyBuilder.string(default: () -> String): NativePrimitiveKey<String> =
+fun PrimitiveKeyBuilder.string(default: String): NativePrimitiveKey<String> =
   nativeKey<String, PrimitiveKeyValueGetter, PrimitiveKeyValueSetter>(
-    get = { getString(name, default()) ?: default() },
+    get = { getString(name, default) ?: default },
     set = { setString(name, it) },
     backingDefault = default
   ).let { key ->
@@ -30,7 +29,7 @@ fun PrimitiveKeyBuilder.string(): NativePrimitiveKey<String?> =
   nativeKey<String?, PrimitiveKeyValueGetter, PrimitiveKeyValueSetter>(
     get = { getString(name, null) },
     set = { setString(name, it) },
-    backingDefault = { null }
+    backingDefault = null
   ).let { key ->
     when (stringsShouldBeEncoded) {
       false -> key
@@ -41,9 +40,8 @@ fun PrimitiveKeyBuilder.string(): NativePrimitiveKey<String?> =
     }
   }
 
-fun PrimitiveKeyBuilder.int(default: Int): NativePrimitiveKey<Int> = int { default }
-fun PrimitiveKeyBuilder.int(default: () -> Int): NativePrimitiveKey<Int> = nativeKey(
-  get = { getInt(name, default()) },
+fun PrimitiveKeyBuilder.int(default: Int): NativePrimitiveKey<Int> = nativeKey(
+  get = { getInt(name, default) },
   set = { setInt(name, it) },
   backingDefault = default
 )

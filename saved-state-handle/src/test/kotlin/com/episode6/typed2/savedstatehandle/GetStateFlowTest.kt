@@ -37,7 +37,7 @@ class GetStateFlowTest {
   private val savedStateHandle: SavedStateHandle = mock()
 
   @Test fun testIntStateFlow() = runTest {
-    val backingStateFlow: MutableStateFlow<Int> = MutableStateFlow(Keys.intKey.backingDefault())
+    val backingStateFlow: MutableStateFlow<Int> = MutableStateFlow(Keys.intKey.backingTypeInfo.default)
     savedStateHandle.stub {
       onGeneric { getStateFlow<Int>(any(), anyOrNull()) } doReturn backingStateFlow
     }
@@ -60,7 +60,7 @@ class GetStateFlowTest {
   }
 
   @Test fun testNullableIntStateFlow() = runTest {
-    val backingStateFlow: MutableStateFlow<String?> = MutableStateFlow(Keys.nullableIntKey.backingDefault())
+    val backingStateFlow: MutableStateFlow<String?> = MutableStateFlow(Keys.nullableIntKey.backingTypeInfo.default)
     savedStateHandle.stub {
       onGeneric { getStateFlow<String?>(any(), anyOrNull()) } doReturn backingStateFlow
     }
@@ -83,7 +83,7 @@ class GetStateFlowTest {
   }
 
   @Test fun testRequiredIntStateFlow_noValue() = runTest {
-    val backingStateFlow: MutableStateFlow<String?> = MutableStateFlow(Keys.requiredInt.backingDefault())
+    val backingStateFlow: MutableStateFlow<String?> = MutableStateFlow(Keys.requiredInt.backingTypeInfo.default)
     savedStateHandle.stub {
       onGeneric { getStateFlow<String?>(any(), anyOrNull()) } doReturn backingStateFlow
     }
@@ -117,7 +117,7 @@ class GetStateFlowTest {
 
   @Test(expected = RequiredBundleKeyMissing::class) // catches exception in othe coroutine
   fun testRequiredAsyncIntStateFlow_noValue() = runTest(UnconfinedTestDispatcher()) {
-    val backingStateFlow: MutableStateFlow<String?> = MutableStateFlow(Keys.asyncRequiredInt.backingDefault())
+    val backingStateFlow: MutableStateFlow<String?> = MutableStateFlow(Keys.asyncRequiredInt.backingTypeInfo.default)
     savedStateHandle.stub {
       onGeneric { getStateFlow<String?>(any(), anyOrNull()) } doReturn backingStateFlow
     }

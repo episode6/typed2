@@ -12,14 +12,14 @@ import kotlinx.coroutines.flow.stateIn
 fun <T, BACKED_BY> SavedStateHandle.getStateFlow(
   scope: CoroutineScope,
   key: Key<T, *, *, BACKED_BY>,
-): StateFlow<T> = getStateFlow(key.name, key.backingDefault()).run {
+): StateFlow<T> = getStateFlow(key.name, key.backingTypeInfo.default).run {
   map { key.mapGet(it) }.stateIn(scope, SharingStarted.Eagerly, initialValue = key.mapGet(value))
 }
 
 fun <T, BACKED_BY> SavedStateHandle.getStateFlow(
   scope: CoroutineScope,
   key: AsyncKey<T, *, *, BACKED_BY>,
-): StateFlow<T?> = getStateFlow(key.name, key.backingDefault())
+): StateFlow<T?> = getStateFlow(key.name, key.backingTypeInfo.default)
   .map { key.mapGet(it) }
   .stateIn(scope, SharingStarted.Eagerly, null)
 
