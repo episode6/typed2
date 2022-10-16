@@ -16,9 +16,9 @@ import kotlinx.coroutines.launch
 
 fun <T, BACKED_BY> SavedStateHandle.getLiveData(key: Key<T, *, *, BACKED_BY>): MutableLiveData<T> {
   val backingLiveData = getLiveData(key.name, key.backingTypeInfo.default)
-  val result = MutableMediatorLiveData<T>(onNewValue = { backingLiveData.value = key.mapSet(it) })
-  backingLiveData.value?.let { result.setValueSkipCallback(key.mapGet(it)) } ?: key.outputDefault?.provider()?.invoke()?.let {  result.setValueSkipCallback(it) }
-  result.addSource(backingLiveData) { result.setValueSkipCallback(key.mapGet(it)) }
+  val result = MutableMediatorLiveData<T>(onNewValue = { backingLiveData.value = key.mapper.mapSet(it) })
+  backingLiveData.value?.let { result.setValueSkipCallback(key.mapper.mapGet(it)) } ?: key.default?.provider()?.invoke()?.let {  result.setValueSkipCallback(it) }
+  result.addSource(backingLiveData) { result.setValueSkipCallback(key.mapper.mapGet(it)) }
   return result
 }
 
@@ -30,10 +30,10 @@ fun <T, BACKED_BY> SavedStateHandle.getLiveData(
   val backingLiveData = getLiveData(key.name, key.backingTypeInfo.default)
   val result = MutableMediatorLiveData<T>(onNewValue = { newValues.tryEmit(it) })
   scope.launch {
-    newValues.map { key.mapSet(it) }.collectLatest { backingLiveData.value = it }
+    newValues.map { key.mapper.mapSet(it) }.collectLatest { backingLiveData.value = it }
   }
   scope.launch {
-    backingLiveData.asFlow().map { key.mapGet(it) }.collectLatest { result.setValueSkipCallback(it) }
+    backingLiveData.asFlow().map { key.mapper.mapGet(it) }.collectLatest { result.setValueSkipCallback(it) }
   }
   return result
 }
