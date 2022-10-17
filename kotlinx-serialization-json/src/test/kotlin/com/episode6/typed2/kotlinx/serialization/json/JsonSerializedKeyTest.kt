@@ -1,7 +1,12 @@
 package com.episode6.typed2.kotlinx.serialization.json
 
 import android.os.Bundle
+import assertk.Assert
+import assertk.assertThat
+import assertk.assertions.*
 import com.episode6.typed2.bundles.BundleKeyNamespace
+import com.episode6.typed2.bundles.RequiredBundleKeyMissing
+import com.episode6.typed2.bundles.get
 import org.junit.Test
 import org.mockito.kotlin.mock
 
@@ -21,7 +26,22 @@ class JsonSerializedKeyTest {
 
   private val bundle: Bundle = mock()
 
-  @Test fun testNullable_set() {
+  @Test fun testNullable_get_missing() {
+    val result: TestData? = bundle.get(Keys.nullableData)
 
+    assertThat(result).isNull()
+  }
+
+  @Test fun testDefault_get_missing() {
+    val result: TestData = bundle.get(Keys.defaultData)
+
+    assertThat(result).hasName("default")
+  }
+
+  @Test fun testRequired_get_missing() {
+    assertThat { bundle.get(Keys.requiredData) }
+      .isFailure().hasClass(RequiredBundleKeyMissing::class)
   }
 }
+
+fun Assert<TestData>.hasName(name: String) = prop(TestData::name).isEqualTo(name)
