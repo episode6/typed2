@@ -3,6 +3,7 @@ description = "Kotlinx serialization support for typed2: ${rootProject.descripti
 plugins {
   id("com.android.library")
   id("config-android-deploy")
+  kotlin("plugin.serialization") // just for tests
 }
 
 android {
