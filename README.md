@@ -9,7 +9,7 @@ Example:
 object PrefKeys : PrefKeyNamespace(prefix = "com.sample.prefkey.") {
   val SOME_INT = key("someInt").int(default = 2)
   val SOME_NULLABLE_INT = key("nullableInt").int()
-  val SOME_SERIALIZED_OBJECT = key("myObj").json(SomeObject.serializer()).asAsync()
+  val SOME_SERIALIZED_OBJECT = key("myObj").json(SomeObject.serializer()).async()
 }
 
 val sharedPreferences: SharedPreference = TODO()
