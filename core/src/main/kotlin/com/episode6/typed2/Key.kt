@@ -6,45 +6,60 @@ interface KeyValueGetter {
 
 interface KeyValueSetter
 
-typealias DefaultProvider<T> = () -> T
-
-data class Key<T : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter, BACKED_BY : Any?>(
-  val name: String,
-  val backingDefault: DefaultProvider<BACKED_BY>,
-  val default: DefaultProvider<T>? = null,
+class KeyBacker<GETTER : KeyValueGetter, SETTER : KeyValueSetter, BACKED_BY : Any?> internal constructor(
   val getBackingData: (GETTER) -> BACKED_BY,
-  val mapGet: (BACKED_BY) -> T,
   val setBackingData: (SETTER, BACKED_BY) -> Unit,
+)
+
+class KeyMapper<T : Any?, BACKED_BY : Any?> internal constructor(
+  val mapGet: (BACKED_BY) -> T,
   val mapSet: (T) -> BACKED_BY,
 )
+
+class Key<T : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter, BACKED_BY : Any?> internal constructor(
+  override val name: String,
+  override val default: OutputDefault<T>?,
+  override val backingTypeInfo: KeyBackingTypeInfo<BACKED_BY>,
+  val backer: KeyBacker<GETTER, SETTER, BACKED_BY>,
+  val mapper: KeyMapper<T, BACKED_BY>,
+  internal val newKeyCallback: (KeyTypeInfo<*, *>) -> Unit,
+) : KeyTypeInfo<T, BACKED_BY> {
+  init { newKeyCallback(this) }
+}
 
 fun <T : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter, BACKED_BY : Any?> Key<T, GETTER, SETTER, BACKED_BY>.get(
   getter: GETTER,
 ): T {
-  val default = default
-  return if (default != null && !getter.contains(name)) default() else mapGet(getBackingData(getter))
+  val default = default?.provider()
+  return if (default != null && !getter.contains(name)) default() else mapper.mapGet(backer.getBackingData(getter))
 }
 
 fun <T : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter, BACKED_BY : Any?> Key<T, GETTER, SETTER, BACKED_BY>.set(
   setter: SETTER,
   value: T,
-) =
-  setBackingData(setter, mapSet(value))
+) = backer.setBackingData(setter, mapper.mapSet(value))
 
 interface KeyBuilder {
   val name: String
+  val newKeyCallback: (KeyTypeInfo<*, *>) -> Unit get() = {}
 }
 
 fun <T : Any, GETTER : KeyValueGetter, SETTER : KeyValueSetter, BACKED_BY : Any?> Key<T?, GETTER, SETTER, BACKED_BY>.withDefault(
-  default: () -> T,
+  default: ()->T
+): Key<T, GETTER, SETTER, BACKED_BY> = withOutputDefault(OutputDefault.Provider(default))
+
+fun <T : Any, GETTER : KeyValueGetter, SETTER : KeyValueSetter, BACKED_BY : Any?> Key<T?, GETTER, SETTER, BACKED_BY>.withOutputDefault(
+  default: OutputDefault<T>,
 ): Key<T, GETTER, SETTER, BACKED_BY> = Key(
   name = name,
+  backingTypeInfo = backingTypeInfo,
+  backer = backer,
   default = default,
-  backingDefault = backingDefault,
-  getBackingData = getBackingData,
-  setBackingData = setBackingData,
-  mapSet = mapSet,
-  mapGet = { mapGet(it) ?: default() }
+  mapper = KeyMapper(
+    mapSet = mapper.mapSet,
+    mapGet = { mapper.mapGet(it) ?: default.provider().invoke() }
+  ),
+  newKeyCallback = newKeyCallback,
 )
 
 fun <T : Any?, R : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter, BACKED_BY : Any?> Key<T, GETTER, SETTER, BACKED_BY>.mapType(
@@ -52,23 +67,25 @@ fun <T : Any?, R : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter, BACKE
   mapSet: (R) -> T,
 ): Key<R, GETTER, SETTER, BACKED_BY> = Key(
   name = name,
-  default = default?.let { { mapGet(it()) } },
-  backingDefault = backingDefault,
-  getBackingData = getBackingData,
-  setBackingData = setBackingData,
-  mapSet = { this@mapType.mapSet(mapSet(it)) },
-  mapGet = { mapGet(this@mapType.mapGet(it)) }
+  backingTypeInfo = backingTypeInfo,
+  backer = backer,
+  default = default?.map(mapGet),
+  mapper = KeyMapper(
+    mapSet = { mapper.mapSet(mapSet(it)) },
+    mapGet = { mapGet(mapper.mapGet(it)) }
+  ),
+  newKeyCallback = newKeyCallback,
 )
 
-internal fun <T : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter> KeyBuilder.nativeKey(
-  get: GETTER.() -> T,
-  set: SETTER.(T) -> Unit,
-  backingDefault: DefaultProvider<T>,
+internal inline fun <reified T : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter> KeyBuilder.nativeKey(
+  noinline get: GETTER.() -> T,
+  noinline set: SETTER.(T) -> Unit,
+  backingDefault: T,
 ): Key<T, GETTER, SETTER, T> = Key(
   name = name,
-  backingDefault = backingDefault,
-  mapGet = { it },
-  mapSet = { it },
-  getBackingData = get,
-  setBackingData = set,
+  default = null,
+  backingTypeInfo = KeyBackingTypeInfo(kclass = T::class, default = backingDefault),
+  backer = KeyBacker(getBackingData = get, setBackingData = set),
+  mapper = KeyMapper({ it }, { it }),
+  newKeyCallback = newKeyCallback
 )

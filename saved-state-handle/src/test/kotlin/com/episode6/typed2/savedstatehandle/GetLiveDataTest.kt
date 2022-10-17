@@ -16,7 +16,6 @@ import assertk.assertions.isNull
 import com.episode6.typed2.asAsync
 import com.episode6.typed2.bundles.BundleKeyNamespace
 import com.episode6.typed2.bundles.RequiredBundleKeyMissing
-import com.episode6.typed2.bundles.asRequired
 import com.episode6.typed2.int
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -55,7 +54,7 @@ class GetLiveDataTest {
   private val savedStateHandle: SavedStateHandle = mock()
 
   @Test fun testIntStateFlow() = runTest {
-    val backingLiveData: MutableLiveData<Int> = MutableLiveData(Keys.intKey.backingDefault())
+    val backingLiveData: MutableLiveData<Int> = MutableLiveData(Keys.intKey.backingTypeInfo.default)
     savedStateHandle.stub {
       onGeneric { getLiveData<Int>(any(), anyOrNull()) } doReturn backingLiveData
     }
@@ -86,7 +85,7 @@ class GetLiveDataTest {
   }
 
   @Test fun testNullableIntStateFlow() = runTest {
-    val backingLiveData: MutableLiveData<String?> = MutableLiveData(Keys.nullableIntKey.backingDefault())
+    val backingLiveData: MutableLiveData<String?> = MutableLiveData(Keys.nullableIntKey.backingTypeInfo.default)
     savedStateHandle.stub {
       onGeneric { getLiveData<String?>(any(), anyOrNull()) } doReturn backingLiveData
     }
@@ -117,7 +116,7 @@ class GetLiveDataTest {
   }
 
   @Test fun testRequiredIntStateFlow_noValue() = runTest {
-    val backingLiveData: MutableLiveData<String?> = MutableLiveData(Keys.requiredInt.backingDefault())
+    val backingLiveData: MutableLiveData<String?> = MutableLiveData(Keys.requiredInt.backingTypeInfo.default)
     savedStateHandle.stub {
       onGeneric { getLiveData<String?>(any(), anyOrNull()) } doReturn backingLiveData
     }
@@ -160,7 +159,7 @@ class GetLiveDataTest {
 
   @Test(expected = RequiredBundleKeyMissing::class) // catches exception in other coroutine
   fun testRequiredAsyncIntStateFlow_noValue() = runTest(UnconfinedTestDispatcher()) {
-    val backingLiveData: MutableLiveData<String?> = MutableLiveData(Keys.asyncRequiredInt.backingDefault())
+    val backingLiveData: MutableLiveData<String?> = MutableLiveData(Keys.asyncRequiredInt.backingTypeInfo.default)
     savedStateHandle.stub {
       onGeneric { getLiveData<String?>(any(), anyOrNull()) } doReturn backingLiveData
     }

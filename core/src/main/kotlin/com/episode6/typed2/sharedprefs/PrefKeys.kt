@@ -15,13 +15,16 @@ open class PrefNamespace(private val prefix: String = "") {
 }
 
 fun PrefKeyBuilder.stringSet(default: Set<String>): PrefKey<Set<String>, Set<String?>?> = stringSet { default }
-fun PrefKeyBuilder.stringSet(default: () -> Set<String>): PrefKey<Set<String>, Set<String?>?> = stringSet().withDefault(default)
+fun PrefKeyBuilder.stringSet(default: () -> Set<String>): PrefKey<Set<String>, Set<String?>?> = stringSet()
+  .withDefault(default)
+
 fun PrefKeyBuilder.stringSet(): PrefKey<Set<String>?, Set<String?>?> = nullableStringSet().mapType(
   mapGet = { it?.filterNotNull()?.toSet() },
   mapSet = { it }
 )
+
 fun PrefKeyBuilder.nullableStringSet(): NativePrefKey<Set<String?>?> = nativeKey(
   get = { getStringSet(name, null) },
   set = { setStringSet(name, it) },
-  backingDefault = { null }
+  backingDefault = null
 )
