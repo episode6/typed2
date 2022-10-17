@@ -2,8 +2,8 @@ package com.episode6.typed2
 
 import android.net.Uri
 
-typealias PrimitiveKey<T, BACKED_BY> = Key<T, in PrimitiveKeyValueGetter, in PrimitiveKeyValueSetter, BACKED_BY>
-typealias AsyncPrimitiveKey<T, BACKED_BY> = AsyncKey<T, in PrimitiveKeyValueGetter, in PrimitiveKeyValueSetter, BACKED_BY>
+typealias PrimitiveKey<T, BACKED_BY> = Key<T, BACKED_BY, in PrimitiveKeyValueGetter, in PrimitiveKeyValueSetter>
+typealias AsyncPrimitiveKey<T, BACKED_BY> = AsyncKey<T, BACKED_BY, in PrimitiveKeyValueGetter, in PrimitiveKeyValueSetter>
 typealias NativePrimitiveKey<T> = PrimitiveKey<T, T>
 
 interface PrimitiveKeyBuilder : KeyBuilder {
