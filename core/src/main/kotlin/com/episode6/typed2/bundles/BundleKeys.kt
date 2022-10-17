@@ -13,10 +13,10 @@ open class BundleKeyNamespace(private val prefix: String = "") {
   private class Builder(override val name: String) : BundleKeyBuilder
 
   protected fun key(name: String): BundleKeyBuilder = Builder(prefix + name)
-}
 
-inline fun <reified T : Any, BACKED_BY : Any?> BundleKey<T?, BACKED_BY>.asRequired(): BundleKey<T, BACKED_BY> =
-  withDefault(OutputDefault.Required { RequiredBundleKeyMissing(name) })
+  protected fun <T : Any, BACKED_BY : Any?> BundleKey<T?, BACKED_BY>.asRequired(): BundleKey<T, BACKED_BY> =
+    withDefault(OutputDefault.Required { RequiredBundleKeyMissing(name) })
+}
 
 fun BundleKeyBuilder.bundle(default: Bundle): BundleKey<Bundle, Bundle?> = bundle { default }
 fun BundleKeyBuilder.bundle(default: () -> Bundle): BundleKey<Bundle, Bundle?> = bundle()

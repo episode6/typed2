@@ -30,6 +30,9 @@ open class NavScreen(val name: String, private val argPrefix: String = "") {
     name: String,
     argBuilder: NavArgBuilder.() -> NavArg<T, BACKED_BY>,
   ): AsyncNavArg<T, BACKED_BY> = Builder(argPrefix + name).argBuilder().asAsync().also { _args += it }
+
+  protected fun <T : Any, BACKED_BY : Any?> NavArg<T?, BACKED_BY>.asRequired(): NavArg<T, BACKED_BY> =
+    withDefault(OutputDefault.Required { RequiredNavArgumentMissing(name) })
 }
 
 internal fun <T, BACKED_BY> KeyTypeInfo<T, BACKED_BY>.toNavArgument(): NamedNavArgument = navArgument(name = name) {
@@ -50,3 +53,4 @@ private fun KClass<*>.asNavType(): NavType<*> = when (this) {
 }
 
 class UnexpectedKeyTypeException(type: KClass<*>) : RuntimeException("Unexpected key type: $type")
+class RequiredNavArgumentMissing(name: String) : RuntimeException("Required nav argument missing: $name")

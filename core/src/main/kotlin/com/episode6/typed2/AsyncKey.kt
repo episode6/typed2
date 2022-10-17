@@ -4,12 +4,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlin.coroutines.CoroutineContext
 
-data class AsyncKeyMapper<T : Any?, BACKED_BY : Any?> internal constructor(
+class AsyncKeyMapper<T : Any?, BACKED_BY : Any?> internal constructor(
   val mapGet: suspend (BACKED_BY) -> T,
   val mapSet: suspend (T) -> BACKED_BY,
 )
 
-data class AsyncKey<T : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter, BACKED_BY : Any?> internal constructor(
+class AsyncKey<T : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter, BACKED_BY : Any?> internal constructor(
   override val name: String,
   override val default: OutputDefault<T>?,
   override val backingTypeInfo: KeyBackingTypeInfo<BACKED_BY>,

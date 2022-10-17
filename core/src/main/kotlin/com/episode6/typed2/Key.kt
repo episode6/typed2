@@ -1,24 +1,22 @@
 package com.episode6.typed2
 
-import kotlin.reflect.typeOf
-
 interface KeyValueGetter {
   fun contains(name: String): Boolean
 }
 
 interface KeyValueSetter
 
-data class KeyBacker<GETTER : KeyValueGetter, SETTER : KeyValueSetter, BACKED_BY : Any?> internal constructor(
+class KeyBacker<GETTER : KeyValueGetter, SETTER : KeyValueSetter, BACKED_BY : Any?> internal constructor(
   val getBackingData: (GETTER) -> BACKED_BY,
   val setBackingData: (SETTER, BACKED_BY) -> Unit,
 )
 
-data class KeyMapper<T : Any?, BACKED_BY : Any?> internal constructor(
+class KeyMapper<T : Any?, BACKED_BY : Any?> internal constructor(
   val mapGet: (BACKED_BY) -> T,
   val mapSet: (T) -> BACKED_BY,
 )
 
-data class Key<T : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter, BACKED_BY : Any?> internal constructor(
+class Key<T : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter, BACKED_BY : Any?> internal constructor(
   override val name: String,
   override val default: OutputDefault<T>?,
   override val backingTypeInfo: KeyBackingTypeInfo<BACKED_BY>,

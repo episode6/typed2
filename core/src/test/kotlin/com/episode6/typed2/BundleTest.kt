@@ -7,7 +7,6 @@ import assertk.assertions.isEqualTo
 import assertk.assertions.isFailure
 import com.episode6.typed2.bundles.BundleKeyNamespace
 import com.episode6.typed2.bundles.RequiredBundleKeyMissing
-import com.episode6.typed2.bundles.asRequired
 import com.episode6.typed2.bundles.get
 import org.junit.Test
 import org.mockito.kotlin.doReturn

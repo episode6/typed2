@@ -16,7 +16,6 @@ import assertk.assertions.isNull
 import com.episode6.typed2.asAsync
 import com.episode6.typed2.bundles.BundleKeyNamespace
 import com.episode6.typed2.bundles.RequiredBundleKeyMissing
-import com.episode6.typed2.bundles.asRequired
 import com.episode6.typed2.int
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
