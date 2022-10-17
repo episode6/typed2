@@ -22,7 +22,7 @@ class Key<T : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter, BACKED_BY 
   override val backingTypeInfo: KeyBackingTypeInfo<BACKED_BY>,
   val backer: KeyBacker<GETTER, SETTER, BACKED_BY>,
   val mapper: KeyMapper<T, BACKED_BY>,
-  val newKeyCallback: (KeyTypeInfo<*, *>) -> Unit,
+  internal val newKeyCallback: (KeyTypeInfo<*, *>) -> Unit,
 ) : KeyTypeInfo<T, BACKED_BY> {
   init { newKeyCallback(this) }
 }
