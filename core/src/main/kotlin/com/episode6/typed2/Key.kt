@@ -22,7 +22,10 @@ class Key<T : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter, BACKED_BY 
   override val backingTypeInfo: KeyBackingTypeInfo<BACKED_BY>,
   val backer: KeyBacker<GETTER, SETTER, BACKED_BY>,
   val mapper: KeyMapper<T, BACKED_BY>,
-) : KeyTypeInfo<T, BACKED_BY>
+  val newKeyCallback: (KeyTypeInfo<*, *>) -> Unit,
+) : KeyTypeInfo<T, BACKED_BY> {
+  init { newKeyCallback(this) }
+}
 
 fun <T : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter, BACKED_BY : Any?> Key<T, GETTER, SETTER, BACKED_BY>.get(
   getter: GETTER,
@@ -38,6 +41,7 @@ fun <T : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter, BACKED_BY : Any
 
 interface KeyBuilder {
   val name: String
+  val newKeyCallback: (KeyTypeInfo<*, *>) -> Unit get() = {}
 }
 
 fun <T : Any, GETTER : KeyValueGetter, SETTER : KeyValueSetter, BACKED_BY : Any?> Key<T?, GETTER, SETTER, BACKED_BY>.withDefault(
@@ -51,6 +55,7 @@ fun <T : Any, GETTER : KeyValueGetter, SETTER : KeyValueSetter, BACKED_BY : Any?
     mapSet = mapper.mapSet,
     mapGet = { mapper.mapGet(it) ?: default.provider().invoke() }
   ),
+  newKeyCallback = newKeyCallback,
 )
 
 fun <T : Any?, R : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter, BACKED_BY : Any?> Key<T, GETTER, SETTER, BACKED_BY>.mapType(
@@ -65,6 +70,7 @@ fun <T : Any?, R : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter, BACKE
     mapSet = { mapper.mapSet(mapSet(it)) },
     mapGet = { mapGet(mapper.mapGet(it)) }
   ),
+  newKeyCallback = newKeyCallback,
 )
 
 internal inline fun <reified T : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter> KeyBuilder.nativeKey(
@@ -77,4 +83,5 @@ internal inline fun <reified T : Any?, GETTER : KeyValueGetter, SETTER : KeyValu
   backingTypeInfo = KeyBackingTypeInfo(kclass = T::class, default = backingDefault),
   backer = KeyBacker(getBackingData = get, setBackingData = set),
   mapper = KeyMapper({ it }, { it }),
+  newKeyCallback = newKeyCallback
 )

@@ -13,23 +13,17 @@ typealias NativeAsyncNavArg<T> = AsyncNavArg<T, T>
 
 interface NavArgBuilder : PrimitiveKeyBuilder
 open class NavScreen(val name: String, private val argPrefix: String = "") {
-  private class Builder(override val name: String) : NavArgBuilder {
-    override val stringsShouldBeEncoded: Boolean = true
-  }
 
+  private val _args = LinkedHashMap<String, KeyTypeInfo<*, *>>()
+  internal val args: List<KeyTypeInfo<*, *>> get() = _args.values.toList()
 
-  private val _args = mutableListOf<KeyTypeInfo<*, *>>()
-  internal val args: List<KeyTypeInfo<*, *>> get() = _args.toList()
+  private class Builder(
+    override val name: String,
+    override val stringsShouldBeEncoded: Boolean = true,
+    override val newKeyCallback: (KeyTypeInfo<*, *>) -> Unit,
+  ) : NavArgBuilder
 
-  protected fun <T, BACKED_BY> arg(
-    name: String,
-    argBuilder: NavArgBuilder.() -> NavArg<T, BACKED_BY>,
-  ): NavArg<T, BACKED_BY> = Builder(argPrefix + name).argBuilder().also { _args += it }
-
-  protected fun <T, BACKED_BY> asyncArg(
-    name: String,
-    argBuilder: NavArgBuilder.() -> NavArg<T, BACKED_BY>,
-  ): AsyncNavArg<T, BACKED_BY> = Builder(argPrefix + name).argBuilder().asAsync().also { _args += it }
+  protected fun key(name: String): NavArgBuilder = Builder(argPrefix + name) { _args[it.name] = it }
 
   protected fun <T : Any, BACKED_BY : Any?> NavArg<T?, BACKED_BY>.asRequired(): NavArg<T, BACKED_BY> =
     withDefault(OutputDefault.Required { RequiredNavArgumentMissing(name) })
