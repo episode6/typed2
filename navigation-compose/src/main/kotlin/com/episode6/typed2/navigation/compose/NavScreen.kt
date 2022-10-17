@@ -2,8 +2,8 @@ package com.episode6.typed2.navigation.compose
 
 import com.episode6.typed2.*
 
-typealias NavArg<T, BACKED_BY> = Key<T, in PrimitiveKeyValueGetter, in PrimitiveKeyValueSetter, BACKED_BY>
-typealias AsyncNavArg<T, BACKED_BY> = AsyncKey<T, in PrimitiveKeyValueGetter, in PrimitiveKeyValueSetter, BACKED_BY>
+typealias NavArg<T, BACKED_BY> = Key<T, BACKED_BY, in PrimitiveKeyValueGetter, in PrimitiveKeyValueSetter>
+typealias AsyncNavArg<T, BACKED_BY> = AsyncKey<T, BACKED_BY, in PrimitiveKeyValueGetter, in PrimitiveKeyValueSetter>
 typealias NativeNavArg<T> = NavArg<T, T>
 typealias NativeAsyncNavArg<T> = AsyncNavArg<T, T>
 

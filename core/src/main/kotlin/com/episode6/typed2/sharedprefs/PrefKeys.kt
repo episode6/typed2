@@ -2,8 +2,8 @@ package com.episode6.typed2.sharedprefs
 
 import com.episode6.typed2.*
 
-typealias PrefKey<T, BACKED_BY> = Key<T, in PrefValueGetter, in PrefValueSetter, BACKED_BY>
-typealias AsyncPrefKey<T, BACKED_BY> = AsyncKey<T, in PrefValueGetter, in PrefValueSetter, BACKED_BY>
+typealias PrefKey<T, BACKED_BY> = Key<T, BACKED_BY, in PrefValueGetter, in PrefValueSetter>
+typealias AsyncPrefKey<T, BACKED_BY> = AsyncKey<T, BACKED_BY, in PrefValueGetter, in PrefValueSetter>
 typealias NativePrefKey<T> = PrefKey<T, T>
 typealias NativeAsyncPrefKey<T> = AsyncPrefKey<T, T>
 

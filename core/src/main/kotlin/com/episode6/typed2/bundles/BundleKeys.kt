@@ -3,8 +3,8 @@ package com.episode6.typed2.bundles
 import android.os.Bundle
 import com.episode6.typed2.*
 
-typealias BundleKey<T, BACKED_BY> = Key<T, in BundleValueGetter, in BundleValueSetter, BACKED_BY>
-typealias AsyncBundleKey<T, BACKED_BY> = AsyncKey<T, in BundleValueGetter, in BundleValueSetter, BACKED_BY>
+typealias BundleKey<T, BACKED_BY> = Key<T, BACKED_BY, in BundleValueGetter, in BundleValueSetter>
+typealias AsyncBundleKey<T, BACKED_BY> = AsyncKey<T, BACKED_BY, in BundleValueGetter, in BundleValueSetter>
 typealias NativeBundleKey<T> = BundleKey<T, T>
 typealias NativeAsyncBundleKey<T> = AsyncBundleKey<T, T>
 
