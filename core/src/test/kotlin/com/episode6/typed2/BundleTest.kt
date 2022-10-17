@@ -18,7 +18,7 @@ class BundleTest {
 
   object Keys : BundleKeyNamespace() {
     val myInt = key("intKey").int(default = 42)
-    val myRequiredInt = key("requiredInt").int().asRequired()
+    val myRequiredInt = key("requiredInt").int().required()
   }
 
   val bundle: Bundle = mock()

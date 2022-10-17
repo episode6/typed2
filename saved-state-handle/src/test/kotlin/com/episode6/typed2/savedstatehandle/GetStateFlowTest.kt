@@ -10,7 +10,7 @@ import assertk.assertions.hasClass
 import assertk.assertions.isEqualTo
 import assertk.assertions.isFailure
 import assertk.assertions.isNull
-import com.episode6.typed2.asAsync
+import com.episode6.typed2.async
 import com.episode6.typed2.bundles.BundleKeyNamespace
 import com.episode6.typed2.bundles.RequiredBundleKeyMissing
 import com.episode6.typed2.int
@@ -29,8 +29,8 @@ class GetStateFlowTest {
   object Keys : BundleKeyNamespace() {
     val intKey = key("intKey").int(default = 2)
     val nullableIntKey = key("nullableInt").int()
-    val requiredInt = key("requiredInt").int().asRequired()
-    val asyncRequiredInt = key("asyncRequiredInt").int().asRequired().asAsync()
+    val requiredInt = key("requiredInt").int().required()
+    val asyncRequiredInt = key("asyncRequiredInt").int().required().async()
   }
 
   private val savedStateHandle: SavedStateHandle = mock()

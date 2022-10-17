@@ -14,8 +14,8 @@ class NavScreenArgsTest {
   object TestScreen : NavScreen("testScreen") {
     val nullableIntArg = key("nullableInt").int()
     val intArg = key("intArg").int(default = 42)
-    val requiredInt = key("requiredInt").int().asRequired()
-    val asyncInt = key("async").int().asAsync()
+    val requiredInt = key("requiredInt").int().required()
+    val asyncInt = key("async").int().async()
   }
 
   val savedStateHandle: SavedStateHandle = mock()

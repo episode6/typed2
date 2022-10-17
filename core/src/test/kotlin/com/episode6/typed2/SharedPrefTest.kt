@@ -19,7 +19,7 @@ class SharedPrefTest {
     val myInt = key("intKey").int(default = 42)
     val myNullInt = key("nullableInt").int()
     val myStringSet = key("stringSet").stringSet()
-    val myAsyncString = key("asyncString").string().asAsync()
+    val myAsyncString = key("asyncString").string().async()
   }
 
   val editor: SharedPreferences.Editor = mock()

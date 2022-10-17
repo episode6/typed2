@@ -20,7 +20,7 @@ class AsyncKey<T : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter, BACKE
   init { newKeyCallback(this) }
 }
 
-fun <T : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter, BACKED_BY : Any?> Key<T, GETTER, SETTER, BACKED_BY>.asAsync(
+fun <T : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter, BACKED_BY : Any?> Key<T, GETTER, SETTER, BACKED_BY>.async(
   context: CoroutineContext = Dispatchers.Default,
 ): AsyncKey<T, GETTER, SETTER, BACKED_BY> = AsyncKey(
   name = name,
