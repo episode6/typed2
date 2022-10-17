@@ -44,7 +44,7 @@ interface KeyBuilder {
   val newKeyCallback: (KeyTypeInfo<*, *>) -> Unit get() = {}
 }
 
-fun <T : Any, GETTER : KeyValueGetter, SETTER : KeyValueSetter, BACKED_BY : Any?> Key<T?, GETTER, SETTER, BACKED_BY>.withDefault(
+fun <T : Any, GETTER : KeyValueGetter, SETTER : KeyValueSetter, BACKED_BY : Any?> Key<T?, GETTER, SETTER, BACKED_BY>.withOutputDefault(
   default: OutputDefault<T>,
 ): Key<T, GETTER, SETTER, BACKED_BY> = Key(
   name = name,

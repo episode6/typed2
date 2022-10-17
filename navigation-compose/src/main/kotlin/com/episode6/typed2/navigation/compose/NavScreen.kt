@@ -26,7 +26,7 @@ open class NavScreen(val name: String, private val argPrefix: String = "") {
   protected fun key(name: String): NavArgBuilder = Builder(argPrefix + name) { _args[it.name] = it }
 
   protected fun <T : Any, BACKED_BY : Any?> NavArg<T?, BACKED_BY>.asRequired(): NavArg<T, BACKED_BY> =
-    withDefault(OutputDefault.Required { RequiredNavArgumentMissing(name) })
+    withOutputDefault(OutputDefault.Required { RequiredNavArgumentMissing(name) })
 }
 
 internal fun <T, BACKED_BY> KeyTypeInfo<T, BACKED_BY>.toNavArgument(): NamedNavArgument = navArgument(name = name) {

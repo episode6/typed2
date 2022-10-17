@@ -15,12 +15,12 @@ open class BundleKeyNamespace(private val prefix: String = "") {
   protected fun key(name: String): BundleKeyBuilder = Builder(prefix + name)
 
   protected fun <T : Any, BACKED_BY : Any?> BundleKey<T?, BACKED_BY>.asRequired(): BundleKey<T, BACKED_BY> =
-    withDefault(OutputDefault.Required { RequiredBundleKeyMissing(name) })
+    withOutputDefault(OutputDefault.Required { RequiredBundleKeyMissing(name) })
 }
 
 fun BundleKeyBuilder.bundle(default: Bundle): BundleKey<Bundle, Bundle?> = bundle { default }
 fun BundleKeyBuilder.bundle(default: () -> Bundle): BundleKey<Bundle, Bundle?> = bundle()
-  .withDefault(OutputDefault.Provider(default))
+  .withOutputDefault(OutputDefault.Provider(default))
 
 fun BundleKeyBuilder.bundle(): NativeBundleKey<Bundle?> = nativeKey(
   get = { getBundle(name) },
