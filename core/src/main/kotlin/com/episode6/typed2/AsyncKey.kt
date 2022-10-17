@@ -15,7 +15,10 @@ class AsyncKey<T : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter, BACKE
   override val backingTypeInfo: KeyBackingTypeInfo<BACKED_BY>,
   val backer: KeyBacker<GETTER, SETTER, BACKED_BY>,
   val mapper: AsyncKeyMapper<T, BACKED_BY>,
-) : KeyTypeInfo<T, BACKED_BY>
+  val newKeyCallback: (KeyTypeInfo<*, *>) -> Unit,
+) : KeyTypeInfo<T, BACKED_BY> {
+  init { newKeyCallback(this) }
+}
 
 fun <T : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter, BACKED_BY : Any?> Key<T, GETTER, SETTER, BACKED_BY>.asAsync(
   context: CoroutineContext = Dispatchers.Default,
@@ -25,6 +28,7 @@ fun <T : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter, BACKED_BY : Any
   backingTypeInfo = backingTypeInfo,
   backer = backer,
   mapper = mapper.toAsync(context),
+  newKeyCallback = newKeyCallback,
 )
 
 suspend fun <T : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter, BACKED_BY : Any?> AsyncKey<T, GETTER, SETTER, BACKED_BY>.get(
