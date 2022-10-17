@@ -2,9 +2,7 @@ package com.episode6.typed2.navigation.compose
 
 import androidx.lifecycle.SavedStateHandle
 import assertk.assertThat
-import assertk.assertions.containsExactly
-import assertk.assertions.hasClass
-import assertk.assertions.isFailure
+import assertk.assertions.*
 import com.episode6.typed2.*
 import com.episode6.typed2.savedstatehandle.get
 import org.junit.Test
@@ -31,10 +29,14 @@ class NavScreenArgsTest {
 
   @Test fun testNullableInt() {
     val result: Int? = savedStateHandle.get(TestScreen.nullableIntArg)
+
+    assertThat(result).isNull()
   }
 
   @Test fun testInt() {
     val result: Int = savedStateHandle.get(TestScreen.intArg)
+
+    assertThat(result).isEqualTo(42)
   }
 
   @Test fun testRequiredInt() {

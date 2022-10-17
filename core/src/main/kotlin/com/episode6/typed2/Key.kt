@@ -24,7 +24,9 @@ class Key<T : Any?, BACKED_BY : Any?, GETTER : KeyValueGetter, SETTER : KeyValue
   val mapper: KeyMapper<T, BACKED_BY>,
   internal val newKeyCallback: (KeyTypeInfo<*, *>) -> Unit,
 ) : KeyTypeInfo<T, BACKED_BY> {
-  init { newKeyCallback(this) }
+  init {
+    newKeyCallback(this)
+  }
 }
 
 fun <T : Any?, BACKED_BY : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter> Key<T, BACKED_BY, GETTER, SETTER>.get(
@@ -43,39 +45,6 @@ interface KeyBuilder {
   val name: String
   val newKeyCallback: (KeyTypeInfo<*, *>) -> Unit get() = {}
 }
-
-fun <T : Any, BACKED_BY : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter> Key<T?, BACKED_BY, GETTER, SETTER>.withDefault(
-  default: ()->T
-): Key<T, BACKED_BY, GETTER, SETTER> = withOutputDefault(OutputDefault.Provider(default))
-
-fun <T : Any, BACKED_BY : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter> Key<T?, BACKED_BY, GETTER, SETTER>.withOutputDefault(
-  default: OutputDefault<T>,
-): Key<T, BACKED_BY, GETTER, SETTER> = Key(
-  name = name,
-  backingTypeInfo = backingTypeInfo,
-  backer = backer,
-  default = default,
-  mapper = KeyMapper(
-    mapSet = mapper.mapSet,
-    mapGet = { mapper.mapGet(it) ?: default.provider().invoke() }
-  ),
-  newKeyCallback = newKeyCallback,
-)
-
-fun <T : Any?, R : Any?, BACKED_BY : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter> Key<T, BACKED_BY, GETTER, SETTER>.mapType(
-  mapGet: (T) -> R,
-  mapSet: (R) -> T,
-): Key<R, BACKED_BY, GETTER, SETTER> = Key(
-  name = name,
-  backingTypeInfo = backingTypeInfo,
-  backer = backer,
-  default = default?.map(mapGet),
-  mapper = KeyMapper(
-    mapSet = { mapper.mapSet(mapSet(it)) },
-    mapGet = { mapGet(mapper.mapGet(it)) }
-  ),
-  newKeyCallback = newKeyCallback,
-)
 
 internal inline fun <reified T : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter> KeyBuilder.nativeKey(
   noinline get: GETTER.() -> T,
