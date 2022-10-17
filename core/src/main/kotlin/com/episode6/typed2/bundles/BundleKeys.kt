@@ -20,7 +20,7 @@ open class BundleKeyNamespace(private val prefix: String = "") {
 
 fun BundleKeyBuilder.bundle(default: Bundle): BundleKey<Bundle, Bundle?> = bundle { default }
 fun BundleKeyBuilder.bundle(default: () -> Bundle): BundleKey<Bundle, Bundle?> = bundle()
-  .withOutputDefault(OutputDefault.Provider(default))
+  .withDefault(default)
 
 fun BundleKeyBuilder.bundle(): NativeBundleKey<Bundle?> = nativeKey(
   get = { getBundle(name) },
