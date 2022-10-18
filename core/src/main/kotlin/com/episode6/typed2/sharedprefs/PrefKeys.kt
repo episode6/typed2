@@ -10,7 +10,7 @@ typealias NativePrefKey<T> = PrefKey<T, T>
 typealias NativeAsyncPrefKey<T> = AsyncPrefKey<T, T>
 
 interface PrefKeyBuilder : PrimitiveKeyBuilder
-open class PrefNamespace(private val prefix: String = "") {
+open class PrefKeyNamespace(private val prefix: String = "") {
   private class Builder(override val name: String) : PrefKeyBuilder
 
   protected fun key(name: String): PrefKeyBuilder = Builder(prefix + name)

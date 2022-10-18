@@ -4,7 +4,7 @@ import android.content.SharedPreferences
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isNull
-import com.episode6.typed2.sharedprefs.PrefNamespace
+import com.episode6.typed2.sharedprefs.PrefKeyNamespace
 import com.episode6.typed2.sharedprefs.get
 import com.episode6.typed2.sharedprefs.set
 import com.episode6.typed2.sharedprefs.stringSet
@@ -15,7 +15,7 @@ import org.mockito.kotlin.*
 
 class SharedPrefTest {
 
-  object Keys : PrefNamespace("com.prefix.") {
+  object Keys : PrefKeyNamespace("com.prefix.") {
     val myInt = key("intKey").int(default = 42)
     val myNullInt = key("nullableInt").int()
     val myStringSet = key("stringSet").stringSet()
