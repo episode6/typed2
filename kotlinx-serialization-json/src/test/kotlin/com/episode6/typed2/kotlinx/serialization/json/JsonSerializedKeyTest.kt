@@ -22,10 +22,6 @@ class JsonSerializedKeyTest {
     val nullableData = key("testData").json(TestData.serializer())
     val defaultData = key("withDefault").json(default = TestData("default"), TestData.serializer())
     val requiredData = key("required").json(TestData.serializer()).required()
-
-    val asyncNullableData = key("testData-async").json(TestData.serializer()).async()
-    val asyncDefaultData = key("withDefault-async").json(TestData.serializer()) { TestData("default") }.async()
-    val asyncRequiredData = key("required-async").json(TestData.serializer()).required().async()
   }
 
   private val bundle: Bundle = mock()
@@ -104,4 +100,4 @@ private fun Bundle.setupTestDataKey(name: String) {
   }
 }
 
-private fun jsonTestData(name: String): String =  "{\"name\":\"$name\"}"
+private fun jsonTestData(name: String): String = "{\"name\":\"$name\"}"
