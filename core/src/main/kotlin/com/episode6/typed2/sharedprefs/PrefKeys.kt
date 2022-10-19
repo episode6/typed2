@@ -14,6 +14,7 @@ open class PrefKeyNamespace(private val prefix: String = "") {
   private class Builder(override val name: String) : PrefKeyBuilder
 
   protected fun key(name: String): PrefKeyBuilder = Builder(prefix + name)
+  protected fun <T : Any, BACKED_BY : Any?> PrefKey<T?, BACKED_BY>.defaultProvider(defaultProvider: ()->T): PrefKey<T, BACKED_BY> = withDefault(defaultProvider)
   protected fun <T : Any?, BACKED_BY : Any?> PrefKey<T, BACKED_BY>.async(context: CoroutineContext = Dispatchers.Default): AsyncPrefKey<T, BACKED_BY> = asAsync(context)
 }
 

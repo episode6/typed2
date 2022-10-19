@@ -23,6 +23,7 @@ open class NavScreen(val name: String, private val argPrefix: String = "") {
 
   protected fun key(name: String): NavArgBuilder = Builder(argPrefix + name) { _args[it.name] = it }
   protected fun <T : Any, BACKED_BY : Any?> NavArg<T?, BACKED_BY>.required(): NavArg<T, BACKED_BY> = asRequired { RequiredNavArgumentMissing(name) }
+  protected fun <T : Any, BACKED_BY : Any?> NavArg<T?, BACKED_BY>.defaultProvider(defaultProvider: ()->T): NavArg<T, BACKED_BY> = withDefault(defaultProvider)
   protected fun <T : Any?, BACKED_BY : Any?> NavArg<T, BACKED_BY>.async(context: CoroutineContext = Dispatchers.Default): AsyncNavArg<T, BACKED_BY> = asAsync(context)
 }
 

@@ -14,10 +14,6 @@ inline fun <reified T : Any> PrimitiveKeyBuilder.gson(
   noinline gson: () -> Gson = Typed2DefaultGson::gson,
 ): PrimitiveKey<T, String?> = gson<T>(gson).withDefault { default }
 
-inline fun <reified T : Any> PrimitiveKeyBuilder.gson(
-  noinline gson: () -> Gson = Typed2DefaultGson::gson,
-  noinline default: ()->T,
-): PrimitiveKey<T, String?> = gson<T>(gson).withDefault(default)
 
 inline fun <reified T : Any> PrimitiveKeyBuilder.gson(
   noinline gson: () -> Gson = Typed2DefaultGson::gson,

@@ -17,6 +17,7 @@ open class BundleKeyNamespace(private val prefix: String = "") {
   protected fun key(name: String): BundleKeyBuilder = Builder(prefix + name)
 
   protected fun <T : Any, BACKED_BY : Any?> BundleKey<T?, BACKED_BY>.required(): BundleKey<T, BACKED_BY> = asRequired { RequiredBundleKeyMissing(name) }
+  protected fun <T : Any, BACKED_BY : Any?> BundleKey<T?, BACKED_BY>.defaultProvider(defaultProvider: ()->T): BundleKey<T, BACKED_BY> = withDefault(defaultProvider)
   protected fun <T : Any?, BACKED_BY : Any?> BundleKey<T, BACKED_BY>.async(context: CoroutineContext = Dispatchers.Default): AsyncBundleKey<T, BACKED_BY> = asAsync(context)
 }
 

@@ -22,7 +22,6 @@ class JsonSerializedKeyTest {
     val nullableData = key("testData").gson<TestData>()
     val defaultData = key("withDefault").gson(default = TestData("default"))
     val requiredData = key("required").gson<TestData>().required()
-    val something = key("name").gson(default = { TestData("") }).async()
   }
 
   private val bundle: Bundle = mock()
