@@ -14,8 +14,8 @@ fun NavController.navigateTo(screen: NavScreen) {
  * Replacement for [NavController.navigate] that allows type-safe setting of arguments
  * Usage:
  * navController.navigateTo(Screen) {
- *   arg(Screen.Arg1, "someValue")
- *   arg(Screen.Arg2, 42)
+ *   set(Screen.Arg1, "someValue")
+ *   set(Screen.Arg2, 42)
  * }
  */
 fun NavController.navigateTo(screen: NavScreen, args: PrimitiveKeyValueSetter.() -> Unit) {
@@ -24,7 +24,11 @@ fun NavController.navigateTo(screen: NavScreen, args: PrimitiveKeyValueSetter.()
   navigate(screen.buildRoute(builder.argMap))
 }
 
-fun NavController.navigateTo(screen: NavScreen, scope: CoroutineScope, args: suspend PrimitiveKeyValueSetter.() -> Unit) {
+fun NavController.navigateTo(
+  screen: NavScreen,
+  scope: CoroutineScope,
+  args: suspend PrimitiveKeyValueSetter.() -> Unit,
+) {
   scope.launch {
     val builder = ComposeNavArgBuilder()
     builder.args()
@@ -50,7 +54,7 @@ private fun NavScreen.buildRoute(argValues: Map<String, Any?>): String {
   }
 }
 
-private class ComposeNavArgBuilder internal constructor() : PrimitiveKeyValueSetter {
+private class ComposeNavArgBuilder constructor() : PrimitiveKeyValueSetter {
   val argMap: MutableMap<String, Any?> = mutableMapOf()
   override fun setInt(name: String, value: Int) { argMap[name] = value }
   override fun setString(name: String, value: String?) { argMap[name] = value }
