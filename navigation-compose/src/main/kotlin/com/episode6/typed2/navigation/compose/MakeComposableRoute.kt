@@ -38,7 +38,7 @@ fun NavGraphBuilder.composableScreen(
 ) {
   composable(
     route = screen.makeRouteDefinition(),
-    arguments = screen.makeArgs(),
+    arguments = screen.makeArgDefinitions(),
     deepLinks = deepLinks,
     content = content,
   )
@@ -56,7 +56,7 @@ internal fun NavScreen.makeRouteDefinition(): String {
 }
 
 @VisibleForTesting
-internal fun NavScreen.makeArgs(): List<NamedNavArgument> = args.map { it.toNavArgument() }
+internal fun NavScreen.makeArgDefinitions(): List<NamedNavArgument> = args.map { it.toNavArgument() }
 
 internal val NavScreen.requiredArgs: List<KeyTypeInfo<*, *>> get() = args.filter { it.default is OutputDefault.Required }
 internal val NavScreen.optionalArgs: List<KeyTypeInfo<*, *>> get() = args.filter { it.default !is OutputDefault.Required }

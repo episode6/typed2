@@ -17,4 +17,5 @@ dependencies {
   testImplementation(libs.bundles.test.support)
   testImplementation(project(":saved-state-handle"))
   testImplementation(libs.androidx.savedstatehandle)
+  testImplementation(libs.robolectric.core)
 }
