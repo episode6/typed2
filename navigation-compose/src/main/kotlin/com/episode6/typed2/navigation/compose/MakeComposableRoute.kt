@@ -5,11 +5,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.*
-import androidx.navigation.compose.NavHost as RawNavHost
 import androidx.navigation.compose.composable
 import com.episode6.typed2.KeyTypeInfo
 import com.episode6.typed2.OutputDefault
 import kotlin.reflect.KClass
+import androidx.navigation.compose.NavHost as RawNavHost
 
 // wrapper for NavHost that takes a startScreen instead of a string
 @Composable
@@ -24,19 +24,28 @@ fun NavHost(
 
   RawNavHost(
     navController = navController,
-    startDestination = remember { startScreen.makeRoute() },
+    startDestination = remember { startScreen.makeRouteDefinition() },
     modifier = modifier,
     builder = builder
   )
 }
 
 // wrapper for composable that takes a string instead of a route and arg list
-fun NavGraphBuilder.composableScreen(screen: NavScreen, content: @Composable (NavBackStackEntry) -> Unit) {
-  composable(route = screen.makeRoute(), arguments = screen.makeArgs(), content = content)
+fun NavGraphBuilder.composableScreen(
+  screen: NavScreen,
+  deepLinks: List<NavDeepLink> = emptyList(),
+  content: @Composable (NavBackStackEntry) -> Unit,
+) {
+  composable(
+    route = screen.makeRouteDefinition(),
+    arguments = screen.makeArgs(),
+    deepLinks = deepLinks,
+    content = content,
+  )
 }
 
 @VisibleForTesting
-internal fun NavScreen.makeRoute(): String {
+internal fun NavScreen.makeRouteDefinition(): String {
   if (args.isEmpty()) return name
   val requiredArgStrings = requiredArgs.map { "{${it.name}}" }
   val optionalArgStrings = optionalArgs.map { "${it.name}={${it.name}}" }
@@ -71,4 +80,5 @@ private fun KClass<*>.asNavType(): NavType<*> = when (this) {
 
 class IllegalStartScreenException(screen: NavScreen) :
   IllegalArgumentException("Illegal start screen used in NavHost definition: ${screen.name} has required arguments.")
+
 class UnexpectedKeyTypeException(type: KClass<*>) : RuntimeException("Unexpected key type: $type")
