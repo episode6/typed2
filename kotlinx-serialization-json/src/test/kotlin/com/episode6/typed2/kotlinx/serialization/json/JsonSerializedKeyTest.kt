@@ -19,9 +19,9 @@ import org.mockito.kotlin.verify
 class JsonSerializedKeyTest {
 
   object Keys : BundleKeyNamespace() {
-    val nullableData = key("testData").json(TestData.serializer())
-    val defaultData = key("withDefault").json(default = TestData("default"), TestData.serializer())
-    val requiredData = key("required").json(TestData.serializer()).required()
+    val nullableData = key("testData").json(TestData::serializer)
+    val defaultData = key("withDefault").json(default = TestData("default"), TestData::serializer)
+    val requiredData = key("required").json(TestData::serializer).required()
   }
 
   private val bundle: Bundle = mock()
