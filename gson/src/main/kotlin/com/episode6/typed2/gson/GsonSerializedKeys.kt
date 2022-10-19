@@ -5,19 +5,19 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
 object Typed2DefaultGson {
-  private val default: Gson by lazy(LazyThreadSafetyMode.PUBLICATION) { Gson() }
+  private val default: Gson by lazy { Gson() }
   fun gson(): Gson = default
 }
 
 inline fun <reified T : Any> PrimitiveKeyBuilder.gson(
   default: T,
   noinline gson: () -> Gson = Typed2DefaultGson::gson,
-): PrimitiveKey<T, String?> = gson<T>(gson).withDefault { default }
+): PrimitiveKey<T, String?> = gson<T>(defaultProvider = { default }, gson)
 
 inline fun <reified T : Any> PrimitiveKeyBuilder.gson(
+  noinline defaultProvider: () -> T,
   noinline gson: () -> Gson = Typed2DefaultGson::gson,
-  noinline default: ()->T,
-): PrimitiveKey<T, String?> = gson<T>(gson).withDefault(default)
+): PrimitiveKey<T, String?> = gson<T>(gson).withDefault(defaultProvider)
 
 inline fun <reified T : Any> PrimitiveKeyBuilder.gson(
   noinline gson: () -> Gson = Typed2DefaultGson::gson,

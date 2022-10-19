@@ -9,7 +9,8 @@ Example:
 object PrefKeys : PrefKeyNamespace(prefix = "com.sample.prefkey.") {
   val SOME_INT = key("someInt").int(default = 2)
   val SOME_NULLABLE_INT = key("nullableInt").int()
-  val SOME_SERIALIZED_OBJECT = key("myObj").json(SomeObject.serializer()).async()
+  val SOME_KOTLINX_SERIALIZED_OBJECT = key("myObj").json(SomeObject::serializer).async()
+  val SOME_GSON_SERIALIZED_OBJECT = key("myObj2").gson<SomeOtherObject>(default = SomeOtherObject()).async()
 }
 
 val sharedPreferences: SharedPreference = TODO()
@@ -20,6 +21,7 @@ fun main() {
   val someNullableInt: Int? = sharedPreferences.get(PrefKeys.SOME_NULLABLE_INT)
   coroutineContext {
     val someObject: SomeObject? = sharedPreferences.get(PrefKeys.SOME_SERIALIZED_OBJECT)
+    val someOtherObject: SomeOtherObject? = sharedPreferences.get(PrefKeys.SOME_GSON_SERIALIZED_OBJECT)
   }
 }
 ```
