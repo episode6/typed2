@@ -20,5 +20,9 @@ gradlePlugin {
       id = "config-jvm-deploy"
       implementationClass = "plugins.ConfigureJvmDeployablePlugin"
     }
+    create("ConfigureAndroidComposePlugin") {
+      id = "config-compose"
+      implementationClass = "plugins.ConfigureAndroidComposePlugin"
+    }
   }
 }

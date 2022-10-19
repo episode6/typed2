@@ -3,6 +3,7 @@ description = ""
 plugins {
   id("com.android.library")
   id("config-android-deploy")
+  id("config-compose")
 }
 
 android {
