@@ -18,6 +18,7 @@ dependencyResolutionManagement {
 rootProject.name = "typed2"
 include(
   ":core",
+  ":gson",
   ":kotlinx-serialization-json",
   ":navigation-compose",
   ":saved-state-handle",
