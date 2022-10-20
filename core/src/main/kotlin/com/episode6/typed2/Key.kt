@@ -4,7 +4,9 @@ interface KeyValueGetter {
   fun contains(name: String): Boolean
 }
 
-interface KeyValueSetter
+interface KeyValueSetter {
+  fun remove(name: String)
+}
 
 class KeyBacker<BACKED_BY : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter> internal constructor(
   val getBackingData: (GETTER) -> BACKED_BY,
