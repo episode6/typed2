@@ -19,6 +19,7 @@ rootProject.name = "typed2"
 include(
   ":core",
   ":gson",
+  ":kotlinx-serialization-bundlizer",
   ":kotlinx-serialization-json",
   ":navigation-compose",
   ":saved-state-handle",
