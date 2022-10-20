@@ -9,6 +9,7 @@ class TypedSharedPreferences(private val delegate: SharedPreferences) : PrefValu
   override fun getStringSet(name: String, defaultValue: Set<String?>?): Set<String?>? = delegate.getStringSet(name, defaultValue)?.toSet()
 
   class Editor(private val delegate: SharedPreferences.Editor) : PrefValueSetter {
+    override fun remove(name: String) { delegate.remove(name) }
     override fun setString(name: String, value: String?) { delegate.putString(name, value) }
     override fun setInt(name: String, value: Int) { delegate.putInt(name, value) }
     override fun setStringSet(name: String, value: Set<String?>?) { delegate.putStringSet(name, value) }
@@ -20,5 +21,7 @@ fun SharedPreferences.Editor.typed(): TypedSharedPreferences.Editor = TypedShare
 
 fun <T, BACKED_BY> SharedPreferences.get(key: PrefKey<T, BACKED_BY>): T = typed().get(key)
 fun <T, BACKED_BY> SharedPreferences.Editor.set(key: PrefKey<T, BACKED_BY>, value: T) = typed().set(key, value)
+fun <T, BACKED_BY> SharedPreferences.Editor.remove(key: PrefKey<T, BACKED_BY>) = typed().remove(key)
 suspend fun <T, BACKED_BY> SharedPreferences.get(key: AsyncPrefKey<T, BACKED_BY>): T = typed().get(key)
 suspend fun <T, BACKED_BY> SharedPreferences.Editor.set(key: AsyncPrefKey<T, BACKED_BY>, value: T) = typed().set(key, value)
+fun <T, BACKED_BY> SharedPreferences.Editor.remove(key: AsyncPrefKey<T, BACKED_BY>) = typed().remove(key)

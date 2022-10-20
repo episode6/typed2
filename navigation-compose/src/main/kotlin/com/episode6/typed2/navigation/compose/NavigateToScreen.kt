@@ -54,10 +54,11 @@ private fun NavScreen.buildRoute(argValues: Map<String, Any?>): String {
   }
 }
 
-private class ComposeNavArgBuilder constructor() : PrimitiveKeyValueSetter {
+private class ComposeNavArgBuilder : PrimitiveKeyValueSetter {
   val argMap: MutableMap<String, Any?> = mutableMapOf()
   override fun setInt(name: String, value: Int) { argMap[name] = value }
   override fun setString(name: String, value: String?) { argMap[name] = value }
+  override fun remove(name: String) { argMap.remove(name) }
 }
 
 class MissingRequiredArgumentException(arg: KeyTypeInfo<*, *>, screen: NavScreen) : IllegalArgumentException(
