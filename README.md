@@ -28,7 +28,7 @@ fun main() {
 
 Also works with Bundles...
 ```kotlin
-object Arguments : BundleKeyNamespace(prefix = "com.sample.prefkey.") {
+object Arguments : BundleKeyNamespace(prefix = "com.sample.arguments.") {
   val SOME_INT = key("someInt").int(default = 2)
   val SOME_NULLABLE_INT = key("nullableInt").int()
 }
