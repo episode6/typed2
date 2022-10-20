@@ -9,19 +9,20 @@ import com.episode6.typed2.bundles.RequiredBundleKeyMissing
 import com.episode6.typed2.bundles.get
 import com.episode6.typed2.bundles.set
 import org.junit.Test
-import org.mockito.kotlin.doReturn
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.stub
-import org.mockito.kotlin.verify
+import org.junit.runner.RunWith
+import org.mockito.kotlin.*
+import org.robolectric.Robolectric
+import org.robolectric.RobolectricTestRunner
 
 @kotlinx.serialization.Serializable data class TestData(val name: String)
 
+@RunWith(RobolectricTestRunner::class)
 class BundlizedKeyTest {
 
   object Keys : BundleKeyNamespace() {
-    val nullableData = key("testData").json(TestData::serializer)
-    val defaultData = key("withDefault").json(default = TestData("default"), TestData::serializer)
-    val requiredData = key("required").json(TestData::serializer).required()
+    val nullableData = key("testData").bundlized(TestData::serializer)
+    val defaultData = key("withDefault").bundlized(default = TestData("default"), TestData::serializer)
+    val requiredData = key("required").bundlized(TestData::serializer).required()
   }
 
   private val bundle: Bundle = mock()
@@ -43,13 +44,16 @@ class BundlizedKeyTest {
   @Test fun testNullable_set_null() {
     bundle.set(Keys.nullableData, null)
 
-    verify(bundle).putString("testData", null)
+    verify(bundle).putBundle("testData", null)
   }
 
   @Test fun testNullable_set_obj() {
     bundle.set(Keys.nullableData, TestData("newData"))
 
-    verify(bundle).putString("testData", jsonTestData("newData"))
+    argumentCaptor<Bundle>() {
+      verify(bundle).putBundle(eq("testData"), capture())
+      assertThat(firstValue).hasNameValue("newData")
+    }
   }
 
   @Test fun testDefault_get_missing() {
@@ -69,7 +73,10 @@ class BundlizedKeyTest {
   @Test fun testDefault_set_obj() {
     bundle.set(Keys.defaultData, TestData("newData"))
 
-    verify(bundle).putString("withDefault", jsonTestData("newData"))
+    argumentCaptor<Bundle>() {
+      verify(bundle).putBundle(eq("withDefault"), capture())
+      assertThat(firstValue).hasNameValue("newData")
+    }
   }
 
   @Test fun testRequired_get_missing() {
@@ -88,16 +95,22 @@ class BundlizedKeyTest {
   @Test fun testRequired_set_obj() {
     bundle.set(Keys.requiredData, TestData("newData"))
 
-    verify(bundle).putString("required", jsonTestData("newData"))
+    argumentCaptor<Bundle>() {
+      verify(bundle).putBundle(eq("required"), capture())
+      assertThat(firstValue).hasNameValue("newData")
+    }
   }
 }
 
 private fun Assert<TestData>.hasName(name: String) = prop(TestData::name).isEqualTo(name)
+private fun Assert<Bundle>.hasNameValue(name: String) = transform { it.getString("name") }.isEqualTo(name)
 private fun Bundle.setupTestDataKey(name: String) {
   stub {
     on { containsKey(name) } doReturn true
-    on { getString(name, null) } doReturn jsonTestData(name)
+    on { getBundle(name) } doReturn bundleTestData(name)
   }
 }
 
-private fun jsonTestData(name: String): String = "{\"name\":\"$name\"}"
+private fun bundleTestData(name: String): Bundle = Bundle().apply {
+  putString("name", name)
+}
