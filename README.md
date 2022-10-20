@@ -26,4 +26,52 @@ fun main() {
 }
 ```
 
-This pattern is currently working for SharedPrefs and Bundles, but I'd like to expand it to navigation arguments and SavedStateHandle's getStateFlow/getLiveData methods. Only a handful of types are currently implemented, while I work through the complexities of these other use-cases.
+Also works with Bundles...
+```kotlin
+object Arguments : BundleKeyNamespace(prefix = "com.sample.arguments.") {
+  val SOME_INT = key("someInt").int(default = 2)
+  val SOME_NULLABLE_INT = key("nullableInt").int()
+}
+
+val bundle: Bundle = TODO()
+
+fun main() {
+  // types are enforced by the keys
+  val someInt: Int = bundle.get(Arguments.SOME_INT)
+  val someNullableInt: Int? = bundle.get(Arguments.SOME_NULLABLE_INT)
+}
+```
+
+Can also be used to define screens for Navigation-Compose, enabling type-safe navigation arguments.
+```kotlin
+object MyScreen : NavScreen(name = "myScreen") {
+  val SOME_INT = key("someInt").int(default = 2)
+  val SOME_NULLABLE_INT = key("nullableInt").int()
+}
+
+val savedStateHandle: SavedStateHandle = TODO()
+val navController: NavController = TODO()
+
+@Composable fun MyNavigationDefinition(navController: NavHostController) {
+  NavHost(navController = navController, startScreen = MyScreen) { // note: startScreen must not have any required args
+    composableScreen(MyScreen) { // navigation args get included/processed automatically to generate the screen's route
+      /* actual composable UI */
+    }
+  }
+}
+
+fun main() {
+  // can pull nav arguments from either SavedStateHandles or Bundles
+  val someInt: Int = savedStateHandle.get(MyScreen.SOME_INT)
+  val someNullableInt: Int? = savedStateHandle.get(MyScreen.SOME_NULLABLE_INT)
+  
+  // type-safe navigation arguments
+  navController.navigateTo(MyScreen) {
+    set(MyScreen.SOME_INT, 5)
+    set(MyScreen.SOME_NULLABLE_INT, 42)
+  }
+}
+```
+
+
+

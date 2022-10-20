@@ -1,7 +1,3 @@
-/*
- * Copyright (c) 2021 Geoffrey Hackett. All rights reserved.
- */
-
 package plugins
 
 import org.gradle.api.Plugin

@@ -3,6 +3,7 @@ description = ""
 plugins {
   id("com.android.library")
   id("config-android-deploy")
+  id("config-compose")
 }
 
 android {
@@ -16,4 +17,5 @@ dependencies {
   testImplementation(libs.bundles.test.support)
   testImplementation(project(":saved-state-handle"))
   testImplementation(libs.androidx.savedstatehandle)
+  testImplementation(libs.robolectric.core)
 }
