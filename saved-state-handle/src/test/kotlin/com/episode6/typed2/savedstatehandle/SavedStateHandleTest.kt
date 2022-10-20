@@ -1,5 +1,6 @@
 package com.episode6.typed2.savedstatehandle
 
+import android.os.Bundle
 import androidx.lifecycle.SavedStateHandle
 import assertk.assertThat
 import assertk.assertions.hasClass
@@ -8,6 +9,7 @@ import assertk.assertions.isFailure
 import assertk.assertions.isNull
 import com.episode6.typed2.bundles.BundleKeyNamespace
 import com.episode6.typed2.bundles.RequiredBundleKeyMissing
+import com.episode6.typed2.bundles.bundle
 import com.episode6.typed2.int
 import org.junit.Test
 import org.mockito.kotlin.doAnswer
@@ -20,7 +22,7 @@ class SavedStateHandleTest {
     val intKey = key("intKey").int(default = 2)
     val nullableIntKey = key("nullableInt").int()
     val requiredInt = key("requiredInt").int().required()
-    val asyncRequiredInt = key("asyncRequiredInt").int().required().async()
+    val bundle = key("bundle").bundle()
   }
 
   private val savedStateHandle: SavedStateHandle = mock()
@@ -62,6 +64,11 @@ class SavedStateHandleTest {
 
     assertThat { savedStateHandle.get(Keys.requiredInt) }
       .isFailure().hasClass(RequiredBundleKeyMissing::class)
+  }
+
+  @Test fun testSetSavedStateProvider() {
+    // todo: gonna fill out this test after implementing the bundlizer plugin
+    savedStateHandle.setSavedStateProvider(Keys.bundle) { Bundle() }
   }
 }
 
