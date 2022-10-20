@@ -52,6 +52,14 @@ object MyScreen : NavScreen(name = "myScreen") {
 val savedStateHandle: SavedStateHandle = TODO()
 val navController: NavController = TODO()
 
+@Composable fun MyNavigationDefinition(navController: NavHostController) {
+  NavHost(navController = navController, startScreen = MyScreen) { // note: startScreen must not have any required args
+    composableScreen(MyScreen) { // navigation args get included/processed automatically to generate the screen's route
+      /* actual composable UI */
+    }
+  }
+}
+
 fun main() {
   // can pull nav arguments from either SavedStateHandles or Bundles
   val someInt: Int = savedStateHandle.get(MyScreen.SOME_INT)
