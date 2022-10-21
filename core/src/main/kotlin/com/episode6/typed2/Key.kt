@@ -47,16 +47,3 @@ interface KeyBuilder {
   val name: String
   val newKeyCallback: (KeyTypeInfo<*, *>) -> Unit get() = {}
 }
-
-internal inline fun <reified T : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter> KeyBuilder.nativeKey(
-  noinline get: GETTER.() -> T,
-  noinline set: SETTER.(T) -> Unit,
-  backingDefault: T,
-): Key<T, T, GETTER, SETTER> = Key(
-  name = name,
-  default = null,
-  backingTypeInfo = KeyBackingTypeInfo(kclass = T::class, default = backingDefault),
-  backer = KeyBacker(getBackingData = get, setBackingData = set),
-  mapper = KeyMapper({ it }, { it }),
-  newKeyCallback = newKeyCallback
-)

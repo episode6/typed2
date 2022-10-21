@@ -26,10 +26,9 @@ fun PrimitiveKeyBuilder.string(default: String): NativePrimitiveKey<String> =
   }
 
 fun PrimitiveKeyBuilder.string(): NativePrimitiveKey<String?> =
-  nativeKey<String?, PrimitiveKeyValueGetter, PrimitiveKeyValueSetter>(
+  nativeKey<String, PrimitiveKeyValueGetter, PrimitiveKeyValueSetter>(
     get = { getString(name, null) },
     set = { setString(name, it) },
-    backingDefault = null
   ).let { key ->
     when (stringsShouldBeEncoded) {
       false -> key
