@@ -4,7 +4,7 @@ import kotlin.reflect.KClass
 
 interface KeyTypeInfo<T : Any?, BACKED_BY : Any?> {
   val name: String
-  val default: OutputDefault<T>?
+  val outputDefault: OutputDefault<T>?
   val backingTypeInfo: KeyBackingTypeInfo<BACKED_BY>
 }
 
