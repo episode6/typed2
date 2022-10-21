@@ -9,7 +9,7 @@ object NativeKeys {
     backingClass: KClass<T>,
     get: GETTER.() -> T,
     set: SETTER.(T) -> Unit,
-    newKeyCallback: (KeyTypeInfo<*, *>) -> Unit,
+    newKeyCallback: (KeyDescriptor<*, *>) -> Unit,
   ): Key<T, T, GETTER, SETTER> = Key(
     name = name,
     outputDefault = null,
@@ -24,7 +24,7 @@ object NativeKeys {
     backingClass: KClass<T>,
     get: GETTER.() -> T?,
     set: SETTER.(T?) -> Unit,
-    newKeyCallback: (KeyTypeInfo<*, *>) -> Unit,
+    newKeyCallback: (KeyDescriptor<*, *>) -> Unit,
   ): Key<T?, T?, GETTER, SETTER> = Key(
     name = name,
     outputDefault = null,

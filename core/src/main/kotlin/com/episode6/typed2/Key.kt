@@ -24,8 +24,8 @@ class Key<T : Any?, BACKED_BY : Any?, GETTER : KeyValueGetter, SETTER : KeyValue
   override val backingTypeInfo: KeyBackingTypeInfo<BACKED_BY>,
   val backer: KeyBacker<BACKED_BY, GETTER, SETTER>,
   val mapper: KeyMapper<T, BACKED_BY>,
-  internal val newKeyCallback: (KeyTypeInfo<*, *>) -> Unit,
-) : KeyTypeInfo<T, BACKED_BY> {
+  internal val newKeyCallback: (KeyDescriptor<*, *>) -> Unit,
+) : KeyDescriptor<T, BACKED_BY> {
   init {
     newKeyCallback(this)
   }
@@ -45,5 +45,5 @@ fun <T : Any?, BACKED_BY : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSette
 
 interface KeyBuilder {
   val name: String
-  val newKeyCallback: (KeyTypeInfo<*, *>) -> Unit get() = {}
+  val newKeyCallback: (KeyDescriptor<*, *>) -> Unit get() = {}
 }
