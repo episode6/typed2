@@ -18,7 +18,7 @@ fun <T : Any, BACKED_BY : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter
   name = name,
   backingTypeInfo = backingTypeInfo,
   backer = backer,
-  default = default,
+  outputDefault = default,
   mapper = KeyMapper(
     mapSet = mapper.mapSet,
     mapGet = { mapper.mapGet(it) ?: default.provider().invoke() }
@@ -33,7 +33,7 @@ fun <T : Any?, R : Any?, BACKED_BY : Any?, GETTER : KeyValueGetter, SETTER : Key
   name = name,
   backingTypeInfo = backingTypeInfo,
   backer = backer,
-  default = default?.map(mapGet),
+  outputDefault = outputDefault?.map(mapGet),
   mapper = KeyMapper(
     mapSet = { mapper.mapSet(mapSet(it)) },
     mapGet = { mapGet(mapper.mapGet(it)) }
@@ -45,7 +45,7 @@ fun <T : Any?, BACKED_BY : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSette
   context: CoroutineContext,
 ): AsyncKey<T, BACKED_BY, GETTER, SETTER> = AsyncKey(
   name = name,
-  default = default,
+  outputDefault = outputDefault,
   backingTypeInfo = backingTypeInfo,
   backer = backer,
   mapper = mapper.asAsync(context),

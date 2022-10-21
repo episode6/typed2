@@ -58,12 +58,12 @@ internal fun NavScreen.makeRouteDefinition(): String {
 @VisibleForTesting
 internal fun NavScreen.makeArgDefinitions(): List<NamedNavArgument> = args.map { it.toNavArgument() }
 
-internal val NavScreen.requiredArgs: List<KeyTypeInfo<*, *>> get() = args.filter { it.default is OutputDefault.Required }
-internal val NavScreen.optionalArgs: List<KeyTypeInfo<*, *>> get() = args.filter { it.default !is OutputDefault.Required }
+internal val NavScreen.requiredArgs: List<KeyTypeInfo<*, *>> get() = args.filter { it.outputDefault is OutputDefault.Required }
+internal val NavScreen.optionalArgs: List<KeyTypeInfo<*, *>> get() = args.filter { it.outputDefault !is OutputDefault.Required }
 
 private fun <T, BACKED_BY> KeyTypeInfo<T, BACKED_BY>.toNavArgument(): NamedNavArgument = navArgument(name = name) {
   type = backingTypeInfo.kclass.asNavType()
-  nullable = backingTypeInfo.nullable && default !is OutputDefault.Required
+  nullable = backingTypeInfo.nullable && outputDefault !is OutputDefault.Required
   if (!nullable && backingTypeInfo.default != null) {
     defaultValue = backingTypeInfo.default
   }

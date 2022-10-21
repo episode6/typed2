@@ -12,7 +12,7 @@ object NativeKeys {
     newKeyCallback: (KeyTypeInfo<*, *>) -> Unit,
   ): Key<T, T, GETTER, SETTER> = Key(
     name = name,
-    default = null,
+    outputDefault = null,
     backingTypeInfo = KeyBackingTypeInfo(kclass = backingClass, default = backingDefault),
     backer = KeyBacker(getBackingData = get, setBackingData = set),
     mapper = KeyMapper({ it }, { it }),
@@ -27,7 +27,7 @@ object NativeKeys {
     newKeyCallback: (KeyTypeInfo<*, *>) -> Unit,
   ): Key<T?, T?, GETTER, SETTER> = Key(
     name = name,
-    default = null,
+    outputDefault = null,
     backingTypeInfo = KeyBackingTypeInfo(kclass = backingClass, default = null),
     backer = KeyBacker(getBackingData = get, setBackingData = set),
     mapper = KeyMapper({ it }, { it }),
