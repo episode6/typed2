@@ -9,7 +9,7 @@ object NativeKeys {
     backingClass: KClass<T>,
     get: GETTER.() -> T,
     set: SETTER.(T) -> Unit,
-    newKeyCallback: (KeyTypeInfo<*, *>) -> Unit
+    newKeyCallback: (KeyTypeInfo<*, *>) -> Unit,
   ): Key<T, T, GETTER, SETTER> = Key(
     name = name,
     default = null,
@@ -18,12 +18,13 @@ object NativeKeys {
     mapper = KeyMapper({ it }, { it }),
     newKeyCallback = newKeyCallback
   )
+
   fun <T : Any, GETTER : KeyValueGetter, SETTER : KeyValueSetter> create(
     name: String,
     backingClass: KClass<T>,
     get: GETTER.() -> T?,
     set: SETTER.(T?) -> Unit,
-    newKeyCallback: (KeyTypeInfo<*, *>) -> Unit
+    newKeyCallback: (KeyTypeInfo<*, *>) -> Unit,
   ): Key<T?, T?, GETTER, SETTER> = Key(
     name = name,
     default = null,
