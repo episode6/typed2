@@ -1,13 +1,5 @@
 package com.episode6.typed2
 
-interface KeyValueGetter {
-  fun contains(name: String): Boolean
-}
-
-interface KeyValueSetter {
-  fun remove(name: String)
-}
-
 class KeyBacker<BACKED_BY : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter> internal constructor(
   val getBackingData: (GETTER) -> BACKED_BY,
   val setBackingData: (SETTER, BACKED_BY) -> Unit,
@@ -30,18 +22,6 @@ class Key<T : Any?, BACKED_BY : Any?, GETTER : KeyValueGetter, SETTER : KeyValue
     newKeyCallback(this)
   }
 }
-
-fun <T : Any?, BACKED_BY : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter> Key<T, BACKED_BY, GETTER, SETTER>.get(
-  getter: GETTER,
-): T {
-  val default = outputDefault?.provider()
-  return if (default != null && !getter.contains(name)) default() else mapper.mapGet(backer.getBackingData(getter))
-}
-
-fun <T : Any?, BACKED_BY : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter> Key<T, BACKED_BY, GETTER, SETTER>.set(
-  setter: SETTER,
-  value: T,
-) = backer.setBackingData(setter, mapper.mapSet(value))
 
 interface KeyBuilder {
   val name: String
