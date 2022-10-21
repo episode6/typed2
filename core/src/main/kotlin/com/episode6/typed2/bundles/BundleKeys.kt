@@ -9,6 +9,7 @@ typealias BundleKey<T, BACKED_BY> = Key<T, BACKED_BY, in BundleValueGetter, in B
 typealias AsyncBundleKey<T, BACKED_BY> = AsyncKey<T, BACKED_BY, in BundleValueGetter, in BundleValueSetter>
 typealias NativeBundleKey<T> = BundleKey<T, T>
 typealias NativeAsyncBundleKey<T> = AsyncBundleKey<T, T>
+typealias BundleProperty<T> = KeyValueDelegate<T, in BundleValueGetter, in BundleValueSetter>
 
 interface BundleKeyBuilder : PrimitiveKeyBuilder
 open class BundleKeyNamespace(private val prefix: String = "") {

@@ -2,6 +2,7 @@ package com.episode6.typed2.savedstatehandle
 
 import android.os.Bundle
 import androidx.lifecycle.SavedStateHandle
+import com.episode6.typed2.KeyValueDelegate
 import com.episode6.typed2.bundles.*
 
 class TypedSavedStateHandle(private val delegate: SavedStateHandle) : BundleValueGetter, BundleValueSetter {
@@ -23,3 +24,6 @@ fun <T, BACKED_BY> SavedStateHandle.remove(key: BundleKey<T, BACKED_BY>) = typed
 suspend fun <T, BACKED_BY> SavedStateHandle.get(key: AsyncBundleKey<T, BACKED_BY>): T = typed().get(key)
 suspend fun <T, BACKED_BY> SavedStateHandle.set(key: AsyncBundleKey<T, BACKED_BY>, value: T) = typed().set(key, value)
 fun <T, BACKED_BY> SavedStateHandle.remove(key: AsyncBundleKey<T, BACKED_BY>) = typed().remove(key.name)
+
+fun <T> TypedSavedStateHandle.property(key: BundleKey<T, *>): BundleProperty<T> = KeyValueDelegate(key, this, this)
+fun <T> SavedStateHandle.property(key: BundleKey<T, *>): BundleProperty<T> = typed().property(key)

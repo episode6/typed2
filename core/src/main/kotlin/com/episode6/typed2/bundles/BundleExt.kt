@@ -23,3 +23,6 @@ fun <T, BACKED_BY> Bundle.remove(key: BundleKey<T, BACKED_BY>) = typed().remove(
 suspend fun <T, BACKED_BY> Bundle.get(key: AsyncBundleKey<T, BACKED_BY>): T = typed().get(key)
 suspend fun <T, BACKED_BY> Bundle.set(key: AsyncBundleKey<T, BACKED_BY>, value: T) = typed().set(key, value)
 fun <T, BACKED_BY> Bundle.remove(key: AsyncBundleKey<T, BACKED_BY>) = typed().remove(key)
+
+fun <T> TypedBundle.property(key: BundleKey<T, *>): BundleProperty<T> = KeyValueDelegate(key, this, this)
+fun <T> Bundle.property(key: BundleKey<T, *>): BundleProperty<T> = typed().property(key)
