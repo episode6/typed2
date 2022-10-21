@@ -1,4 +1,4 @@
-description = "Kotlinx serialization support for typed2: ${rootProject.description}"
+description = "Kotlinx json serialization support for typed2: ${rootProject.description}"
 
 plugins {
   id("com.android.library")
