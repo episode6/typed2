@@ -12,13 +12,13 @@ typealias NativeAsyncNavArg<T> = AsyncNavArg<T, T>
 interface NavArgBuilder : PrimitiveKeyBuilder
 open class NavScreen(val name: String, private val argPrefix: String = "") {
 
-  private val _args = LinkedHashMap<String, KeyTypeInfo<*, *>>()
-  internal val args: List<KeyTypeInfo<*, *>> get() = _args.values.toList()
+  private val _args = LinkedHashMap<String, KeyDescriptor<*, *>>()
+  internal val args: List<KeyDescriptor<*, *>> get() = _args.values.toList()
 
   private class Builder(
     override val name: String,
     override val stringsShouldBeEncoded: Boolean = true,
-    override val newKeyCallback: (KeyTypeInfo<*, *>) -> Unit,
+    override val newKeyCallback: (KeyDescriptor<*, *>) -> Unit,
   ) : NavArgBuilder
 
   protected fun key(name: String): NavArgBuilder = Builder(argPrefix + name) { _args[it.name] = it }

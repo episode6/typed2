@@ -11,8 +11,8 @@ class AsyncKey<T : Any?, BACKED_BY : Any?, GETTER : KeyValueGetter, SETTER : Key
   override val backingTypeInfo: KeyBackingTypeInfo<BACKED_BY>,
   val backer: KeyBacker<BACKED_BY, GETTER, SETTER>,
   val mapper: AsyncKeyMapper<T, BACKED_BY>,
-  internal val newKeyCallback: (KeyTypeInfo<*, *>) -> Unit,
-) : KeyTypeInfo<T, BACKED_BY> {
+  internal val newKeyCallback: (KeyDescriptor<*, *>) -> Unit,
+) : KeyDescriptor<T, BACKED_BY> {
   init {
     newKeyCallback(this)
   }

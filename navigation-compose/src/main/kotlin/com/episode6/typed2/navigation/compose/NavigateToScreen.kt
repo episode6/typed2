@@ -1,7 +1,7 @@
 package com.episode6.typed2.navigation.compose
 
 import androidx.navigation.NavController
-import com.episode6.typed2.KeyTypeInfo
+import com.episode6.typed2.KeyDescriptor
 import com.episode6.typed2.PrimitiveKeyValueSetter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -61,6 +61,6 @@ private class ComposeNavArgBuilder : PrimitiveKeyValueSetter {
   override fun remove(name: String) { argMap.remove(name) }
 }
 
-class MissingRequiredArgumentException(arg: KeyTypeInfo<*, *>, screen: NavScreen) : IllegalArgumentException(
+class MissingRequiredArgumentException(arg: KeyDescriptor<*, *>, screen: NavScreen) : IllegalArgumentException(
   "Missing required argument \"${arg.name}\" when navigating to screen \"${screen.name}\""
 )
