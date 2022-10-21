@@ -20,7 +20,6 @@ class SavedStateHandleTest {
     val intKey = key("intKey").int(default = 2)
     val nullableIntKey = key("nullableInt").int()
     val requiredInt = key("requiredInt").int().required()
-    val asyncRequiredInt = key("asyncRequiredInt").int().required().async()
   }
 
   private val savedStateHandle: SavedStateHandle = mock()
