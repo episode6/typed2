@@ -8,6 +8,7 @@ import androidx.navigation.*
 import androidx.navigation.compose.composable
 import com.episode6.typed2.KeyDescriptor
 import com.episode6.typed2.OutputDefault
+import com.episode6.typed2.isRequired
 import kotlin.reflect.KClass
 import androidx.navigation.compose.NavHost as RawNavHost
 
@@ -58,12 +59,12 @@ internal fun NavScreen.makeRouteDefinition(): String {
 @VisibleForTesting
 internal fun NavScreen.makeArgDefinitions(): List<NamedNavArgument> = args.map { it.toNavArgument() }
 
-internal val NavScreen.requiredArgs: List<KeyDescriptor<*, *>> get() = args.filter { it.outputDefault is OutputDefault.Required }
-internal val NavScreen.optionalArgs: List<KeyDescriptor<*, *>> get() = args.filter { it.outputDefault !is OutputDefault.Required }
+internal val NavScreen.requiredArgs: List<KeyDescriptor<*, *>> get() = args.filter { it.isRequired }
+internal val NavScreen.optionalArgs: List<KeyDescriptor<*, *>> get() = args.filter { !it.isRequired }
 
 private fun <T, BACKED_BY> KeyDescriptor<T, BACKED_BY>.toNavArgument(): NamedNavArgument = navArgument(name = name) {
   type = backingTypeInfo.kclass.asNavType()
-  nullable = backingTypeInfo.nullable && outputDefault !is OutputDefault.Required
+  nullable = backingTypeInfo.nullable && !isRequired
   if (!nullable && backingTypeInfo.default != null) {
     defaultValue = backingTypeInfo.default
   }

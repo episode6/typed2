@@ -12,7 +12,7 @@ fun <T : Any, BACKED_BY : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter
   doesNotExistError: () -> Throwable,
 ): Key<T, BACKED_BY, GETTER, SETTER> = withOutputDefault(OutputDefault.Required(doesNotExistError))
 
-fun <T : Any, BACKED_BY : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter> Key<T?, BACKED_BY, GETTER, SETTER>.withOutputDefault(
+private fun <T : Any, BACKED_BY : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter> Key<T?, BACKED_BY, GETTER, SETTER>.withOutputDefault(
   default: OutputDefault<T>,
 ): Key<T, BACKED_BY, GETTER, SETTER> = Key(
   name = name,
