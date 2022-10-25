@@ -17,6 +17,8 @@ open class PrefKeyNamespace(private val prefix: String = "") {
   protected fun <T : Any?, BACKED_BY : Any?> PrefKey<T, BACKED_BY>.async(context: CoroutineContext = Dispatchers.Default): AsyncPrefKey<T, BACKED_BY> = asAsync(context)
 }
 
+fun PrefKeyBuilder.double(default: Double): PrefKey<Double, String?> = double().withDefault { default }
+
 fun PrefKeyBuilder.stringSet(default: Set<String>): PrefKey<Set<String>, Set<String?>?> = stringSet { default }
 fun PrefKeyBuilder.stringSet(default: () -> Set<String>): PrefKey<Set<String>, Set<String?>?> = stringSet()
   .withDefault(default)
