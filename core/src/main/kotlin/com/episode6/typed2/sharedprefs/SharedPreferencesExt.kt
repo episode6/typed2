@@ -33,38 +33,44 @@ fun SharedPreferences.Editor.remove(key: AsyncPrefKey<*, *>) = typed().remove(ke
 
 inline fun SharedPreferences.edit(
   commit: Boolean = false,
-  action: TypedSharedPreferences.Editor.() -> Unit
+  action: TypedSharedPreferences.Editor.() -> Unit,
 ) = typed().edit(commit = commit, action = action)
 
 inline fun TypedSharedPreferences.edit(
   commit: Boolean = false,
-  action: TypedSharedPreferences.Editor.() -> Unit
+  action: TypedSharedPreferences.Editor.() -> Unit,
 ) {
-  val editor = edit()
-  editor.action()
-  when {
-    commit -> editor.commit()
-    else   -> editor.apply()
+  edit().apply {
+    action()
+    if (commit) commit() else apply()
+  }
+}
+
+suspend inline fun SharedPreferences.edit(
+  commit: Boolean = false,
+  crossinline action: suspend TypedSharedPreferences.Editor.() -> Unit,
+) = typed().edit(commit = commit, action = action)
+suspend inline fun TypedSharedPreferences.edit(
+  commit: Boolean = false,
+  crossinline action: suspend TypedSharedPreferences.Editor.() -> Unit,
+) {
+  edit().apply {
+    action()
+    if (commit) commit() else apply()
   }
 }
 
 inline fun SharedPreferences.launchEdit(
   scope: CoroutineScope,
   commit: Boolean = false,
-  crossinline action: suspend TypedSharedPreferences.Editor.() -> Unit
+  crossinline action: suspend TypedSharedPreferences.Editor.() -> Unit,
 ) = typed().launchEdit(scope = scope, commit = commit, action = action)
 
 inline fun TypedSharedPreferences.launchEdit(
   scope: CoroutineScope,
   commit: Boolean = false,
-  crossinline action: suspend TypedSharedPreferences.Editor.() -> Unit
+  crossinline action: suspend TypedSharedPreferences.Editor.() -> Unit,
 ) {
-  val editor = edit()
-  scope.launch {
-    editor.action()
-    when {
-      commit -> editor.commit()
-      else   -> editor.apply()
-    }
-  }
+  scope.launch { edit(commit = commit, action = action) }
 }
+
