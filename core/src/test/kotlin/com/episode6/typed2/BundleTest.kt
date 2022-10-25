@@ -5,15 +5,10 @@ import assertk.assertThat
 import assertk.assertions.hasClass
 import assertk.assertions.isEqualTo
 import assertk.assertions.isFailure
-import com.episode6.typed2.bundles.BundleKeyNamespace
-import com.episode6.typed2.bundles.RequiredBundleKeyMissing
-import com.episode6.typed2.bundles.get
-import com.episode6.typed2.bundles.property
+import assertk.assertions.isNull
+import com.episode6.typed2.bundles.*
 import org.junit.Test
-import org.mockito.kotlin.doReturn
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.stub
-import org.mockito.kotlin.verify
+import org.mockito.kotlin.*
 
 
 class BundleTest {
@@ -21,6 +16,8 @@ class BundleTest {
   object Keys : BundleKeyNamespace() {
     val myInt = key("intKey").int(default = 42)
     val myRequiredInt = key("requiredInt").int().required()
+    val myDouble = key("double").double(default = 10.0)
+    val nullableDouble = key("nullableDouble").double()
   }
 
   val bundle: Bundle = mock()
@@ -89,5 +86,38 @@ class BundleTest {
     result = 27
 
     verify(bundle).putString("requiredInt", "27")
+  }
+
+  @Test fun testGetDouble() {
+    bundle.stub {
+      on { containsKey("double") } doReturn true
+      on { getDouble(eq("double"), any()) } doReturn 19.0
+    }
+
+    val result = bundle.get(Keys.myDouble)
+
+    assertThat(result).isEqualTo(19.0)
+  }
+
+  @Test fun testGetDouble_default() {
+    bundle.stub {
+      on { containsKey("double") } doReturn false
+      on { getDouble(eq("double"), any()) } doAnswer { it.getArgument(1) }
+    }
+
+    val result = bundle.get(Keys.myDouble)
+
+    assertThat(result).isEqualTo(10.0)
+  }
+
+  @Test fun testGetNullableDouble() {
+    bundle.stub {
+      on { containsKey("double") } doReturn false
+      on { getString(eq("double"), any()) } doReturn null
+    }
+
+    val result = bundle.get(Keys.nullableDouble)
+
+    assertThat(result).isNull()
   }
 }
