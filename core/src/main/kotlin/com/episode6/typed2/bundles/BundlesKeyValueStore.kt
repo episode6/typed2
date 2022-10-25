@@ -3,10 +3,10 @@ package com.episode6.typed2.bundles
 import android.os.Bundle
 import com.episode6.typed2.*
 
-interface BundleValueGetter : PrimitiveKeyValueGetter {
+interface BundleValueGetter : BaseBundleValueGetter {
   fun getBundle(name: String): Bundle?
 }
-interface BundleValueSetter : PrimitiveKeyValueSetter {
+interface BundleValueSetter : BaseBundleValueSetter {
   fun setBundle(name: String, value: Bundle?)
 }
 

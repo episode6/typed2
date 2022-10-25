@@ -11,7 +11,7 @@ typealias NativeBundleKey<T> = BundleKey<T, T>
 typealias NativeAsyncBundleKey<T> = AsyncBundleKey<T, T>
 typealias BundleProperty<T> = KeyValueDelegate<T, in BundleValueGetter, in BundleValueSetter>
 
-interface BundleKeyBuilder : PrimitiveKeyBuilder
+interface BundleKeyBuilder : BaseBundleKeyBuilder
 open class BundleKeyNamespace(private val prefix: String = "") {
   private class Builder(override val name: String) : BundleKeyBuilder
 
