@@ -46,20 +46,6 @@ inline fun TypedSharedPreferences.edit(
   }
 }
 
-suspend inline fun SharedPreferences.edit(
-  commit: Boolean = false,
-  crossinline action: suspend TypedSharedPreferences.Editor.() -> Unit,
-) = typed().edit(commit = commit, action = action)
-suspend inline fun TypedSharedPreferences.edit(
-  commit: Boolean = false,
-  crossinline action: suspend TypedSharedPreferences.Editor.() -> Unit,
-) {
-  edit().apply {
-    action()
-    if (commit) commit() else apply()
-  }
-}
-
 inline fun SharedPreferences.launchEdit(
   scope: CoroutineScope,
   commit: Boolean = false,
@@ -71,6 +57,11 @@ inline fun TypedSharedPreferences.launchEdit(
   commit: Boolean = false,
   crossinline action: suspend TypedSharedPreferences.Editor.() -> Unit,
 ) {
-  scope.launch { edit(commit = commit, action = action) }
+  scope.launch {
+    edit().apply {
+      action()
+      if (commit) commit() else apply()
+    }
+  }
 }
 

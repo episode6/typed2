@@ -1,14 +1,15 @@
+@file:OptIn(ExperimentalCoroutinesApi::class)
+
 package com.episode6.typed2
 
 import android.content.SharedPreferences
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isNull
-import com.episode6.typed2.sharedprefs.PrefKeyNamespace
-import com.episode6.typed2.sharedprefs.get
-import com.episode6.typed2.sharedprefs.set
-import com.episode6.typed2.sharedprefs.stringSet
+import com.episode6.typed2.sharedprefs.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.plus
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 import org.mockito.kotlin.*
@@ -96,5 +97,47 @@ class SharedPrefTest {
     val result = sharedPrefs.get(Keys.myAsyncString)
 
     assertThat(result).isEqualTo("happyString")
+  }
+
+  @Test fun testEditExt() {
+    sharedPrefs.edit {
+      set(Keys.myInt, 343)
+      set(Keys.myNullInt, 989)
+    }
+
+    inOrder(sharedPrefs, editor) {
+      verify(sharedPrefs).edit()
+      verify(editor).putInt("com.prefix.intKey", 343)
+      verify(editor).putString("com.prefix.nullableInt", "989")
+      verify(editor).apply()
+    }
+  }
+
+  @Test fun testEditExtInSuspendMethod() = runTest {
+    sharedPrefs.edit {
+      set(Keys.myInt, 343)
+      set(Keys.myAsyncString, "yahoo")
+    }
+
+    inOrder(sharedPrefs, editor) {
+      verify(sharedPrefs).edit()
+      verify(editor).putInt("com.prefix.intKey", 343)
+      verify(editor).putString("com.prefix.asyncString", "yahoo")
+      verify(editor).apply()
+    }
+  }
+
+  @Test fun testLaunchEditExt() = runTest {
+    sharedPrefs.launchEdit(this + UnconfinedTestDispatcher()) {
+      set(Keys.myInt, 343)
+      set(Keys.myAsyncString, "yahoo")
+    }
+
+    inOrder(sharedPrefs, editor) {
+      verify(sharedPrefs).edit()
+      verify(editor).putInt("com.prefix.intKey", 343)
+      verify(editor).putString("com.prefix.asyncString", "yahoo")
+      verify(editor).apply()
+    }
   }
 }
