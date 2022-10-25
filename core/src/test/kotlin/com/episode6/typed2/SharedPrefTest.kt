@@ -128,8 +128,8 @@ class SharedPrefTest {
     }
   }
 
-  @Test fun testLaunchEditExt() = runTest {
-    sharedPrefs.launchEdit(this + UnconfinedTestDispatcher()) {
+  @Test fun testLaunchEditExt() = runTest(UnconfinedTestDispatcher()) {
+    sharedPrefs.launchEdit(this) {
       set(Keys.myInt, 343)
       set(Keys.myAsyncString, "yahoo")
     }
