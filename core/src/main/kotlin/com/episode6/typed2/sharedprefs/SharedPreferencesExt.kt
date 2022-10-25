@@ -2,6 +2,7 @@ package com.episode6.typed2.sharedprefs
 
 import android.content.SharedPreferences
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 class TypedSharedPreferences(private val delegate: SharedPreferences) : PrefValueGetter {
@@ -50,18 +51,17 @@ inline fun SharedPreferences.launchEdit(
   scope: CoroutineScope,
   commit: Boolean = false,
   crossinline action: suspend TypedSharedPreferences.Editor.() -> Unit,
-) = typed().launchEdit(scope = scope, commit = commit, action = action)
+): Job = typed().launchEdit(scope = scope, commit = commit, action = action)
 
 inline fun TypedSharedPreferences.launchEdit(
   scope: CoroutineScope,
   commit: Boolean = false,
   crossinline action: suspend TypedSharedPreferences.Editor.() -> Unit,
-) {
-  scope.launch {
-    edit().apply {
-      action()
-      if (commit) commit() else apply()
-    }
+): Job = scope.launch {
+  edit().apply {
+    action()
+    if (commit) commit() else apply()
   }
 }
+
 

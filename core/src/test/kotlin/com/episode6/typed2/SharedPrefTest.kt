@@ -8,8 +8,6 @@ import assertk.assertions.isEqualTo
 import assertk.assertions.isNull
 import com.episode6.typed2.sharedprefs.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.plus
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 import org.mockito.kotlin.*
@@ -21,6 +19,7 @@ class SharedPrefTest {
     val myNullInt = key("nullableInt").int()
     val myStringSet = key("stringSet").stringSet()
     val myAsyncString = key("asyncString").string().async()
+    val myDouble = key("double").double()
   }
 
   val editor: SharedPreferences.Editor = mock()
@@ -128,10 +127,10 @@ class SharedPrefTest {
   }
 
   @Test fun testLaunchEditExt() = runTest {
-    sharedPrefs.launchEdit(this + UnconfinedTestDispatcher()) {
+    sharedPrefs.launchEdit(this) {
       set(Keys.myInt, 343)
       set(Keys.myAsyncString, "yahoo")
-    }
+    }.join()
 
     inOrder(sharedPrefs, editor) {
       verify(sharedPrefs).edit()
@@ -139,5 +138,20 @@ class SharedPrefTest {
       verify(editor).putString("com.prefix.asyncString", "yahoo")
       verify(editor).apply()
     }
+  }
+
+  @Test fun testSetBigDouble() {
+    editor.set(Keys.myDouble, 7.9238475894798576E16)
+
+    verify(editor).putString("com.prefix.double", "79238475894798576")
+  }
+
+  @Test fun testGetBigDouble() {
+    sharedPrefs.stub {
+      on { getString("com.prefix.double", null) } doReturn "79238475894798576"
+    }
+    val result = sharedPrefs.get(Keys.myDouble)
+
+    assertThat(result).isEqualTo(7.9238475894798576E16)
   }
 }

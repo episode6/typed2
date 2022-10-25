@@ -8,11 +8,13 @@ class TypedBundle(private val delegate: Bundle) : BundleValueGetter, BundleValue
   override fun getInt(name: String, default: Int): Int = delegate.getInt(name, default)
   override fun getString(name: String, default: String?): String? = delegate.getString(name, default)
   override fun getBundle(name: String): Bundle? = delegate.getBundle(name)
+  override fun getDouble(name: String, default: Double): Double = delegate.getDouble(name, default)
 
   override fun remove(name: String) = delegate.remove(name)
   override fun setString(name: String, value: String?) = delegate.putString(name, value)
   override fun setInt(name: String, value: Int) = delegate.putInt(name, value)
   override fun setBundle(name: String, value: Bundle?) = delegate.putBundle(name, value)
+  override fun setDouble(name: String, value: Double) { delegate.putDouble(name, value) }
 }
 
 fun Bundle.typed(): TypedBundle = TypedBundle(this)
