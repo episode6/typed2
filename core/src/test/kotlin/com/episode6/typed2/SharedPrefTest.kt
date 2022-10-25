@@ -8,8 +8,6 @@ import assertk.assertions.isEqualTo
 import assertk.assertions.isNull
 import com.episode6.typed2.sharedprefs.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.plus
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 import org.mockito.kotlin.*
@@ -128,11 +126,11 @@ class SharedPrefTest {
     }
   }
 
-  @Test fun testLaunchEditExt() = runTest(UnconfinedTestDispatcher()) {
+  @Test fun testLaunchEditExt() = runTest {
     sharedPrefs.launchEdit(this) {
       set(Keys.myInt, 343)
       set(Keys.myAsyncString, "yahoo")
-    }
+    }.join()
 
     inOrder(sharedPrefs, editor) {
       verify(sharedPrefs).edit()
