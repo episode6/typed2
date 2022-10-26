@@ -20,8 +20,8 @@ open class PersistableBundleKeyNamespace(private val prefix: String = "") {
   protected fun <T : Any?, BACKED_BY : Any?> PersistableBundleKey<T, BACKED_BY>.async(context: CoroutineContext = Dispatchers.Default): AsyncPersistableBundleKey<T, BACKED_BY> = asAsync(context)
 }
 
-fun PersistableBundleKeyBuilder.persistableBundle(default: PersistableBundle): PersistableBundleKey<PersistableBundle, PersistableBundle?> = persistableBundle {default}
-fun PersistableBundleKeyBuilder.persistableBundle(default: ()->PersistableBundle): PersistableBundleKey<PersistableBundle, PersistableBundle?> = persistableBundle().withDefault(default)
+fun PersistableBundleKeyBuilder.persistableBundle(default: PersistableBundle): PersistableBundleKey<PersistableBundle, PersistableBundle?> = persistableBundle { default }
+fun PersistableBundleKeyBuilder.persistableBundle(default: () -> PersistableBundle): PersistableBundleKey<PersistableBundle, PersistableBundle?> = persistableBundle().withDefault(default)
 fun PersistableBundleKeyBuilder.persistableBundle(): NativePersistableBundleKey<PersistableBundle?> = nativeKey(
   get = { getPersistableBundle(name) },
   set = { setPersistableBundle(name, it) },
