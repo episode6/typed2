@@ -10,7 +10,7 @@ class TypedPersistableBundle(private val delegate: PersistableBundle) : Persista
   override fun getString(name: String, default: String?): String? = delegate.getString(name, default)
   override fun getDouble(name: String, default: Double): Double = delegate.getDouble(name, default)
 
-  override fun setPersistableBundle(name: String, value: PersistableBundle) { delegate.putPersistableBundle(name, value) }
+  override fun setPersistableBundle(name: String, value: PersistableBundle?) { delegate.putPersistableBundle(name, value) }
   override fun remove(name: String) = delegate.remove(name)
   override fun setString(name: String, value: String?) = delegate.putString(name, value)
   override fun setInt(name: String, value: Int) = delegate.putInt(name, value)

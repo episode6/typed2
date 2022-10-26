@@ -9,7 +9,7 @@ interface PersistableBundleValueGetter : BaseBundleValueGetter {
 }
 
 interface PersistableBundleValueSetter : BaseBundleValueSetter {
-  fun setPersistableBundle(name: String, value: PersistableBundle)
+  fun setPersistableBundle(name: String, value: PersistableBundle?)
 }
 
 fun <T> PersistableBundleValueGetter.get(key: PersistableBundleKey<T, *>): T = key.get(this)
