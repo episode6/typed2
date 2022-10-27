@@ -56,7 +56,10 @@ private fun NavScreen.buildRoute(argValues: Map<String, Any?>): String {
 
 private class ComposeNavArgBuilder : PrimitiveKeyValueSetter {
   val argMap: MutableMap<String, Any?> = mutableMapOf()
+  override fun setBoolean(name: String, value: Boolean) { argMap[name] = value }
+  override fun setFloat(name: String, value: Float) { argMap[name] = value }
   override fun setInt(name: String, value: Int) { argMap[name] = value }
+  override fun setLong(name: String, value: Long) { argMap[name] = value }
   override fun setString(name: String, value: String?) { argMap[name] = value }
   override fun remove(name: String) { argMap.remove(name) }
 }

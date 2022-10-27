@@ -1,17 +1,34 @@
 package com.episode6.typed2.bundles
 
+import android.os.Build
 import android.os.PersistableBundle
 import com.episode6.typed2.KeyValueDelegate
 
 class TypedPersistableBundle(private val delegate: PersistableBundle) : PersistableBundleValueGetter, PersistableBundleValueSetter {
   override fun getPersistableBundle(name: String): PersistableBundle? = delegate.getPersistableBundle(name)
   override fun contains(name: String): Boolean = delegate.containsKey(name)
+  override fun getBoolean(name: String, default: Boolean): Boolean = if (Build.VERSION.SDK_INT >= 22) {
+    delegate.getBoolean(name, default)
+  } else {
+    delegate.getInt(name, default.asInt()).asBoolean()
+  }
+  override fun getFloat(name: String, default: Float): Float = delegate.getDouble(name, default.toDouble()).toFloat()
   override fun getInt(name: String, default: Int): Int = delegate.getInt(name, default)
+  override fun getLong(name: String, default: Long): Long = delegate.getLong(name, default)
   override fun getString(name: String, default: String?): String? = delegate.getString(name, default)
   override fun getDouble(name: String, default: Double): Double = delegate.getDouble(name, default)
 
   override fun setPersistableBundle(name: String, value: PersistableBundle?) { delegate.putPersistableBundle(name, value) }
   override fun remove(name: String) = delegate.remove(name)
+  override fun setBoolean(name: String, value: Boolean) {
+    if (Build.VERSION.SDK_INT >= 22) {
+      delegate.putBoolean(name, value)
+    } else {
+      delegate.putInt(name, value.asInt())
+    }
+  }
+  override fun setFloat(name: String, value: Float) { delegate.putDouble(name, value.toDouble()) }
+  override fun setLong(name: String, value: Long) { delegate.putLong(name, value) }
   override fun setString(name: String, value: String?) = delegate.putString(name, value)
   override fun setInt(name: String, value: Int) = delegate.putInt(name, value)
   override fun setDouble(name: String, value: Double) { delegate.putDouble(name, value) }
@@ -28,3 +45,6 @@ fun PersistableBundle.remove(key: AsyncPersistableBundleKey<*, *>) = typed().rem
 
 fun <T> TypedPersistableBundle.property(key: PersistableBundleKey<T, *>): PersistableBundleProperty<T> = KeyValueDelegate(key, { this }, { this })
 fun <T> PersistableBundle.property(key: PersistableBundleKey<T, *>): PersistableBundleProperty<T> = typed().property(key)
+
+private fun Int.asBoolean(): Boolean = this > 0
+private fun Boolean.asInt(): Int = if (this) 1 else 0
