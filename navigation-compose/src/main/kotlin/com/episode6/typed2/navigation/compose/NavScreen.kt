@@ -1,5 +1,6 @@
 package com.episode6.typed2.navigation.compose
 
+import android.net.Uri
 import com.episode6.typed2.*
 import kotlinx.coroutines.Dispatchers
 import kotlin.coroutines.CoroutineContext
@@ -17,9 +18,11 @@ open class NavScreen(val name: String, private val argPrefix: String = "") {
 
   private class Builder(
     override val name: String,
-    override val stringsShouldBeEncoded: Boolean = true,
     override val newKeyCallback: (KeyDescriptor<*, *>) -> Unit,
-  ) : NavArgBuilder
+  ) : NavArgBuilder {
+    override fun String.encode(): String = Uri.encode(this)
+    override fun String.decode(): String = Uri.decode(this)
+  }
 
   protected fun key(name: String): NavArgBuilder = Builder(argPrefix + name) { _args[it.name] = it }
   protected fun <T : Any, BACKED_BY : Any?> NavArg<T?, BACKED_BY>.required(): NavArg<T, BACKED_BY> = asRequired { RequiredNavArgumentMissing(name) }
