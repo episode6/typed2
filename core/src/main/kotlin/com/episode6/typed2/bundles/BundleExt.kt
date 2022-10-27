@@ -1,7 +1,7 @@
 package com.episode6.typed2.bundles
 
 import android.os.Bundle
-import com.episode6.typed2.*
+import com.episode6.typed2.KeyValueDelegate
 
 class TypedBundle(private val delegate: Bundle) : BundleValueGetter, BundleValueSetter {
   override fun contains(name: String): Boolean = delegate.containsKey(name)
