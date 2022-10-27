@@ -144,6 +144,7 @@ class BaseBundleTest {
     result = 27
 
     verify(bundle).putString("requiredInt", "27")
+    suppressWarning { result }
   }
 
   @Test fun testSetProperty_pbundle() {
@@ -152,6 +153,7 @@ class BaseBundleTest {
     result = 27
 
     verify(persistableBundle).putString("requiredInt", "27")
+    suppressWarning { result }
   }
 
   @Test fun testGetDouble() {
@@ -220,3 +222,6 @@ class BaseBundleTest {
     assertThat(result).isNull()
   }
 }
+
+@Suppress("UNUSED_PARAMETER")
+private fun suppressWarning(thing: ()->Any) {}

@@ -86,6 +86,7 @@ class BundleTest {
     result = 27
 
     verify(bundle).putString("requiredInt", "27")
+    suppressWarning { result }
   }
 
   @Test fun testGetDouble() {
@@ -121,3 +122,6 @@ class BundleTest {
     assertThat(result).isNull()
   }
 }
+
+@Suppress("UNUSED_PARAMETER")
+private fun suppressWarning(thing: ()->Any) {}
