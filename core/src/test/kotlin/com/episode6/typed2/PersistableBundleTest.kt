@@ -87,6 +87,7 @@ class PersistableBundleTest {
     result = 27
 
     verify(bundle).putString("requiredInt", "27")
+    suppressWarning { result }
   }
 
   @Test fun testGetDouble() {
@@ -153,3 +154,6 @@ class PersistableBundleTest {
     verify(bundle).putPersistableBundle("bundle", innerBundle)
   }
 }
+
+@Suppress("UNUSED_PARAMETER")
+private fun suppressWarning(thing: ()->Any) {}
