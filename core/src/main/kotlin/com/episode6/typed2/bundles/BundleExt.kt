@@ -5,7 +5,10 @@ import com.episode6.typed2.KeyValueDelegate
 
 class TypedBundle(private val delegate: Bundle) : BundleValueGetter, BundleValueSetter {
   override fun contains(name: String): Boolean = delegate.containsKey(name)
+  override fun getBoolean(name: String, default: Boolean): Boolean = delegate.getBoolean(name, default)
+  override fun getFloat(name: String, default: Float): Float = delegate.getFloat(name, default)
   override fun getInt(name: String, default: Int): Int = delegate.getInt(name, default)
+  override fun getLong(name: String, default: Long): Long = delegate.getLong(name, default)
   override fun getString(name: String, default: String?): String? = delegate.getString(name, default)
   override fun getBundle(name: String): Bundle? = delegate.getBundle(name)
   override fun getDouble(name: String, default: Double): Double = delegate.getDouble(name, default)
@@ -13,6 +16,9 @@ class TypedBundle(private val delegate: Bundle) : BundleValueGetter, BundleValue
   override fun remove(name: String) = delegate.remove(name)
   override fun setString(name: String, value: String?) = delegate.putString(name, value)
   override fun setInt(name: String, value: Int) = delegate.putInt(name, value)
+  override fun setBoolean(name: String, value: Boolean) { delegate.putBoolean(name, value) }
+  override fun setFloat(name: String, value: Float) { delegate.putFloat(name, value) }
+  override fun setLong(name: String, value: Long) { delegate.putLong(name, value) }
   override fun setBundle(name: String, value: Bundle?) = delegate.putBundle(name, value)
   override fun setDouble(name: String, value: Double) { delegate.putDouble(name, value) }
 }

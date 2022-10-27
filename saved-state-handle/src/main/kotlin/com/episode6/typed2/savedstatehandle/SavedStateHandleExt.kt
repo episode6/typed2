@@ -9,6 +9,9 @@ class TypedSavedStateHandle(private val delegate: SavedStateHandle) : BundleValu
   override fun contains(name: String): Boolean = delegate.contains(name)
   override fun getBundle(name: String): Bundle? = delegate[name]
   override fun getDouble(name: String, default: Double): Double = delegate[name] ?: default
+  override fun getBoolean(name: String, default: Boolean): Boolean = delegate[name] ?: default
+  override fun getFloat(name: String, default: Float): Float = delegate[name] ?: default
+  override fun getLong(name: String, default: Long): Long = delegate[name] ?: default
   override fun getInt(name: String, default: Int): Int = delegate[name] ?: default
   override fun getString(name: String, default: String?): String? = delegate[name] ?: default
   override fun remove(name: String) { delegate.remove<Any>(name) }
@@ -16,6 +19,9 @@ class TypedSavedStateHandle(private val delegate: SavedStateHandle) : BundleValu
   override fun setDouble(name: String, value: Double) { delegate[name] = value }
   override fun setInt(name: String, value: Int) { delegate[name] = value }
   override fun setString(name: String, value: String?) { delegate[name] = value }
+  override fun setBoolean(name: String, value: Boolean) { delegate[name] = value }
+  override fun setFloat(name: String, value: Float) { delegate[name] = value }
+  override fun setLong(name: String, value: Long) { delegate[name] = value }
 }
 
 fun SavedStateHandle.typed(): TypedSavedStateHandle = TypedSavedStateHandle(this)
