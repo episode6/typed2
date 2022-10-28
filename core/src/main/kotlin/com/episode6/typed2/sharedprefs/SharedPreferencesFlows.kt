@@ -26,6 +26,7 @@ fun <T> SharedPreferences.stateFlow(key: PrefKey<T, *>, scope: CoroutineScope, s
 fun <T> SharedPreferences.sharedFlow(key: AsyncPrefKey<T, *>, scope: CoroutineScope, started: SharingStarted, replay: Int = 1): SharedFlow<T> =
   flow(key)
     .onStart { emit(get(key)) }
+    .conflate()
     .shareIn(scope, started, replay)
 
 private fun SharedPreferences.changedKeyNames(): Flow<String> = callbackFlow {
