@@ -20,3 +20,9 @@ object ScreenWithAllArgTypes : NavScreen("all_args") {
   val DefaultArg = key("defaultArg").int(default = 42)
   val RequiredArg = key("stringArg").string().required()
 }
+
+object ScreenWithAsyncArgTypes : NavScreen("all_args") {
+  val NullArg = key("nullArg").string().async()
+  val DefaultArg = key("defaultArg").int(default = 42).async()
+  val RequiredArg = key("stringArg").string().required().async()
+}
