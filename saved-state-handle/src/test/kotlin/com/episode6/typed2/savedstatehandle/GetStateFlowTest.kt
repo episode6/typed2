@@ -15,8 +15,7 @@ import com.episode6.typed2.bundles.RequiredBundleKeyMissing
 import com.episode6.typed2.int
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
@@ -41,7 +40,7 @@ class GetStateFlowTest {
     }
 
     launch {
-      val result: StateFlow<Int> = savedStateHandle.getStateFlow(this, Keys.intKey)
+      val result: StateFlow<Int> = savedStateHandle.stateFlow(Keys.intKey, this, SharingStarted.Eagerly)
 
       assertThat(result.value).isEqualTo(2)
 
@@ -64,7 +63,7 @@ class GetStateFlowTest {
     }
 
     launch {
-      val result: StateFlow<Int?> = savedStateHandle.getStateFlow(this, Keys.nullableIntKey)
+      val result: StateFlow<Int?> = savedStateHandle.stateFlow(Keys.nullableIntKey, this, SharingStarted.Eagerly)
 
       assertThat(result.value).isNull()
 
@@ -86,7 +85,7 @@ class GetStateFlowTest {
       onGeneric { getStateFlow<String?>(any(), anyOrNull()) } doReturn backingStateFlow
     }
 
-    assertThat { savedStateHandle.getStateFlow(this, Keys.requiredInt) }
+    assertThat { savedStateHandle.stateFlow(Keys.requiredInt, this, SharingStarted.Eagerly) }
       .isFailure().hasClass(RequiredBundleKeyMissing::class)
   }
 
@@ -97,7 +96,7 @@ class GetStateFlowTest {
     }
 
     launch {
-      val result: StateFlow<Int?> = savedStateHandle.getStateFlow(this, Keys.requiredInt)
+      val result: StateFlow<Int?> = savedStateHandle.stateFlow(Keys.requiredInt, this, SharingStarted.Eagerly)
 
       assertThat(result.value).isEqualTo(5)
 
@@ -120,8 +119,8 @@ class GetStateFlowTest {
       onGeneric { getStateFlow<String?>(any(), anyOrNull()) } doReturn backingStateFlow
     }
 
-    val result = savedStateHandle.getStateFlow(this, Keys.asyncRequiredInt)
-    assertThat(result.value).isNull()
+    val result = savedStateHandle.sharedFlow(Keys.asyncRequiredInt, this, SharingStarted.Eagerly)
+    assertThat(result.first()).isNull()
     result.testIn(this)
   }
 
@@ -132,10 +131,9 @@ class GetStateFlowTest {
     }
 
     launch {
-      val result: StateFlow<Int?> = savedStateHandle.getStateFlow(this, Keys.asyncRequiredInt)
+      val result: SharedFlow<Int?> = savedStateHandle.sharedFlow(Keys.asyncRequiredInt, this, SharingStarted.Eagerly)
 
       result.test {
-        assertThat(awaitItem()).isNull()
         assertThat(awaitItem()).isEqualTo(5)
 
         backingStateFlow.emit("10")
