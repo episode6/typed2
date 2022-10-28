@@ -18,25 +18,24 @@ fun NavController.navigateTo(screen: NavScreen) {
  *   set(Screen.Arg2, 42)
  * }
  */
-fun NavController.navigateTo(screen: NavScreen, args: PrimitiveKeyValueSetter.() -> Unit) {
+inline fun NavController.navigateTo(screen: NavScreen, args: PrimitiveKeyValueSetter.() -> Unit) {
   val builder = ComposeNavArgBuilder()
   builder.args()
-  navigate(screen.buildRoute(builder.argMap))
+  navigate(screen.buildRoute(builder))
 }
 
-fun NavController.navigateTo(
+inline fun NavController.launchNavigateTo(
   screen: NavScreen,
   scope: CoroutineScope,
-  args: suspend PrimitiveKeyValueSetter.() -> Unit,
+  crossinline args: suspend PrimitiveKeyValueSetter.() -> Unit,
 ) {
   scope.launch {
-    val builder = ComposeNavArgBuilder()
-    builder.args()
-    navigate(screen.buildRoute(builder.argMap))
+    navigateTo(screen) { args() }
   }
 }
 
-private fun NavScreen.buildRoute(argValues: Map<String, Any?>): String {
+fun NavScreen.buildRoute(argBuilder: ComposeNavArgBuilder): String {
+  val argValues = argBuilder.argMap
   if (argValues.isEmpty()) return name
 
   val requiredValues = requiredArgs
@@ -54,8 +53,8 @@ private fun NavScreen.buildRoute(argValues: Map<String, Any?>): String {
   }
 }
 
-private class ComposeNavArgBuilder : PrimitiveKeyValueSetter {
-  val argMap: MutableMap<String, Any?> = mutableMapOf()
+class ComposeNavArgBuilder : PrimitiveKeyValueSetter {
+  internal val argMap: MutableMap<String, Any?> = mutableMapOf()
   override fun setBoolean(name: String, value: Boolean) { argMap[name] = value }
   override fun setFloat(name: String, value: Float) { argMap[name] = value }
   override fun setInt(name: String, value: Int) { argMap[name] = value }

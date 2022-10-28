@@ -64,11 +64,6 @@ inline fun TypedSharedPreferences.launchEdit(
   scope: CoroutineScope,
   commit: Boolean = false,
   crossinline action: suspend TypedSharedPreferences.Editor.() -> Unit,
-): Job = scope.launch {
-  edit().apply {
-    action()
-    if (commit) commit() else apply()
-  }
-}
+): Job = scope.launch { edit(commit = commit) { action() } }
 
 
