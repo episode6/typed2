@@ -54,16 +54,16 @@ inline fun TypedSharedPreferences.edit(
   }
 }
 
-inline fun SharedPreferences.launchEdit(
+fun SharedPreferences.launchEdit(
   scope: CoroutineScope,
   commit: Boolean = false,
-  crossinline action: suspend TypedSharedPreferences.Editor.() -> Unit,
+  action: suspend TypedSharedPreferences.Editor.() -> Unit,
 ): Job = typed().launchEdit(scope = scope, commit = commit, action = action)
 
-inline fun TypedSharedPreferences.launchEdit(
+fun TypedSharedPreferences.launchEdit(
   scope: CoroutineScope,
   commit: Boolean = false,
-  crossinline action: suspend TypedSharedPreferences.Editor.() -> Unit,
+  action: suspend TypedSharedPreferences.Editor.() -> Unit,
 ): Job = scope.launch { edit(commit = commit) { action() } }
 
 

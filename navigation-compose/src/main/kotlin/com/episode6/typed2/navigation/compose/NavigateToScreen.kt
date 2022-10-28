@@ -22,32 +22,34 @@ fun NavController.navigateTo(screen: NavScreen) {
 inline fun NavController.navigateTo(screen: NavScreen, args: PrimitiveKeyValueSetter.() -> Unit) {
   val builder = ComposeNavArgBuilder()
   builder.args()
-  navigate(screen.buildRoute(builder))
+  navigate(NavScreenRoute.build(screen, builder))
 }
 
-inline fun NavController.launchNavigateTo(
+fun NavController.launchNavigateTo(
   screen: NavScreen,
   scope: CoroutineScope,
-  crossinline args: suspend PrimitiveKeyValueSetter.() -> Unit,
+  args: suspend PrimitiveKeyValueSetter.() -> Unit,
 ): Job = scope.launch { navigateTo(screen) { args() } }
 
+object NavScreenRoute {
 
-fun NavScreen.buildRoute(argBuilder: ComposeNavArgBuilder): String {
-  val argValues = argBuilder.argMap
-  if (argValues.isEmpty()) return name
+  fun build(screen: NavScreen, argBuilder: ComposeNavArgBuilder): String = with(screen) {
+    val argValues = argBuilder.argMap
+    if (argValues.isEmpty()) return name
 
-  val requiredValues = requiredArgs
-    .map { argValues[it.name] ?: throw MissingRequiredArgumentException(it, this) }
+    val requiredValues = requiredArgs
+      .map { argValues[it.name] ?: throw MissingRequiredArgumentException(it, this) }
 
-  val optValues = optionalArgs
-    .filter { argValues[it.name] != null }
-    .map { "${it.name}=${argValues[it.name]}" }
+    val optValues = optionalArgs
+      .filter { argValues[it.name] != null }
+      .map { "${it.name}=${argValues[it.name]}" }
 
-  val route = (listOf(name) + requiredValues).joinToString(separator = "/")
-  return if (optValues.isNotEmpty()) {
-    "$route?${optValues.joinToString(separator = "&")}"
-  } else {
-    route
+    val route = (listOf(name) + requiredValues).joinToString(separator = "/")
+    return if (optValues.isNotEmpty()) {
+      "$route?${optValues.joinToString(separator = "&")}"
+    } else {
+      route
+    }
   }
 }
 
