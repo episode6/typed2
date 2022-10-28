@@ -24,7 +24,7 @@ class GetSharedPrefFlowTest {
   object Keys : PrefKeyNamespace() {
     val intKey = key("intKey").int(default = 2)
     val nullableIntKey = key("nullableInt").int()
-    val asyncRequiredInt = key("asyncRequiredInt").int().async()
+    val asyncKey = key("asyncInt").int().async()
   }
 
   private val listener = MutableSharedFlow<SharedPreferences.OnSharedPreferenceChangeListener>(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
@@ -90,12 +90,12 @@ class GetSharedPrefFlowTest {
     }
 
     launch {
-      val result: SharedFlow<Int?> = prefs.sharedFlow(Keys.asyncRequiredInt, this, SharingStarted.Eagerly)
+      val result: SharedFlow<Int?> = prefs.sharedFlow(Keys.asyncKey, this, SharingStarted.Eagerly)
 
       result.test {
         assertThat(awaitItem()).isEqualTo(5)
 
-        pingListener(Keys.asyncRequiredInt)
+        pingListener(Keys.asyncKey)
 
         assertThat(awaitItem()).isEqualTo(10)
       }
