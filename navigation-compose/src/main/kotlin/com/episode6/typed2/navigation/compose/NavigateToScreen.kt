@@ -4,6 +4,7 @@ import androidx.navigation.NavController
 import com.episode6.typed2.KeyDescriptor
 import com.episode6.typed2.PrimitiveKeyValueSetter
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 fun NavController.navigateTo(screen: NavScreen) {
@@ -28,11 +29,8 @@ inline fun NavController.launchNavigateTo(
   screen: NavScreen,
   scope: CoroutineScope,
   crossinline args: suspend PrimitiveKeyValueSetter.() -> Unit,
-) {
-  scope.launch {
-    navigateTo(screen) { args() }
-  }
-}
+): Job = scope.launch { navigateTo(screen) { args() } }
+
 
 fun NavScreen.buildRoute(argBuilder: ComposeNavArgBuilder): String {
   val argValues = argBuilder.argMap
