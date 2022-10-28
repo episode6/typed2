@@ -12,4 +12,5 @@ android {
 dependencies {
   implementation(libs.kotlinx.coroutines.core)
   testImplementation(libs.bundles.test.support)
+  testImplementation(libs.turbine.core)
 }
