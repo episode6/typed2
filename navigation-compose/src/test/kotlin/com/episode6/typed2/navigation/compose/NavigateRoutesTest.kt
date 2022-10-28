@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalCoroutinesApi::class)
+
 package com.episode6.typed2.navigation.compose
 
 import androidx.navigation.NavController
@@ -6,6 +8,10 @@ import assertk.assertions.hasMessage
 import assertk.assertions.isFailure
 import assertk.assertions.isInstanceOf
 import com.episode6.typed2.set
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.withContext
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.kotlin.mock
@@ -81,6 +87,41 @@ class NavigateRoutesTest {
       navController.navigateTo(ScreenWithAllArgTypes) {
         set(ScreenWithAllArgTypes.NullArg, "notNullThisTime")
         set(ScreenWithAllArgTypes.DefaultArg, 65)
+      }
+    }.isFailure()
+      .isInstanceOf(MissingRequiredArgumentException::class)
+      .hasMessage("Missing required argument \"stringArg\" when navigating to screen \"all_args\"")
+  }
+
+  @Test fun navScreenWithAsyncArgTypes_success_all() = runTest {
+    val job = navController.launchNavigateTo(ScreenWithAsyncArgTypes, this) {
+      set(ScreenWithAsyncArgTypes.NullArg, "notNullThisTime")
+      set(ScreenWithAsyncArgTypes.DefaultArg, 65)
+      set(ScreenWithAsyncArgTypes.RequiredArg, "myString")
+    }
+    job.join()
+
+    verify(navController).navigate("all_args/myString?nullArg=notNullThisTime&defaultArg=65")
+  }
+
+  @Test fun navScreenWithAsyncArgTypes_success_some() = runTest {
+    withContext(UnconfinedTestDispatcher()) {
+      navController.navigateTo(ScreenWithAsyncArgTypes) {
+        set(ScreenWithAsyncArgTypes.DefaultArg, 65)
+        set(ScreenWithAsyncArgTypes.RequiredArg, "myString")
+      }
+    }
+
+    verify(navController).navigate("all_args/myString?defaultArg=65")
+  }
+
+  @Test fun navScreenWithAsyncArgTypes_fail() = runTest {
+    assertThat {
+      withContext(UnconfinedTestDispatcher()) {
+        navController.navigateTo(ScreenWithAsyncArgTypes) {
+          set(ScreenWithAsyncArgTypes.NullArg, "notNullThisTime")
+          set(ScreenWithAsyncArgTypes.DefaultArg, 65)
+        }
       }
     }.isFailure()
       .isInstanceOf(MissingRequiredArgumentException::class)

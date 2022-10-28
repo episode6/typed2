@@ -4,6 +4,7 @@ import androidx.navigation.NavController
 import com.episode6.typed2.KeyDescriptor
 import com.episode6.typed2.PrimitiveKeyValueSetter
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 fun NavController.navigateTo(screen: NavScreen) {
@@ -18,44 +19,42 @@ fun NavController.navigateTo(screen: NavScreen) {
  *   set(Screen.Arg2, 42)
  * }
  */
-fun NavController.navigateTo(screen: NavScreen, args: PrimitiveKeyValueSetter.() -> Unit) {
+inline fun NavController.navigateTo(screen: NavScreen, args: PrimitiveKeyValueSetter.() -> Unit) {
   val builder = ComposeNavArgBuilder()
   builder.args()
-  navigate(screen.buildRoute(builder.argMap))
+  navigate(NavScreenRoute.build(screen, builder))
 }
 
-fun NavController.navigateTo(
+fun NavController.launchNavigateTo(
   screen: NavScreen,
   scope: CoroutineScope,
   args: suspend PrimitiveKeyValueSetter.() -> Unit,
-) {
-  scope.launch {
-    val builder = ComposeNavArgBuilder()
-    builder.args()
-    navigate(screen.buildRoute(builder.argMap))
+): Job = scope.launch { navigateTo(screen) { args() } }
+
+object NavScreenRoute {
+
+  fun build(screen: NavScreen, argBuilder: ComposeNavArgBuilder): String = with(screen) {
+    val argValues = argBuilder.argMap
+    if (argValues.isEmpty()) return name
+
+    val requiredValues = requiredArgs
+      .map { argValues[it.name] ?: throw MissingRequiredArgumentException(it, this) }
+
+    val optValues = optionalArgs
+      .filter { argValues[it.name] != null }
+      .map { "${it.name}=${argValues[it.name]}" }
+
+    val route = (listOf(name) + requiredValues).joinToString(separator = "/")
+    return if (optValues.isNotEmpty()) {
+      "$route?${optValues.joinToString(separator = "&")}"
+    } else {
+      route
+    }
   }
 }
 
-private fun NavScreen.buildRoute(argValues: Map<String, Any?>): String {
-  if (argValues.isEmpty()) return name
-
-  val requiredValues = requiredArgs
-    .map { argValues[it.name] ?: throw MissingRequiredArgumentException(it, this) }
-
-  val optValues = optionalArgs
-    .filter { argValues[it.name] != null }
-    .map { "${it.name}=${argValues[it.name]}" }
-
-  val route = (listOf(name) + requiredValues).joinToString(separator = "/")
-  return if (optValues.isNotEmpty()) {
-    "$route?${optValues.joinToString(separator = "&")}"
-  } else {
-    route
-  }
-}
-
-private class ComposeNavArgBuilder : PrimitiveKeyValueSetter {
-  val argMap: MutableMap<String, Any?> = mutableMapOf()
+class ComposeNavArgBuilder : PrimitiveKeyValueSetter {
+  internal val argMap: MutableMap<String, Any?> = mutableMapOf()
   override fun setBoolean(name: String, value: Boolean) { argMap[name] = value }
   override fun setFloat(name: String, value: Float) { argMap[name] = value }
   override fun setInt(name: String, value: Int) { argMap[name] = value }
