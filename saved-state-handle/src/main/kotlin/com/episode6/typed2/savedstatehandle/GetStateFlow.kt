@@ -21,6 +21,7 @@ fun <T, BACKED_BY> SavedStateHandle.sharedFlow(
   replay: Int = 1,
 ): SharedFlow<T> = getStateFlow(key.name, key.backingTypeInfo.default)
   .map { key.mapper.mapGet(it) }
+  .conflate()
   .shareIn(scope, started, replay)
 
 
