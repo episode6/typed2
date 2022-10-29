@@ -24,6 +24,8 @@ class BundleKeysTest {
     val charSequence = key("charSequence").charSequence()
     val charSequenceArray = key("charSequenceArray").charSequenceArray()
     val charSequenceList = key("charSequenceList").charSequenceList()
+    val floatArray = key("floatArray").floatArray()
+    val intList = key("intList").intList()
   }
 
   private val getter: BundleValueGetter = mock {
@@ -31,6 +33,7 @@ class BundleKeysTest {
     on { getByte(any(), any()) } doAnswer { it.getArgument(1) }
     on { getChar(any(), any()) } doAnswer { it.getArgument(1) }
     on { getCharSequenceArrayList(any()) } doReturn null
+    on { getIntArrayList(any()) } doReturn null
     on { getString(any(), anyOrNull()) } doAnswer { it.getArgument(1) }
   }
 
@@ -147,6 +150,26 @@ class BundleKeysTest {
     inOrder(getter, setter) {
       verify(getter).getCharSequenceArrayList("charSequenceList")
       verify(setter).setCharSequenceArrayList("charSequenceList", ArrayList(listOf("hi")))
+    }
+  }
+
+  @Test fun testFloatArray() {
+    assertThat(getter.get(Keys.floatArray)).isNull()
+    setter.set(Keys.floatArray, floatArrayOf(1.2f))
+
+    inOrder(getter, setter) {
+      verify(getter).getFloatArray("floatArray")
+      verify(setter).setFloatArray("floatArray", floatArrayOf(1.2f))
+    }
+  }
+
+  @Test fun testIntList() {
+    assertThat(getter.get(Keys.intList)).isNull()
+    setter.set(Keys.intList, listOf(42))
+
+    inOrder(getter, setter) {
+      verify(getter).getIntArrayList("intList")
+      verify(setter).setIntArrayList("intList", ArrayList(listOf(42)))
     }
   }
 }
