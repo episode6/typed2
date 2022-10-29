@@ -9,12 +9,18 @@ interface BundleValueGetter : BaseBundleValueGetter {
   fun getBinder(name: String): IBinder?
   fun getBundle(name: String): Bundle?
   fun getByte(name: String, default: Byte): Byte
+  fun getByteArray(name: String): Array<Byte>? = TODO()
+  fun getChar(name: String, default: Char): Char = TODO()
+  fun getCharArray(name: String): Array<Char>? = TODO()
 }
 
 interface BundleValueSetter : BaseBundleValueSetter {
   fun setBinder(name: String, value: IBinder?)
   fun setBundle(name: String, value: Bundle?)
   fun setByte(name: String, value: Byte)
+  fun setByteArray(name: String, value: Array<Byte>?) { TODO() }
+  fun setChar(name: String, value: Char) { TODO() }
+  fun setCharArray(name: String, value: Array<Char>?) { TODO() }
 }
 
 fun <T> BundleValueGetter.get(key: BundleKey<T, *>): T = key.get(this)
