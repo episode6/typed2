@@ -14,6 +14,9 @@ class TypedBundle(private val delegate: Bundle) : BundleValueGetter, BundleValue
   override fun getBinder(name: String): IBinder? = delegate.getBinder(name)
   override fun getBundle(name: String): Bundle? = delegate.getBundle(name)
   override fun getByte(name: String, default: Byte): Byte = delegate.getByte(name, default)
+  override fun getByteArray(name: String): ByteArray? = delegate.getByteArray(name)
+  override fun getChar(name: String, default: Char): Char = delegate.getChar(name, default)
+  override fun getCharArray(name: String): CharArray? = delegate.getCharArray(name)
   override fun getDouble(name: String, default: Double): Double = delegate.getDouble(name, default)
 
   override fun remove(name: String) = delegate.remove(name)
@@ -25,6 +28,9 @@ class TypedBundle(private val delegate: Bundle) : BundleValueGetter, BundleValue
   override fun setBinder(name: String, value: IBinder?) { delegate.putBinder(name, value) }
   override fun setBundle(name: String, value: Bundle?) = delegate.putBundle(name, value)
   override fun setByte(name: String, value: Byte) { delegate.putByte(name, value) }
+  override fun setByteArray(name: String, value: ByteArray?) { delegate.putByteArray(name, value) }
+  override fun setChar(name: String, value: Char) { delegate.putChar(name, value) }
+  override fun setCharArray(name: String, value: CharArray?) { delegate.putCharArray(name, value) }
   override fun setDouble(name: String, value: Double) { delegate.putDouble(name, value) }
 }
 
