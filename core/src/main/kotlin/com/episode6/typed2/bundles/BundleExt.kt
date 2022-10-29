@@ -20,6 +20,8 @@ class TypedBundle(private val delegate: Bundle) : BundleValueGetter, BundleValue
   override fun getCharSequence(name: String): CharSequence? = delegate.getCharSequence(name)
   override fun getCharSequenceArray(name: String): Array<CharSequence>? = delegate.getCharSequenceArray(name)
   override fun getCharSequenceArrayList(name: String): ArrayList<CharSequence>? = delegate.getCharSequenceArrayList(name)
+  override fun getFloatArray(name: String): FloatArray? = delegate.getFloatArray(name)
+  override fun getIntArrayList(name: String): ArrayList<Int>? = delegate.getIntegerArrayList(name)
   override fun getDouble(name: String, default: Double): Double = delegate.getDouble(name, default)
 
   override fun remove(name: String) = delegate.remove(name)
@@ -37,6 +39,8 @@ class TypedBundle(private val delegate: Bundle) : BundleValueGetter, BundleValue
   override fun setCharSequence(name: String, value: CharSequence?) { delegate.putCharSequence(name, value) }
   override fun setCharSequenceArray(name: String, value: Array<CharSequence>?) { delegate.putCharSequenceArray(name, value) }
   override fun setCharSequenceArrayList(name: String, value: ArrayList<CharSequence>?) { delegate.putCharSequenceArrayList(name, value) }
+  override fun setFloatArray(name: String, value: FloatArray?) { delegate.putFloatArray(name, value) }
+  override fun setIntArrayList(name: String, value: ArrayList<Int>?) { delegate.putIntegerArrayList(name, value) }
   override fun setDouble(name: String, value: Double) { delegate.putDouble(name, value) }
 }
 

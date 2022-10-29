@@ -67,21 +67,30 @@ fun BundleKeyBuilder.charSequence(): BundleKey<CharSequence?, CharSequence?> = n
   set = { setCharSequence(name, it) }
 )
 
-fun BundleKeyBuilder.charSequenceArray(default: Array<CharSequence>): BundleKey<Array<CharSequence>, Array<CharSequence>?> =
-  charSequenceArray().defaultProvider { default }
-
+fun BundleKeyBuilder.charSequenceArray(default: Array<CharSequence>): BundleKey<Array<CharSequence>, Array<CharSequence>?> = charSequenceArray().defaultProvider { default }
 fun BundleKeyBuilder.charSequenceArray(): BundleKey<Array<CharSequence>?, Array<CharSequence>?> = nativeKey(
   get = { getCharSequenceArray(name) },
   set = { setCharSequenceArray(name, it) }
 )
 
-fun BundleKeyBuilder.charSequenceList(default: List<CharSequence>): BundleKey<List<CharSequence>, ArrayList<CharSequence>?> =
-  charSequenceList().defaultProvider { default }
-
+fun BundleKeyBuilder.charSequenceList(default: List<CharSequence>): BundleKey<List<CharSequence>, ArrayList<CharSequence>?> = charSequenceList().defaultProvider { default }
 fun BundleKeyBuilder.charSequenceList(): BundleKey<List<CharSequence>?, ArrayList<CharSequence>?> = charSequenceArrayList().mapType(
   mapGet = { it },
   mapSet = { it?.let { if (it is ArrayList<CharSequence>) it else ArrayList(it) } },
 )
+
+fun BundleKeyBuilder.floatArray(default: FloatArray): BundleKey<FloatArray, FloatArray?> = floatArray().defaultProvider { default }
+fun BundleKeyBuilder.floatArray(): BundleKey<FloatArray?, FloatArray?> = nativeKey(
+  get = { getFloatArray(name) },
+  set = { setFloatArray(name, it) }
+)
+
+fun BundleKeyBuilder.intList(default: List<Int>): BundleKey<List<Int>, ArrayList<Int>?> = intList().defaultProvider { default }
+fun BundleKeyBuilder.intList(): BundleKey<List<Int>?, ArrayList<Int>?> = intArrayList().mapType(
+  mapGet = { it },
+  mapSet = { it?.let { if (it is ArrayList<Int>) it else ArrayList(it) } },
+)
+
 
 private fun BundleKeyBuilder.nativeBinder(): BundleKey<IBinder?, IBinder?> = nativeKey(
   get = { getBinder(name) },
@@ -91,4 +100,9 @@ private fun BundleKeyBuilder.nativeBinder(): BundleKey<IBinder?, IBinder?> = nat
 private fun BundleKeyBuilder.charSequenceArrayList(): BundleKey<ArrayList<CharSequence>?, ArrayList<CharSequence>?> = nativeKey(
   get = { getCharSequenceArrayList(name) },
   set = { setCharSequenceArrayList(name, it) }
+)
+
+private fun BundleKeyBuilder.intArrayList(): BundleKey<ArrayList<Int>?, ArrayList<Int>?> = nativeKey(
+  get = { getIntArrayList(name) },
+  set = { setIntArrayList(name, it) }
 )
