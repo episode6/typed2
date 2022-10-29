@@ -17,6 +17,9 @@ class TypedBundle(private val delegate: Bundle) : BundleValueGetter, BundleValue
   override fun getByteArray(name: String): ByteArray? = delegate.getByteArray(name)
   override fun getChar(name: String, default: Char): Char = delegate.getChar(name, default)
   override fun getCharArray(name: String): CharArray? = delegate.getCharArray(name)
+  override fun getCharSequence(name: String): CharSequence? = delegate.getCharSequence(name)
+  override fun getCharSequenceArray(name: String): Array<CharSequence>? = delegate.getCharSequenceArray(name)
+  override fun getCharSequenceArrayList(name: String): ArrayList<CharSequence>? = delegate.getCharSequenceArrayList(name)
   override fun getDouble(name: String, default: Double): Double = delegate.getDouble(name, default)
 
   override fun remove(name: String) = delegate.remove(name)
@@ -31,6 +34,9 @@ class TypedBundle(private val delegate: Bundle) : BundleValueGetter, BundleValue
   override fun setByteArray(name: String, value: ByteArray?) { delegate.putByteArray(name, value) }
   override fun setChar(name: String, value: Char) { delegate.putChar(name, value) }
   override fun setCharArray(name: String, value: CharArray?) { delegate.putCharArray(name, value) }
+  override fun setCharSequence(name: String, value: CharSequence?) { delegate.putCharSequence(name, value) }
+  override fun setCharSequenceArray(name: String, value: Array<CharSequence>?) { delegate.putCharSequenceArray(name, value) }
+  override fun setCharSequenceArrayList(name: String, value: ArrayList<CharSequence>?) { delegate.putCharSequenceArrayList(name, value) }
   override fun setDouble(name: String, value: Double) { delegate.putDouble(name, value) }
 }
 

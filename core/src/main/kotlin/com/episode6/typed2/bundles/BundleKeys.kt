@@ -69,6 +69,34 @@ fun BundleKeyBuilder.charArray(): BundleKey<CharArray?, CharArray?> = nativeKey(
   set = { setCharArray(name, it) }
 )
 
+fun BundleKeyBuilder.charSequence(default: CharSequence): BundleKey<CharSequence, CharSequence?> = charSequence { default }
+fun BundleKeyBuilder.charSequence(default: ()->CharSequence): BundleKey<CharSequence, CharSequence?> = charSequence().withDefault(default)
+fun BundleKeyBuilder.charSequence(): BundleKey<CharSequence?, CharSequence?> = nativeKey(
+  get = { getCharSequence(name) },
+  set = { setCharSequence(name, it) }
+)
+
+fun BundleKeyBuilder.charSequenceArray(default: Array<CharSequence>): BundleKey<Array<CharSequence>, Array<CharSequence>?> = charSequenceArray { default }
+fun BundleKeyBuilder.charSequenceArray(default: ()->Array<CharSequence>): BundleKey<Array<CharSequence>, Array<CharSequence>?> = charSequenceArray().withDefault(default)
+fun BundleKeyBuilder.charSequenceArray(): BundleKey<Array<CharSequence>?, Array<CharSequence>?> = nativeKey(
+  get = { getCharSequenceArray(name) },
+  set = { setCharSequenceArray(name, it) }
+)
+
+fun BundleKeyBuilder.charSequenceArrayList(default: ArrayList<CharSequence>): BundleKey<ArrayList<CharSequence>, ArrayList<CharSequence>?> = charSequenceArrayList { default }
+fun BundleKeyBuilder.charSequenceArrayList(default: ()->ArrayList<CharSequence>): BundleKey<ArrayList<CharSequence>, ArrayList<CharSequence>?> = charSequenceArrayList().withDefault(default)
+fun BundleKeyBuilder.charSequenceArrayList(): BundleKey<ArrayList<CharSequence>?, ArrayList<CharSequence>?> = nativeKey(
+  get = { getCharSequenceArrayList(name) },
+  set = { setCharSequenceArrayList(name, it) }
+)
+
+fun BundleKeyBuilder.charSequenceList(default: List<CharSequence>): BundleKey<List<CharSequence>, ArrayList<CharSequence>?> = charSequenceList { default }
+fun BundleKeyBuilder.charSequenceList(default: ()->List<CharSequence>): BundleKey<List<CharSequence>, ArrayList<CharSequence>?> = charSequenceList().withDefault(default)
+fun BundleKeyBuilder.charSequenceList(): BundleKey<List<CharSequence>?, ArrayList<CharSequence>?> = charSequenceArrayList().mapType(
+  mapGet = { it },
+  mapSet = { it?.let { if (it is ArrayList<CharSequence>) it else ArrayList(it) } },
+)
+
 private fun BundleKeyBuilder.nativeBinder(): BundleKey<IBinder?, IBinder?> = nativeKey(
   get = { getBinder(name) },
   set = { setBinder(name, it) }
