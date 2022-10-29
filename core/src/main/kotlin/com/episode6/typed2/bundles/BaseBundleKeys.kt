@@ -6,8 +6,6 @@ import kotlin.coroutines.CoroutineContext
 
 typealias BaseBundleKey<T, BACKED_BY> = Key<T, BACKED_BY, in BaseBundleValueGetter, in BaseBundleValueSetter>
 typealias AsyncBaseBundleKey<T, BACKED_BY> = AsyncKey<T, BACKED_BY, in BaseBundleValueGetter, in BaseBundleValueSetter>
-typealias NativeBaseBundleKey<T> = BaseBundleKey<T, T>
-typealias NativeAsyncBaseBundleKey<T> = AsyncBaseBundleKey<T, T>
 
 interface BaseBundleKeyBuilder : PrimitiveKeyBuilder
 
@@ -24,7 +22,7 @@ open class BaseBundleKeyNamespace(private val prefix: String = "") {
   protected fun <T : Any?, BACKED_BY : Any?> BaseBundleKey<T, BACKED_BY>.async(context: CoroutineContext = Dispatchers.Default): AsyncBaseBundleKey<T, BACKED_BY> = asAsync(context)
 }
 
-fun BaseBundleKeyBuilder.double(default: Double): NativeBaseBundleKey<Double> = nativeKey(
+fun BaseBundleKeyBuilder.double(default: Double): BaseBundleKey<Double, Double> = nativeKey(
   get = { getDouble(name, default) },
   set = { setDouble(name, default) },
   backingDefault = default,
