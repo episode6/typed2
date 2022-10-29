@@ -2,6 +2,7 @@ package com.episode6.typed2
 
 import android.os.Bundle
 import android.os.IBinder
+import android.os.Parcelable
 import assertk.assertThat
 import assertk.assertions.isEmpty
 import assertk.assertions.isEqualTo
@@ -26,6 +27,7 @@ class BundleKeysTest {
     val charSequenceList = key("charSequenceList").charSequenceList()
     val floatArray = key("floatArray").floatArray()
     val intList = key("intList").intList()
+    val parcelable = key("parcelable").parcelable<TestParcelable>()
   }
 
   private val getter: BundleValueGetter = mock {
@@ -172,6 +174,19 @@ class BundleKeysTest {
       verify(setter).setIntArrayList("intList", ArrayList(listOf(42)))
     }
   }
+
+  @Test fun testParcelable() {
+    val mockParcelable = mock<TestParcelable>()
+
+    assertThat(getter.get(Keys.parcelable)).isNull()
+    setter.set(Keys.parcelable, mockParcelable)
+
+    inOrder(getter, setter) {
+      verify(getter).getParcelable("parcelable", TestParcelable::class)
+      verify(setter).setParcelable("parcelable", mockParcelable)
+    }
+  }
 }
 
 private interface TestBinder: IBinder
+private interface TestParcelable : Parcelable

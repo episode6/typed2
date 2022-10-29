@@ -2,8 +2,10 @@ package com.episode6.typed2.bundles
 
 import android.os.Bundle
 import android.os.IBinder
+import android.os.Parcelable
 import com.episode6.typed2.get
 import com.episode6.typed2.set
+import kotlin.reflect.KClass
 
 interface BundleValueGetter : BaseBundleValueGetter {
   fun getBinder(name: String): IBinder?
@@ -17,6 +19,7 @@ interface BundleValueGetter : BaseBundleValueGetter {
   fun getCharSequenceArrayList(name: String): ArrayList<CharSequence>?
   fun getFloatArray(name: String): FloatArray?
   fun getIntArrayList(name: String): ArrayList<Int>?
+  fun <T: Parcelable> getParcelable(name: String, kclass: KClass<T>): T?
 }
 
 interface BundleValueSetter : BaseBundleValueSetter {
@@ -31,6 +34,7 @@ interface BundleValueSetter : BaseBundleValueSetter {
   fun setCharSequenceArrayList(name: String, value: ArrayList<CharSequence>?)
   fun setFloatArray(name: String, value: FloatArray?)
   fun setIntArrayList(name: String, value: ArrayList<Int>?)
+  fun <T: Parcelable> setParcelable(name: String, value: T?)
 }
 
 fun <T> BundleValueGetter.get(key: BundleKey<T, *>): T = key.get(this)

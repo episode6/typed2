@@ -2,9 +2,11 @@ package com.episode6.typed2.savedstatehandle
 
 import android.os.Bundle
 import android.os.IBinder
+import android.os.Parcelable
 import androidx.lifecycle.SavedStateHandle
 import com.episode6.typed2.KeyValueDelegate
 import com.episode6.typed2.bundles.*
+import kotlin.reflect.KClass
 
 class TypedSavedStateHandle(private val delegate: SavedStateHandle) : BundleValueGetter, BundleValueSetter {
   override fun contains(name: String): Boolean = delegate.contains(name)
@@ -19,6 +21,7 @@ class TypedSavedStateHandle(private val delegate: SavedStateHandle) : BundleValu
   override fun getCharSequenceArrayList(name: String): ArrayList<CharSequence>? = delegate[name]
   override fun getFloatArray(name: String): FloatArray? = delegate[name]
   override fun getIntArrayList(name: String): ArrayList<Int>? = delegate[name]
+  override fun <T : Parcelable> getParcelable(name: String, kclass: KClass<T>): T? = delegate[name]
   override fun getDouble(name: String, default: Double): Double = delegate[name] ?: default
   override fun getBoolean(name: String, default: Boolean): Boolean = delegate[name] ?: default
   override fun getFloat(name: String, default: Float): Float = delegate[name] ?: default
@@ -37,6 +40,7 @@ class TypedSavedStateHandle(private val delegate: SavedStateHandle) : BundleValu
   override fun setCharSequenceArrayList(name: String, value: ArrayList<CharSequence>?) { delegate[name] = value }
   override fun setFloatArray(name: String, value: FloatArray?) { delegate[name] = value }
   override fun setIntArrayList(name: String, value: ArrayList<Int>?) { delegate[name] = value }
+  override fun <T : Parcelable> setParcelable(name: String, value: T?) { delegate[name] = value }
   override fun setDouble(name: String, value: Double) { delegate[name] = value }
   override fun setInt(name: String, value: Int) { delegate[name] = value }
   override fun setString(name: String, value: String?) { delegate[name] = value }
