@@ -22,5 +22,3 @@ open class NavScreen(val name: String, private val argPrefix: String = "") : Req
 
   protected fun key(name: String): NavArgBuilder = Builder(argPrefix + name) { _args[it.name] = it }
 }
-
-class RequiredNavArgumentMissing(name: String) : RuntimeException("Required nav argument missing: $name")

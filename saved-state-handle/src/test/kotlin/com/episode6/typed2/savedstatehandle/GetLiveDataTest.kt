@@ -13,9 +13,9 @@ import assertk.assertions.hasClass
 import assertk.assertions.isEqualTo
 import assertk.assertions.isFailure
 import assertk.assertions.isNull
+import com.episode6.typed2.RequiredKeyMissingException
 import com.episode6.typed2.async
 import com.episode6.typed2.bundles.BundleKeyNamespace
-import com.episode6.typed2.bundles.RequiredBundleKeyMissing
 import com.episode6.typed2.int
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -122,7 +122,7 @@ class GetLiveDataTest {
     }
 
     assertThat { savedStateHandle.getLiveData(Keys.requiredInt) }
-      .isFailure().hasClass(RequiredBundleKeyMissing::class)
+      .isFailure().hasClass(RequiredKeyMissingException::class)
   }
 
   @Test fun testRequiredIntStateFlow_hasValue() = runTest {
@@ -157,7 +157,7 @@ class GetLiveDataTest {
     }
   }
 
-  @Test(expected = RequiredBundleKeyMissing::class) // catches exception in other coroutine
+  @Test(expected = RequiredKeyMissingException::class) // catches exception in other coroutine
   fun testRequiredAsyncIntStateFlow_noValue() = runTest(UnconfinedTestDispatcher()) {
     val backingLiveData: MutableLiveData<String?> = MutableLiveData(Keys.asyncRequiredInt.backingTypeInfo.default)
     savedStateHandle.stub {
