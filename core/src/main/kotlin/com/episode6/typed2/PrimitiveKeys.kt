@@ -2,8 +2,8 @@ package com.episode6.typed2
 
 import java.math.BigDecimal
 
-typealias PrimitiveKey<T, BACKED_BY> = Key<T, BACKED_BY, in PrimitiveKeyValueGetter, in PrimitiveKeyValueSetter>
-typealias AsyncPrimitiveKey<T, BACKED_BY> = AsyncKey<T, BACKED_BY, in PrimitiveKeyValueGetter, in PrimitiveKeyValueSetter>
+typealias PrimitiveKey<T, BACKED_BY> = Key<T, BACKED_BY, PrimitiveKeyValueGetter, PrimitiveKeyValueSetter>
+typealias AsyncPrimitiveKey<T, BACKED_BY> = AsyncKey<T, BACKED_BY, PrimitiveKeyValueGetter, PrimitiveKeyValueSetter>
 
 interface PrimitiveKeyBuilder : KeyBuilder {
   fun String.encode(): String = this

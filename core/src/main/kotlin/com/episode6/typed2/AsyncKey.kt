@@ -5,7 +5,7 @@ class AsyncKeyMapper<T : Any?, BACKED_BY : Any?> internal constructor(
   val mapSet: suspend (T) -> BACKED_BY,
 )
 
-class AsyncKey<T : Any?, BACKED_BY : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter> internal constructor(
+class AsyncKey<T : Any?, BACKED_BY : Any?, in GETTER : KeyValueGetter, in SETTER : KeyValueSetter> internal constructor(
   override val name: String,
   override val outputDefault: OutputDefault<T>?,
   override val backingTypeInfo: KeyBackingTypeInfo<BACKED_BY>,

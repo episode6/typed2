@@ -4,8 +4,8 @@ import com.episode6.typed2.*
 import kotlinx.coroutines.Dispatchers
 import kotlin.coroutines.CoroutineContext
 
-typealias BaseBundleKey<T, BACKED_BY> = Key<T, BACKED_BY, in BaseBundleValueGetter, in BaseBundleValueSetter>
-typealias AsyncBaseBundleKey<T, BACKED_BY> = AsyncKey<T, BACKED_BY, in BaseBundleValueGetter, in BaseBundleValueSetter>
+typealias BaseBundleKey<T, BACKED_BY> = Key<T, BACKED_BY, BaseBundleValueGetter, BaseBundleValueSetter>
+typealias AsyncBaseBundleKey<T, BACKED_BY> = AsyncKey<T, BACKED_BY, BaseBundleValueGetter, BaseBundleValueSetter>
 
 interface BaseBundleKeyBuilder : PrimitiveKeyBuilder
 

@@ -1,6 +1,6 @@
 package com.episode6.typed2
 
-class KeyBacker<BACKED_BY : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter> internal constructor(
+class KeyBacker<BACKED_BY : Any?, in GETTER : KeyValueGetter, in SETTER : KeyValueSetter> internal constructor(
   val getBackingData: (GETTER) -> BACKED_BY,
   val setBackingData: (SETTER, BACKED_BY) -> Unit,
 )
@@ -10,7 +10,7 @@ class KeyMapper<T : Any?, BACKED_BY : Any?> internal constructor(
   val mapSet: (T) -> BACKED_BY,
 )
 
-class Key<T : Any?, BACKED_BY : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter> internal constructor(
+class Key<T : Any?, BACKED_BY : Any?, in GETTER : KeyValueGetter, in SETTER : KeyValueSetter> internal constructor(
   override val name: String,
   override val outputDefault: OutputDefault<T>?,
   override val backingTypeInfo: KeyBackingTypeInfo<BACKED_BY>,

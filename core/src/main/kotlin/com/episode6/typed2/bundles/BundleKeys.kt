@@ -6,8 +6,8 @@ import com.episode6.typed2.*
 import kotlinx.coroutines.Dispatchers
 import kotlin.coroutines.CoroutineContext
 
-typealias BundleKey<T, BACKED_BY> = Key<T, BACKED_BY, in BundleValueGetter, in BundleValueSetter>
-typealias AsyncBundleKey<T, BACKED_BY> = AsyncKey<T, BACKED_BY, in BundleValueGetter, in BundleValueSetter>
+typealias BundleKey<T, BACKED_BY> = Key<T, BACKED_BY, BundleValueGetter, BundleValueSetter>
+typealias AsyncBundleKey<T, BACKED_BY> = AsyncKey<T, BACKED_BY, BundleValueGetter, BundleValueSetter>
 typealias BundleProperty<T> = KeyValueDelegate<T, in BundleValueGetter, in BundleValueSetter>
 
 interface BundleKeyBuilder : BaseBundleKeyBuilder

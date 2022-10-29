@@ -4,8 +4,8 @@ import com.episode6.typed2.*
 import kotlinx.coroutines.Dispatchers
 import kotlin.coroutines.CoroutineContext
 
-typealias PrefKey<T, BACKED_BY> = Key<T, BACKED_BY, in PrefValueGetter, in PrefValueSetter>
-typealias AsyncPrefKey<T, BACKED_BY> = AsyncKey<T, BACKED_BY, in PrefValueGetter, in PrefValueSetter>
+typealias PrefKey<T, BACKED_BY> = Key<T, BACKED_BY, PrefValueGetter, PrefValueSetter>
+typealias AsyncPrefKey<T, BACKED_BY> = AsyncKey<T, BACKED_BY, PrefValueGetter, PrefValueSetter>
 
 interface PrefKeyBuilder : PrimitiveKeyBuilder
 open class PrefKeyNamespace(private val prefix: String = "") {

@@ -5,9 +5,9 @@ import com.episode6.typed2.*
 import kotlinx.coroutines.Dispatchers
 import kotlin.coroutines.CoroutineContext
 
-typealias PersistableBundleKey<T, BACKED_BY> = Key<T, BACKED_BY, in PersistableBundleValueGetter, in PersistableBundleValueSetter>
-typealias AsyncPersistableBundleKey<T, BACKED_BY> = AsyncKey<T, BACKED_BY, in PersistableBundleValueGetter, in PersistableBundleValueSetter>
-typealias PersistableBundleProperty<T> = KeyValueDelegate<T, in PersistableBundleValueGetter, in PersistableBundleValueSetter>
+typealias PersistableBundleKey<T, BACKED_BY> = Key<T, BACKED_BY, PersistableBundleValueGetter, PersistableBundleValueSetter>
+typealias AsyncPersistableBundleKey<T, BACKED_BY> = AsyncKey<T, BACKED_BY, PersistableBundleValueGetter, PersistableBundleValueSetter>
+typealias PersistableBundleProperty<T> = KeyValueDelegate<T, in PersistableBundleValueGetter, PersistableBundleValueSetter>
 
 interface PersistableBundleKeyBuilder : BaseBundleKeyBuilder
 open class PersistableBundleKeyNamespace(private val prefix: String = "") {
