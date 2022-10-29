@@ -2,7 +2,9 @@ package com.episode6.typed2.bundles
 
 import android.os.Bundle
 import android.os.IBinder
+import android.os.Parcelable
 import com.episode6.typed2.*
+import kotlin.reflect.KClass
 
 typealias BundleKey<T, BACKED_BY> = Key<T, BACKED_BY, BundleValueGetter, BundleValueSetter>
 typealias AsyncBundleKey<T, BACKED_BY> = AsyncKey<T, BACKED_BY, BundleValueGetter, BundleValueSetter>
@@ -91,6 +93,15 @@ fun BundleKeyBuilder.intList(): BundleKey<List<Int>?, ArrayList<Int>?> = intArra
   mapSet = { it?.let { if (it is ArrayList<Int>) it else ArrayList(it) } },
 )
 
+inline fun <reified T : Parcelable> BundleKeyBuilder.parcelable(default: T) : BundleKey<T, T?> = parcelable<T>().defaultProvider { default }
+inline fun <reified T : Parcelable> BundleKeyBuilder.parcelable() : BundleKey<T?, T?> = parcelable(T::class)
+fun <T : Parcelable> BundleKeyBuilder.parcelable(kclass: KClass<T>) : BundleKey<T?, T?> = NativeKeys.create(
+  name = name,
+  backingClass = kclass,
+  get = { getParcelable(name, kclass) },
+  set = { setParcelable(name, it) },
+  newKeyCallback = newKeyCallback,
+)
 
 private fun BundleKeyBuilder.nativeBinder(): BundleKey<IBinder?, IBinder?> = nativeKey(
   get = { getBinder(name) },
