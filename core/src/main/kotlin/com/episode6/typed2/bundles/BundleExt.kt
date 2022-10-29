@@ -1,6 +1,7 @@
 package com.episode6.typed2.bundles
 
 import android.os.Bundle
+import android.os.IBinder
 import com.episode6.typed2.KeyValueDelegate
 
 class TypedBundle(private val delegate: Bundle) : BundleValueGetter, BundleValueSetter {
@@ -10,7 +11,9 @@ class TypedBundle(private val delegate: Bundle) : BundleValueGetter, BundleValue
   override fun getInt(name: String, default: Int): Int = delegate.getInt(name, default)
   override fun getLong(name: String, default: Long): Long = delegate.getLong(name, default)
   override fun getString(name: String, default: String?): String? = delegate.getString(name, default)
+  override fun getBinder(name: String): IBinder? = delegate.getBinder(name)
   override fun getBundle(name: String): Bundle? = delegate.getBundle(name)
+  override fun getByte(name: String, default: Byte): Byte = delegate.getByte(name, default)
   override fun getDouble(name: String, default: Double): Double = delegate.getDouble(name, default)
 
   override fun remove(name: String) = delegate.remove(name)
@@ -19,7 +22,9 @@ class TypedBundle(private val delegate: Bundle) : BundleValueGetter, BundleValue
   override fun setBoolean(name: String, value: Boolean) { delegate.putBoolean(name, value) }
   override fun setFloat(name: String, value: Float) { delegate.putFloat(name, value) }
   override fun setLong(name: String, value: Long) { delegate.putLong(name, value) }
+  override fun setBinder(name: String, value: IBinder?) { delegate.putBinder(name, value) }
   override fun setBundle(name: String, value: Bundle?) = delegate.putBundle(name, value)
+  override fun setByte(name: String, value: Byte) { delegate.putByte(name, value) }
   override fun setDouble(name: String, value: Double) { delegate.putDouble(name, value) }
 }
 

@@ -6,15 +6,15 @@ import com.episode6.typed2.get
 import com.episode6.typed2.set
 
 interface BundleValueGetter : BaseBundleValueGetter {
-  fun getBinder(name: String): IBinder? = TODO()
+  fun getBinder(name: String): IBinder?
   fun getBundle(name: String): Bundle?
-  fun getByte(name: String, default: Byte): Byte = TODO()
+  fun getByte(name: String, default: Byte): Byte
 }
 
 interface BundleValueSetter : BaseBundleValueSetter {
-  fun setBinder(name: String, value: IBinder?) { TODO() }
+  fun setBinder(name: String, value: IBinder?)
   fun setBundle(name: String, value: Bundle?)
-  fun setByte(name: String, value: Byte) { TODO() }
+  fun setByte(name: String, value: Byte)
 }
 
 fun <T> BundleValueGetter.get(key: BundleKey<T, *>): T = key.get(this)
