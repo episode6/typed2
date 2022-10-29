@@ -1,7 +1,9 @@
 package com.episode6.typed2
 
+import android.os.Bundle
 import android.os.IBinder
 import assertk.assertThat
+import assertk.assertions.isEqualTo
 import assertk.assertions.isNull
 import com.episode6.typed2.bundles.*
 import org.junit.Test
@@ -32,6 +34,38 @@ class BundleKeysTest {
     inOrder(getter, setter) {
       verify(getter).getBinder("binder")
       verify(setter).setBinder("binder", mockBinder)
+    }
+  }
+
+  @Test fun testBundle() {
+    val mockBundle: Bundle = mock()
+
+    assertThat(getter.get(Keys.bundle)).isNull()
+    setter.set(Keys.bundle, mockBundle)
+
+    inOrder(getter, setter) {
+      verify(getter).getBundle("bundle")
+      verify(setter).setBundle("bundle", mockBundle)
+    }
+  }
+
+  @Test fun testByte() {
+    assertThat(getter.get(Keys.byte)).isEqualTo(3)
+    setter.set(Keys.byte, 99)
+
+    inOrder(getter, setter) {
+      verify(getter).getByte("byte", 3)
+      verify(setter).setByte("byte", 99)
+    }
+  }
+
+  @Test fun testNullByte() {
+    assertThat(getter.get(Keys.nullByte)).isNull()
+    setter.set(Keys.nullByte, 99)
+
+    inOrder(getter, setter) {
+      verify(getter).getString("nullByte", null)
+      verify(setter).setString("nullByte", "99")
     }
   }
 }
