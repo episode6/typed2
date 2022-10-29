@@ -1,5 +1,6 @@
 package com.episode6.typed2
 
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlin.coroutines.CoroutineContext
 
@@ -41,18 +42,18 @@ fun <T : Any?, R : Any?, BACKED_BY : Any?, GETTER : KeyValueGetter, SETTER : Key
   newKeyCallback = newKeyCallback,
 )
 
-fun <T : Any?, BACKED_BY : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter> Key<T, BACKED_BY, GETTER, SETTER>.asAsync(
-  context: CoroutineContext,
+fun <T : Any?, BACKED_BY : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter> Key<T, BACKED_BY, GETTER, SETTER>.async(
+  context: CoroutineContext = Dispatchers.Default,
 ): AsyncKey<T, BACKED_BY, GETTER, SETTER> = AsyncKey(
   name = name,
   outputDefault = outputDefault,
   backingTypeInfo = backingTypeInfo,
   backer = backer,
-  mapper = mapper.asAsync(context),
+  mapper = mapper.async(context),
   newKeyCallback = newKeyCallback,
 )
 
-private fun <T : Any?, BACKED_BY : Any?> KeyMapper<T, BACKED_BY>.asAsync(context: CoroutineContext) =
+private fun <T : Any?, BACKED_BY : Any?> KeyMapper<T, BACKED_BY>.async(context: CoroutineContext) =
   AsyncKeyMapper<T, BACKED_BY>(
     mapGet = { withContext(context) { mapGet(it) } },
     mapSet = { withContext(context) { mapSet(it) } },

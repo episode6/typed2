@@ -3,8 +3,6 @@ package com.episode6.typed2.bundles
 import android.os.Bundle
 import android.os.IBinder
 import com.episode6.typed2.*
-import kotlinx.coroutines.Dispatchers
-import kotlin.coroutines.CoroutineContext
 
 typealias BundleKey<T, BACKED_BY> = Key<T, BACKED_BY, BundleValueGetter, BundleValueSetter>
 typealias AsyncBundleKey<T, BACKED_BY> = AsyncKey<T, BACKED_BY, BundleValueGetter, BundleValueSetter>
@@ -16,9 +14,11 @@ open class BundleKeyNamespace(private val prefix: String = "") {
 
   protected fun key(name: String): BundleKeyBuilder = Builder(prefix + name)
 
-  protected fun <T : Any, BACKED_BY : Any?> BundleKey<T?, BACKED_BY>.default(default: ()->T): BundleKey<T, BACKED_BY> = withDefault(default)
-  protected fun <T : Any, BACKED_BY : Any?> BundleKey<T?, BACKED_BY>.required(): BundleKey<T, BACKED_BY> = asRequired { RequiredBundleKeyMissing(name) }
-  protected fun <T : Any?, BACKED_BY : Any?> BundleKey<T, BACKED_BY>.async(context: CoroutineContext = Dispatchers.Default): AsyncBundleKey<T, BACKED_BY> = asAsync(context)
+  protected fun <T : Any, BACKED_BY : Any?> BundleKey<T?, BACKED_BY>.default(default: () -> T): BundleKey<T, BACKED_BY> =
+    withDefault(default)
+
+  protected fun <T : Any, BACKED_BY : Any?> BundleKey<T?, BACKED_BY>.required(): BundleKey<T, BACKED_BY> =
+    asRequired { RequiredBundleKeyMissing(name) }
 }
 
 @Suppress("UNCHECKED_CAST")
@@ -73,13 +73,17 @@ fun BundleKeyBuilder.charSequence(): BundleKey<CharSequence?, CharSequence?> = n
   set = { setCharSequence(name, it) }
 )
 
-fun BundleKeyBuilder.charSequenceArray(default: Array<CharSequence>): BundleKey<Array<CharSequence>, Array<CharSequence>?> = charSequenceArray().withDefault { default }
+fun BundleKeyBuilder.charSequenceArray(default: Array<CharSequence>): BundleKey<Array<CharSequence>, Array<CharSequence>?> =
+  charSequenceArray().withDefault { default }
+
 fun BundleKeyBuilder.charSequenceArray(): BundleKey<Array<CharSequence>?, Array<CharSequence>?> = nativeKey(
   get = { getCharSequenceArray(name) },
   set = { setCharSequenceArray(name, it) }
 )
 
-fun BundleKeyBuilder.charSequenceList(default: List<CharSequence>): BundleKey<List<CharSequence>, ArrayList<CharSequence>?> = charSequenceList().withDefault { default }
+fun BundleKeyBuilder.charSequenceList(default: List<CharSequence>): BundleKey<List<CharSequence>, ArrayList<CharSequence>?> =
+  charSequenceList().withDefault { default }
+
 fun BundleKeyBuilder.charSequenceList(): BundleKey<List<CharSequence>?, ArrayList<CharSequence>?> = charSequenceArrayList().mapType(
   mapGet = { it },
   mapSet = { it?.let { if (it is ArrayList<CharSequence>) it else ArrayList(it) } },

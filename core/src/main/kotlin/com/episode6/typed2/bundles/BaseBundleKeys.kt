@@ -1,8 +1,6 @@
 package com.episode6.typed2.bundles
 
 import com.episode6.typed2.*
-import kotlinx.coroutines.Dispatchers
-import kotlin.coroutines.CoroutineContext
 
 typealias BaseBundleKey<T, BACKED_BY> = Key<T, BACKED_BY, BaseBundleValueGetter, BaseBundleValueSetter>
 typealias AsyncBaseBundleKey<T, BACKED_BY> = AsyncKey<T, BACKED_BY, BaseBundleValueGetter, BaseBundleValueSetter>
@@ -18,9 +16,11 @@ open class BaseBundleKeyNamespace(private val prefix: String = "") {
 
   protected fun key(name: String): BaseBundleKeyBuilder = Builder(prefix + name)
 
-  protected fun <T : Any, BACKED_BY : Any?> BaseBundleKey<T?, BACKED_BY>.default(default: ()->T): BaseBundleKey<T, BACKED_BY> = withDefault(default)
-  protected fun <T : Any, BACKED_BY : Any?> BaseBundleKey<T?, BACKED_BY>.required(): BaseBundleKey<T, BACKED_BY> = asRequired { RequiredBaseBundleKeyMissing(name) }
-  protected fun <T : Any?, BACKED_BY : Any?> BaseBundleKey<T, BACKED_BY>.async(context: CoroutineContext = Dispatchers.Default): AsyncBaseBundleKey<T, BACKED_BY> = asAsync(context)
+  protected fun <T : Any, BACKED_BY : Any?> BaseBundleKey<T?, BACKED_BY>.default(default: () -> T): BaseBundleKey<T, BACKED_BY> =
+    withDefault(default)
+
+  protected fun <T : Any, BACKED_BY : Any?> BaseBundleKey<T?, BACKED_BY>.required(): BaseBundleKey<T, BACKED_BY> =
+    asRequired { RequiredBaseBundleKeyMissing(name) }
 }
 
 fun BaseBundleKeyBuilder.double(default: Double): BaseBundleKey<Double, Double> = nativeKey(

@@ -2,8 +2,6 @@ package com.episode6.typed2.bundles
 
 import android.os.PersistableBundle
 import com.episode6.typed2.*
-import kotlinx.coroutines.Dispatchers
-import kotlin.coroutines.CoroutineContext
 
 typealias PersistableBundleKey<T, BACKED_BY> = Key<T, BACKED_BY, PersistableBundleValueGetter, PersistableBundleValueSetter>
 typealias AsyncPersistableBundleKey<T, BACKED_BY> = AsyncKey<T, BACKED_BY, PersistableBundleValueGetter, PersistableBundleValueSetter>
@@ -14,12 +12,16 @@ open class PersistableBundleKeyNamespace(private val prefix: String = "") {
   private class Builder(override val name: String) : PersistableBundleKeyBuilder
 
   protected fun key(name: String): PersistableBundleKeyBuilder = Builder(prefix + name)
-  protected fun <T : Any, BACKED_BY : Any?> PersistableBundleKey<T?, BACKED_BY>.default(default: ()->T): PersistableBundleKey<T, BACKED_BY> = withDefault(default)
-  protected fun <T : Any, BACKED_BY : Any?> PersistableBundleKey<T?, BACKED_BY>.required(): PersistableBundleKey<T, BACKED_BY> = asRequired { RequiredPersistableBundleKeyMissing(name) }
-  protected fun <T : Any?, BACKED_BY : Any?> PersistableBundleKey<T, BACKED_BY>.async(context: CoroutineContext = Dispatchers.Default): AsyncPersistableBundleKey<T, BACKED_BY> = asAsync(context)
+  protected fun <T : Any, BACKED_BY : Any?> PersistableBundleKey<T?, BACKED_BY>.default(default: () -> T): PersistableBundleKey<T, BACKED_BY> =
+    withDefault(default)
+
+  protected fun <T : Any, BACKED_BY : Any?> PersistableBundleKey<T?, BACKED_BY>.required(): PersistableBundleKey<T, BACKED_BY> =
+    asRequired { RequiredPersistableBundleKeyMissing(name) }
 }
 
-fun PersistableBundleKeyBuilder.persistableBundle(default: PersistableBundle): PersistableBundleKey<PersistableBundle, PersistableBundle?> = persistableBundle().withDefault { default }
+fun PersistableBundleKeyBuilder.persistableBundle(default: PersistableBundle): PersistableBundleKey<PersistableBundle, PersistableBundle?> =
+  persistableBundle().withDefault { default }
+
 fun PersistableBundleKeyBuilder.persistableBundle(): PersistableBundleKey<PersistableBundle?, PersistableBundle?> = nativeKey(
   get = { getPersistableBundle(name) },
   set = { setPersistableBundle(name, it) },

@@ -1,5 +1,6 @@
 package com.episode6.typed2.navigation.compose
 
+import com.episode6.typed2.async
 import com.episode6.typed2.int
 import com.episode6.typed2.string
 
