@@ -11,6 +11,9 @@ class TypedSavedStateHandle(private val delegate: SavedStateHandle) : BundleValu
   override fun getBinder(name: String): IBinder? = delegate[name]
   override fun getBundle(name: String): Bundle? = delegate[name]
   override fun getByte(name: String, default: Byte): Byte = delegate[name] ?: default
+  override fun getByteArray(name: String): ByteArray? = delegate[name]
+  override fun getChar(name: String, default: Char): Char = delegate[name] ?: default
+  override fun getCharArray(name: String): CharArray? = delegate[name]
   override fun getDouble(name: String, default: Double): Double = delegate[name] ?: default
   override fun getBoolean(name: String, default: Boolean): Boolean = delegate[name] ?: default
   override fun getFloat(name: String, default: Float): Float = delegate[name] ?: default
@@ -21,6 +24,9 @@ class TypedSavedStateHandle(private val delegate: SavedStateHandle) : BundleValu
   override fun setBinder(name: String, value: IBinder?) { delegate[name] = value }
   override fun setBundle(name: String, value: Bundle?) { delegate[name] = value }
   override fun setByte(name: String, value: Byte) { delegate[name] = value }
+  override fun setByteArray(name: String, value: ByteArray?) { delegate[name] = value }
+  override fun setChar(name: String, value: Char) { delegate[name] = value }
+  override fun setCharArray(name: String, value: CharArray?) { delegate[name] = value }
   override fun setDouble(name: String, value: Double) { delegate[name] = value }
   override fun setInt(name: String, value: Int) { delegate[name] = value }
   override fun setString(name: String, value: String?) { delegate[name] = value }

@@ -44,9 +44,9 @@ fun BundleKeyBuilder.byte(): BundleKey<Byte?, String?> = int().mapType(
   mapSet = { it?.toInt() }
 )
 
-fun BundleKeyBuilder.byteArray(default: Array<Byte>): BundleKey<Array<Byte>, Array<Byte>?> = byteArray { default }
-fun BundleKeyBuilder.byteArray(default: ()->Array<Byte>): BundleKey<Array<Byte>, Array<Byte>?> = byteArray().withDefault(default)
-fun BundleKeyBuilder.byteArray(): BundleKey<Array<Byte>?, Array<Byte>?> = nativeKey(
+fun BundleKeyBuilder.byteArray(default: ByteArray): BundleKey<ByteArray, ByteArray?> = byteArray { default }
+fun BundleKeyBuilder.byteArray(default: ()->ByteArray): BundleKey<ByteArray, ByteArray?> = byteArray().withDefault(default)
+fun BundleKeyBuilder.byteArray(): BundleKey<ByteArray?, ByteArray?> = nativeKey(
   get = { getByteArray(name) },
   set = { setByteArray(name, it) }
 )
@@ -62,9 +62,9 @@ fun BundleKeyBuilder.char(): BundleKey<Char?, String?> = string().mapType(
   mapSet = { it?.toString() }
 )
 
-fun BundleKeyBuilder.charArray(default: Array<Char>): BundleKey<Array<Char>, Array<Char>?> = charArray { default }
-fun BundleKeyBuilder.charArray(default: ()->Array<Char>): BundleKey<Array<Char>, Array<Char>?> = charArray().withDefault(default)
-fun BundleKeyBuilder.charArray(): BundleKey<Array<Char>?, Array<Char>?> = nativeKey(
+fun BundleKeyBuilder.charArray(default: CharArray): BundleKey<CharArray, CharArray?> = charArray { default }
+fun BundleKeyBuilder.charArray(default: ()->CharArray): BundleKey<CharArray, CharArray?> = charArray().withDefault(default)
+fun BundleKeyBuilder.charArray(): BundleKey<CharArray?, CharArray?> = nativeKey(
   get = { getCharArray(name) },
   set = { setCharArray(name, it) }
 )
