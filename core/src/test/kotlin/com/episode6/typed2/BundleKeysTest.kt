@@ -20,7 +20,7 @@ class BundleKeysTest {
     val byteArray = key("byteArray").byteArray()
     val char = key("char").char(default = 'f')
     val nullChar = key("nullChar").char()
-    val charArray = key("charArray").charArray(default = emptyArray())
+    val charArray = key("charArray").charArray(default = charArrayOf())
   }
 
   private val getter: BundleValueGetter = mock {
@@ -78,11 +78,11 @@ class BundleKeysTest {
 
   @Test fun testByteArray() {
     assertThat(getter.get(Keys.byteArray)).isNull()
-    setter.set(Keys.byteArray, arrayOf(99, 101))
+    setter.set(Keys.byteArray, byteArrayOf(99, 101))
 
     inOrder(getter, setter) {
       verify(getter).getByteArray("byteArray")
-      verify(setter).setByteArray("byteArray", arrayOf(99, 101))
+      verify(setter).setByteArray("byteArray", byteArrayOf(99, 101))
     }
   }
 
@@ -108,11 +108,11 @@ class BundleKeysTest {
 
   @Test fun testCharArray() {
     assertThat(getter.get(Keys.charArray)).isNotNull().isEmpty()
-    setter.set(Keys.charArray, arrayOf('r', 't'))
+    setter.set(Keys.charArray, charArrayOf('r', 't'))
 
     inOrder(getter, setter) {
       verify(getter).contains("charArray")
-      verify(setter).setCharArray("charArray", arrayOf('r', 't'))
+      verify(setter).setCharArray("charArray", charArrayOf('r', 't'))
     }
   }
 }
