@@ -21,8 +21,8 @@ open class BundleKeyNamespace(private val prefix: String = "") {
 }
 
 @Suppress("UNCHECKED_CAST")
-fun <T : IBinder> BundleKeyBuilder.binder(): BundleKey<T?, IBinder?> = nativeBinder().mapType(
-  mapGet = { it as? T },
+fun <T : IBinder> BundleKeyBuilder.binder(safeCast: Boolean = false): BundleKey<T?, IBinder?> = nativeBinder().mapType(
+  mapGet = { if (safeCast) it as? T else it as T? },
   mapSet = { it }
 )
 
