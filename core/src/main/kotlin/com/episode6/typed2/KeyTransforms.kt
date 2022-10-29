@@ -41,6 +41,11 @@ fun <T : Any?, R : Any?, BACKED_BY : Any?, GETTER : KeyValueGetter, SETTER : Key
   newKeyCallback = newKeyCallback,
 )
 
+fun <T : Any?, R : T, BACKED_BY : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter> Key<T?, BACKED_BY, GETTER, SETTER>.cast(): Key<R?, BACKED_BY, GETTER, SETTER> = mapType(
+  mapGet = { it as? R },
+  mapSet = { it }
+)
+
 fun <T : Any?, BACKED_BY : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter> Key<T, BACKED_BY, GETTER, SETTER>.asAsync(
   context: CoroutineContext,
 ): AsyncKey<T, BACKED_BY, GETTER, SETTER> = AsyncKey(
