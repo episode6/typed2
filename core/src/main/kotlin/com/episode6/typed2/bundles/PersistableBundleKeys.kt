@@ -8,13 +8,10 @@ typealias AsyncPersistableBundleKey<T, BACKED_BY> = AsyncKey<T, BACKED_BY, Persi
 typealias PersistableBundleProperty<T> = KeyValueDelegate<T, in PersistableBundleValueGetter, PersistableBundleValueSetter>
 
 interface PersistableBundleKeyBuilder : BaseBundleKeyBuilder
-open class PersistableBundleKeyNamespace(private val prefix: String = "") {
+open class PersistableBundleKeyNamespace(private val prefix: String = "") : RequiredEnabledKeyNamespace {
   private class Builder(override val name: String) : PersistableBundleKeyBuilder
 
   protected fun key(name: String): PersistableBundleKeyBuilder = Builder(prefix + name)
-
-  protected fun <T : Any, BACKED_BY : Any?> PersistableBundleKey<T?, BACKED_BY>.required(): PersistableBundleKey<T, BACKED_BY> =
-    asRequired { RequiredPersistableBundleKeyMissing(name) }
 }
 
 fun PersistableBundleKeyBuilder.persistableBundle(default: PersistableBundle): PersistableBundleKey<PersistableBundle, PersistableBundle?> =
@@ -24,5 +21,3 @@ fun PersistableBundleKeyBuilder.persistableBundle(): PersistableBundleKey<Persis
   get = { getPersistableBundle(name) },
   set = { setPersistableBundle(name, it) },
 )
-
-class RequiredPersistableBundleKeyMissing(name: String) : IllegalArgumentException("Required key ($name) missing from persistable bundle")

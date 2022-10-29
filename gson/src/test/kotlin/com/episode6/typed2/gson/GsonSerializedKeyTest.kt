@@ -4,8 +4,8 @@ import android.os.Bundle
 import assertk.Assert
 import assertk.assertThat
 import assertk.assertions.*
+import com.episode6.typed2.RequiredKeyMissingException
 import com.episode6.typed2.bundles.BundleKeyNamespace
-import com.episode6.typed2.bundles.RequiredBundleKeyMissing
 import com.episode6.typed2.bundles.get
 import com.episode6.typed2.bundles.set
 import org.junit.Test
@@ -74,7 +74,7 @@ class JsonSerializedKeyTest {
 
   @Test fun testRequired_get_missing() {
     assertThat { bundle.get(Keys.requiredData) }
-      .isFailure().hasClass(RequiredBundleKeyMissing::class)
+      .isFailure().hasClass(RequiredKeyMissingException::class)
   }
 
   @Test fun testRequired_get_present() {

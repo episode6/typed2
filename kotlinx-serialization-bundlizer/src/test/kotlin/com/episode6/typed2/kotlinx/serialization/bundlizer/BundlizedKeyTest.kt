@@ -4,14 +4,13 @@ import android.os.Bundle
 import assertk.Assert
 import assertk.assertThat
 import assertk.assertions.*
+import com.episode6.typed2.RequiredKeyMissingException
 import com.episode6.typed2.bundles.BundleKeyNamespace
-import com.episode6.typed2.bundles.RequiredBundleKeyMissing
 import com.episode6.typed2.bundles.get
 import com.episode6.typed2.bundles.set
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.kotlin.*
-import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
 
 @kotlinx.serialization.Serializable data class TestData(val name: String)
@@ -81,7 +80,7 @@ class BundlizedKeyTest {
 
   @Test fun testRequired_get_missing() {
     assertThat { bundle.get(Keys.requiredData) }
-      .isFailure().hasClass(RequiredBundleKeyMissing::class)
+      .isFailure().hasClass(RequiredKeyMissingException::class)
   }
 
   @Test fun testRequired_get_present() {

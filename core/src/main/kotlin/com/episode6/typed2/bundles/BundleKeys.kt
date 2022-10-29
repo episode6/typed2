@@ -9,13 +9,10 @@ typealias AsyncBundleKey<T, BACKED_BY> = AsyncKey<T, BACKED_BY, BundleValueGette
 typealias BundleProperty<T> = KeyValueDelegate<T, in BundleValueGetter, in BundleValueSetter>
 
 interface BundleKeyBuilder : BaseBundleKeyBuilder
-open class BundleKeyNamespace(private val prefix: String = "") {
+open class BundleKeyNamespace(private val prefix: String = "") : RequiredEnabledKeyNamespace {
   private class Builder(override val name: String) : BundleKeyBuilder
 
   protected fun key(name: String): BundleKeyBuilder = Builder(prefix + name)
-
-  protected fun <T : Any, BACKED_BY : Any?> BundleKey<T?, BACKED_BY>.required(): BundleKey<T, BACKED_BY> =
-    asRequired { RequiredBundleKeyMissing(name) }
 }
 
 @Suppress("UNCHECKED_CAST")
@@ -95,5 +92,3 @@ private fun BundleKeyBuilder.charSequenceArrayList(): BundleKey<ArrayList<CharSe
   get = { getCharSequenceArrayList(name) },
   set = { setCharSequenceArrayList(name, it) }
 )
-
-class RequiredBundleKeyMissing(name: String) : IllegalArgumentException("Required key ($name) missing from bundle")
