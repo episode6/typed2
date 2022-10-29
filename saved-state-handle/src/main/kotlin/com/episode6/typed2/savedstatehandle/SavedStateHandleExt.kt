@@ -14,6 +14,9 @@ class TypedSavedStateHandle(private val delegate: SavedStateHandle) : BundleValu
   override fun getByteArray(name: String): ByteArray? = delegate[name]
   override fun getChar(name: String, default: Char): Char = delegate[name] ?: default
   override fun getCharArray(name: String): CharArray? = delegate[name]
+  override fun getCharSequence(name: String): CharSequence? = delegate[name]
+  override fun getCharSequenceArray(name: String): Array<CharSequence>? = delegate[name]
+  override fun getCharSequenceArrayList(name: String): ArrayList<CharSequence>? = delegate[name]
   override fun getDouble(name: String, default: Double): Double = delegate[name] ?: default
   override fun getBoolean(name: String, default: Boolean): Boolean = delegate[name] ?: default
   override fun getFloat(name: String, default: Float): Float = delegate[name] ?: default
@@ -27,6 +30,9 @@ class TypedSavedStateHandle(private val delegate: SavedStateHandle) : BundleValu
   override fun setByteArray(name: String, value: ByteArray?) { delegate[name] = value }
   override fun setChar(name: String, value: Char) { delegate[name] = value }
   override fun setCharArray(name: String, value: CharArray?) { delegate[name] = value }
+  override fun setCharSequence(name: String, value: CharSequence?) { delegate[name] = value }
+  override fun setCharSequenceArray(name: String, value: Array<CharSequence>?) { delegate[name] = value }
+  override fun setCharSequenceArrayList(name: String, value: ArrayList<CharSequence>?) { delegate[name] = value }
   override fun setDouble(name: String, value: Double) { delegate[name] = value }
   override fun setInt(name: String, value: Int) { delegate[name] = value }
   override fun setString(name: String, value: String?) { delegate[name] = value }

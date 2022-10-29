@@ -21,12 +21,16 @@ class BundleKeysTest {
     val char = key("char").char(default = 'f')
     val nullChar = key("nullChar").char()
     val charArray = key("charArray").charArray(default = charArrayOf())
+    val charSequence = key("charSequence").charSequence()
+    val charSequenceArray = key("charSequenceArray").charSequenceArray()
+    val charSequenceList = key("charSequenceList").charSequenceList()
   }
 
   private val getter: BundleValueGetter = mock {
     on { contains(any()) } doReturn false
     on { getByte(any(), any()) } doAnswer { it.getArgument(1) }
     on { getChar(any(), any()) } doAnswer { it.getArgument(1) }
+    on { getCharSequenceArrayList(any()) } doReturn null
     on { getString(any(), anyOrNull()) } doAnswer { it.getArgument(1) }
   }
 
@@ -113,6 +117,36 @@ class BundleKeysTest {
     inOrder(getter, setter) {
       verify(getter).contains("charArray")
       verify(setter).setCharArray("charArray", charArrayOf('r', 't'))
+    }
+  }
+
+  @Test fun testCharSequence() {
+    assertThat(getter.get(Keys.charSequence)).isNull()
+    setter.set(Keys.charSequence, "hi")
+
+    inOrder(getter, setter) {
+      verify(getter).getCharSequence("charSequence")
+      verify(setter).setCharSequence("charSequence", "hi")
+    }
+  }
+
+  @Test fun testCharSequenceArray() {
+    assertThat(getter.get(Keys.charSequenceArray)).isNull()
+    setter.set(Keys.charSequenceArray, arrayOf("hi"))
+
+    inOrder(getter, setter) {
+      verify(getter).getCharSequenceArray("charSequenceArray")
+      verify(setter).setCharSequenceArray("charSequenceArray", arrayOf("hi"))
+    }
+  }
+
+  @Test fun testCharSequenceList() {
+    assertThat(getter.get(Keys.charSequenceList)).isNull()
+    setter.set(Keys.charSequenceList, listOf("hi"))
+
+    inOrder(getter, setter) {
+      verify(getter).getCharSequenceArrayList("charSequenceList")
+      verify(setter).setCharSequenceArrayList("charSequenceList", ArrayList(listOf("hi")))
     }
   }
 }

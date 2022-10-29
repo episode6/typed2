@@ -12,6 +12,9 @@ interface BundleValueGetter : BaseBundleValueGetter {
   fun getByteArray(name: String): ByteArray?
   fun getChar(name: String, default: Char): Char
   fun getCharArray(name: String): CharArray?
+  fun getCharSequence(name: String): CharSequence?
+  fun getCharSequenceArray(name: String): Array<CharSequence>?
+  fun getCharSequenceArrayList(name: String): ArrayList<CharSequence>?
 }
 
 interface BundleValueSetter : BaseBundleValueSetter {
@@ -21,6 +24,9 @@ interface BundleValueSetter : BaseBundleValueSetter {
   fun setByteArray(name: String, value: ByteArray?)
   fun setChar(name: String, value: Char)
   fun setCharArray(name: String, value: CharArray?)
+  fun setCharSequence(name: String, value: CharSequence?)
+  fun setCharSequenceArray(name: String, value: Array<CharSequence>?)
+  fun setCharSequenceArrayList(name: String, value: ArrayList<CharSequence>?)
 }
 
 fun <T> BundleValueGetter.get(key: BundleKey<T, *>): T = key.get(this)
