@@ -4,14 +4,13 @@ import java.math.BigDecimal
 
 typealias PrimitiveKey<T, BACKED_BY> = Key<T, BACKED_BY, in PrimitiveKeyValueGetter, in PrimitiveKeyValueSetter>
 typealias AsyncPrimitiveKey<T, BACKED_BY> = AsyncKey<T, BACKED_BY, in PrimitiveKeyValueGetter, in PrimitiveKeyValueSetter>
-typealias NativePrimitiveKey<T> = PrimitiveKey<T, T>
 
 interface PrimitiveKeyBuilder : KeyBuilder {
   fun String.encode(): String = this
   fun String.decode(): String = this
 }
 
-fun PrimitiveKeyBuilder.boolean(default: Boolean): NativePrimitiveKey<Boolean> = nativeKey(
+fun PrimitiveKeyBuilder.boolean(default: Boolean): PrimitiveKey<Boolean, Boolean> = nativeKey(
   get = { getBoolean(name, default) },
   set = { setBoolean(name, it) },
   backingDefault = default
@@ -22,7 +21,7 @@ fun PrimitiveKeyBuilder.boolean(): PrimitiveKey<Boolean?, String?> = string().ma
   mapSet = { it?.toString() }
 )
 
-fun PrimitiveKeyBuilder.float(default: Float): NativePrimitiveKey<Float> = nativeKey(
+fun PrimitiveKeyBuilder.float(default: Float): PrimitiveKey<Float, Float> = nativeKey(
   get = { getFloat(name, default) },
   set = { setFloat(name, it) },
   backingDefault = default
@@ -33,7 +32,7 @@ fun PrimitiveKeyBuilder.float(): PrimitiveKey<Float?, String?> = string().mapTyp
   mapSet = { it?.toString() }
 )
 
-fun PrimitiveKeyBuilder.int(default: Int): NativePrimitiveKey<Int> = nativeKey(
+fun PrimitiveKeyBuilder.int(default: Int): PrimitiveKey<Int, Int> = nativeKey(
   get = { getInt(name, default) },
   set = { setInt(name, it) },
   backingDefault = default
@@ -44,7 +43,7 @@ fun PrimitiveKeyBuilder.int(): PrimitiveKey<Int?, String?> = string().mapType(
   mapSet = { it?.toString() }
 )
 
-fun PrimitiveKeyBuilder.long(default: Long): NativePrimitiveKey<Long> = nativeKey(
+fun PrimitiveKeyBuilder.long(default: Long): PrimitiveKey<Long, Long> = nativeKey(
   get = { getLong(name, default) },
   set = { setLong(name, it) },
   backingDefault = default
@@ -55,7 +54,7 @@ fun PrimitiveKeyBuilder.long(): PrimitiveKey<Long?, String?> = string().mapType(
   mapSet = { it?.toString() }
 )
 
-fun PrimitiveKeyBuilder.string(default: String): NativePrimitiveKey<String> =
+fun PrimitiveKeyBuilder.string(default: String): PrimitiveKey<String, String> =
   nativeKey<String, PrimitiveKeyValueGetter, PrimitiveKeyValueSetter>(
     get = { getString(name, default) ?: default },
     set = { setString(name, it) },
@@ -65,7 +64,7 @@ fun PrimitiveKeyBuilder.string(default: String): NativePrimitiveKey<String> =
     mapSet = { it.encode() },
   )
 
-fun PrimitiveKeyBuilder.string(): NativePrimitiveKey<String?> =
+fun PrimitiveKeyBuilder.string(): PrimitiveKey<String?, String?> =
   nativeKey<String, PrimitiveKeyValueGetter, PrimitiveKeyValueSetter>(
     get = { getString(name, null) },
     set = { setString(name, it) },

@@ -6,8 +6,6 @@ import kotlin.coroutines.CoroutineContext
 
 typealias PrefKey<T, BACKED_BY> = Key<T, BACKED_BY, in PrefValueGetter, in PrefValueSetter>
 typealias AsyncPrefKey<T, BACKED_BY> = AsyncKey<T, BACKED_BY, in PrefValueGetter, in PrefValueSetter>
-typealias NativePrefKey<T> = PrefKey<T, T>
-typealias NativeAsyncPrefKey<T> = AsyncPrefKey<T, T>
 
 interface PrefKeyBuilder : PrimitiveKeyBuilder
 open class PrefKeyNamespace(private val prefix: String = "") {
@@ -28,7 +26,7 @@ fun PrefKeyBuilder.stringSet(): PrefKey<Set<String>?, Set<String?>?> = nullableS
   mapSet = { it }
 )
 
-fun PrefKeyBuilder.nullableStringSet(): NativePrefKey<Set<String?>?> = nativeKey(
+fun PrefKeyBuilder.nullableStringSet(): PrefKey<Set<String?>?, Set<String?>?> = nativeKey(
   get = { getStringSet(name, null) },
   set = { setStringSet(name, it) },
 )

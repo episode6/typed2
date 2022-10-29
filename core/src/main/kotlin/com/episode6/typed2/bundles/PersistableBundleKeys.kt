@@ -7,8 +7,6 @@ import kotlin.coroutines.CoroutineContext
 
 typealias PersistableBundleKey<T, BACKED_BY> = Key<T, BACKED_BY, in PersistableBundleValueGetter, in PersistableBundleValueSetter>
 typealias AsyncPersistableBundleKey<T, BACKED_BY> = AsyncKey<T, BACKED_BY, in PersistableBundleValueGetter, in PersistableBundleValueSetter>
-typealias NativePersistableBundleKey<T> = PersistableBundleKey<T, T>
-typealias NativeAsyncPersistableBundleKey<T> = AsyncPersistableBundleKey<T, T>
 typealias PersistableBundleProperty<T> = KeyValueDelegate<T, in PersistableBundleValueGetter, in PersistableBundleValueSetter>
 
 interface PersistableBundleKeyBuilder : BaseBundleKeyBuilder
@@ -22,7 +20,7 @@ open class PersistableBundleKeyNamespace(private val prefix: String = "") {
 
 fun PersistableBundleKeyBuilder.persistableBundle(default: PersistableBundle): PersistableBundleKey<PersistableBundle, PersistableBundle?> = persistableBundle { default }
 fun PersistableBundleKeyBuilder.persistableBundle(default: () -> PersistableBundle): PersistableBundleKey<PersistableBundle, PersistableBundle?> = persistableBundle().withDefault(default)
-fun PersistableBundleKeyBuilder.persistableBundle(): NativePersistableBundleKey<PersistableBundle?> = nativeKey(
+fun PersistableBundleKeyBuilder.persistableBundle(): PersistableBundleKey<PersistableBundle?, PersistableBundle?> = nativeKey(
   get = { getPersistableBundle(name) },
   set = { setPersistableBundle(name, it) },
 )
