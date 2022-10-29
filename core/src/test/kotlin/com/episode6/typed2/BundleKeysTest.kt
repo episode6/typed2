@@ -23,7 +23,6 @@ class BundleKeysTest {
     val charArray = key("charArray").charArray(default = charArrayOf())
     val charSequence = key("charSequence").charSequence()
     val charSequenceArray = key("charSequenceArray").charSequenceArray()
-    val charSequenceArrayList = key("charSequenceArrayList").charSequenceArrayList()
     val charSequenceList = key("charSequenceList").charSequenceList()
   }
 
@@ -138,16 +137,6 @@ class BundleKeysTest {
     inOrder(getter, setter) {
       verify(getter).getCharSequenceArray("charSequenceArray")
       verify(setter).setCharSequenceArray("charSequenceArray", arrayOf("hi"))
-    }
-  }
-
-  @Test fun testCharSequenceArrayList() {
-    assertThat(getter.get(Keys.charSequenceArrayList)).isNull()
-    setter.set(Keys.charSequenceArrayList, ArrayList(listOf("hi")))
-
-    inOrder(getter, setter) {
-      verify(getter).getCharSequenceArrayList("charSequenceArrayList")
-      verify(setter).setCharSequenceArrayList("charSequenceArrayList", ArrayList(listOf("hi")))
     }
   }
 

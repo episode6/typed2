@@ -83,13 +83,6 @@ fun BundleKeyBuilder.charSequenceArray(): BundleKey<Array<CharSequence>?, Array<
   set = { setCharSequenceArray(name, it) }
 )
 
-fun BundleKeyBuilder.charSequenceArrayList(default: ArrayList<CharSequence>): BundleKey<ArrayList<CharSequence>, ArrayList<CharSequence>?> = charSequenceArrayList { default }
-fun BundleKeyBuilder.charSequenceArrayList(default: ()->ArrayList<CharSequence>): BundleKey<ArrayList<CharSequence>, ArrayList<CharSequence>?> = charSequenceArrayList().withDefault(default)
-fun BundleKeyBuilder.charSequenceArrayList(): BundleKey<ArrayList<CharSequence>?, ArrayList<CharSequence>?> = nativeKey(
-  get = { getCharSequenceArrayList(name) },
-  set = { setCharSequenceArrayList(name, it) }
-)
-
 fun BundleKeyBuilder.charSequenceList(default: List<CharSequence>): BundleKey<List<CharSequence>, ArrayList<CharSequence>?> = charSequenceList { default }
 fun BundleKeyBuilder.charSequenceList(default: ()->List<CharSequence>): BundleKey<List<CharSequence>, ArrayList<CharSequence>?> = charSequenceList().withDefault(default)
 fun BundleKeyBuilder.charSequenceList(): BundleKey<List<CharSequence>?, ArrayList<CharSequence>?> = charSequenceArrayList().mapType(
@@ -100,6 +93,11 @@ fun BundleKeyBuilder.charSequenceList(): BundleKey<List<CharSequence>?, ArrayLis
 private fun BundleKeyBuilder.nativeBinder(): BundleKey<IBinder?, IBinder?> = nativeKey(
   get = { getBinder(name) },
   set = { setBinder(name, it) }
+)
+
+private fun BundleKeyBuilder.charSequenceArrayList(): BundleKey<ArrayList<CharSequence>?, ArrayList<CharSequence>?> = nativeKey(
+  get = { getCharSequenceArrayList(name) },
+  set = { setCharSequenceArrayList(name, it) }
 )
 
 class RequiredBundleKeyMissing(name: String) : IllegalArgumentException("Required key ($name) missing from bundle")
