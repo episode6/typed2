@@ -6,8 +6,8 @@ import assertk.assertions.hasClass
 import assertk.assertions.isEqualTo
 import assertk.assertions.isFailure
 import assertk.assertions.isNull
+import com.episode6.typed2.RequiredKeyMissingException
 import com.episode6.typed2.bundles.BundleKeyNamespace
-import com.episode6.typed2.bundles.RequiredBundleKeyMissing
 import com.episode6.typed2.int
 import org.junit.Test
 import org.mockito.kotlin.doAnswer
@@ -60,7 +60,7 @@ class SavedStateHandleTest {
     }
 
     assertThat { savedStateHandle.get(Keys.requiredInt) }
-      .isFailure().hasClass(RequiredBundleKeyMissing::class)
+      .isFailure().hasClass(RequiredKeyMissingException::class)
   }
 }
 

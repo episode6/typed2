@@ -41,6 +41,6 @@ class NavScreenArgsTest {
 
   @Test fun testRequiredInt() {
     assertThat { savedStateHandle.get(TestScreen.requiredInt) }
-      .isFailure().hasClass(RequiredNavArgumentMissing::class)
+      .isFailure().hasClass(RequiredKeyMissingException::class)
   }
 }

@@ -52,7 +52,7 @@ class BundleTest {
 
     assertThat { bundle.get(Keys.myRequiredInt) }
       .isFailure()
-      .hasClass(RequiredBundleKeyMissing::class)
+      .hasClass(RequiredKeyMissingException::class)
   }
 
   @Test fun testRequiredIntPropertyNotPresent() {
@@ -65,7 +65,7 @@ class BundleTest {
 
     assertThat { result }
       .isFailure()
-      .hasClass(RequiredBundleKeyMissing::class)
+      .hasClass(RequiredKeyMissingException::class)
   }
 
   @Test fun testRequiredIntIsNull() {
@@ -76,7 +76,7 @@ class BundleTest {
 
     assertThat { bundle.get(Keys.myRequiredInt) }
       .isFailure()
-      .hasClass(RequiredBundleKeyMissing::class)
+      .hasClass(RequiredKeyMissingException::class)
   }
 
 
@@ -124,4 +124,5 @@ class BundleTest {
 }
 
 @Suppress("UNUSED_PARAMETER")
-private fun suppressWarning(thing: ()->Any) {}
+private fun suppressWarning(thing: () -> Any) {
+}

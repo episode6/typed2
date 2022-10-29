@@ -10,8 +10,9 @@ import assertk.assertions.hasClass
 import assertk.assertions.isEqualTo
 import assertk.assertions.isFailure
 import assertk.assertions.isNull
+import com.episode6.typed2.RequiredKeyMissingException
+import com.episode6.typed2.async
 import com.episode6.typed2.bundles.BundleKeyNamespace
-import com.episode6.typed2.bundles.RequiredBundleKeyMissing
 import com.episode6.typed2.int
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
@@ -86,7 +87,7 @@ class GetStateFlowTest {
     }
 
     assertThat { savedStateHandle.stateFlow(Keys.requiredInt, this, SharingStarted.Eagerly) }
-      .isFailure().hasClass(RequiredBundleKeyMissing::class)
+      .isFailure().hasClass(RequiredKeyMissingException::class)
   }
 
   @Test fun testRequiredIntStateFlow_hasValue() = runTest {
@@ -112,7 +113,7 @@ class GetStateFlowTest {
     }
   }
 
-  @Test(expected = RequiredBundleKeyMissing::class) // catches exception in othe coroutine
+  @Test(expected = RequiredKeyMissingException::class) // catches exception in othe coroutine
   fun testRequiredAsyncIntStateFlow_noValue() = runTest(UnconfinedTestDispatcher()) {
     val backingStateFlow: MutableStateFlow<String?> = MutableStateFlow(Keys.asyncRequiredInt.backingTypeInfo.default)
     savedStateHandle.stub {

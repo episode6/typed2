@@ -53,7 +53,7 @@ class PersistableBundleTest {
 
     assertThat { bundle.get(Keys.myRequiredInt) }
       .isFailure()
-      .hasClass(RequiredPersistableBundleKeyMissing::class)
+      .hasClass(RequiredKeyMissingException::class)
   }
 
   @Test fun testRequiredIntPropertyNotPresent() {
@@ -66,7 +66,7 @@ class PersistableBundleTest {
 
     assertThat { result }
       .isFailure()
-      .hasClass(RequiredPersistableBundleKeyMissing::class)
+      .hasClass(RequiredKeyMissingException::class)
   }
 
   @Test fun testRequiredIntIsNull() {
@@ -77,7 +77,7 @@ class PersistableBundleTest {
 
     assertThat { bundle.get(Keys.myRequiredInt) }
       .isFailure()
-      .hasClass(RequiredPersistableBundleKeyMissing::class)
+      .hasClass(RequiredKeyMissingException::class)
   }
 
 

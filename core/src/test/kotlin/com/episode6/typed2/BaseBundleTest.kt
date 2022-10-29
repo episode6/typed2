@@ -76,7 +76,7 @@ class BaseBundleTest {
 
     assertThat { bundle.get(Keys.myRequiredInt) }
       .isFailure()
-      .hasClass(RequiredBaseBundleKeyMissing::class)
+      .hasClass(RequiredKeyMissingException::class)
   }
 
   @Test fun testRequiredIntNotPresent_pbundle() {
@@ -87,7 +87,7 @@ class BaseBundleTest {
 
     assertThat { persistableBundle.get(Keys.myRequiredInt) }
       .isFailure()
-      .hasClass(RequiredBaseBundleKeyMissing::class)
+      .hasClass(RequiredKeyMissingException::class)
   }
 
   @Test fun testRequiredIntPropertyNotPresent() {
@@ -100,7 +100,7 @@ class BaseBundleTest {
 
     assertThat { result }
       .isFailure()
-      .hasClass(RequiredBaseBundleKeyMissing::class)
+      .hasClass(RequiredKeyMissingException::class)
   }
 
   @Test fun testRequiredIntPropertyNotPresent_pbundle() {
@@ -113,7 +113,7 @@ class BaseBundleTest {
 
     assertThat { result }
       .isFailure()
-      .hasClass(RequiredBaseBundleKeyMissing::class)
+      .hasClass(RequiredKeyMissingException::class)
   }
 
   @Test fun testRequiredIntIsNull() {
@@ -124,7 +124,7 @@ class BaseBundleTest {
 
     assertThat { bundle.get(Keys.myRequiredInt) }
       .isFailure()
-      .hasClass(RequiredBaseBundleKeyMissing::class)
+      .hasClass(RequiredKeyMissingException::class)
   }
 
   @Test fun testRequiredIntIsNull_pbundle() {
@@ -135,7 +135,7 @@ class BaseBundleTest {
 
     assertThat { persistableBundle.get(Keys.myRequiredInt) }
       .isFailure()
-      .hasClass(RequiredBaseBundleKeyMissing::class)
+      .hasClass(RequiredKeyMissingException::class)
   }
 
   @Test fun testSetProperty() {
@@ -224,4 +224,5 @@ class BaseBundleTest {
 }
 
 @Suppress("UNUSED_PARAMETER")
-private fun suppressWarning(thing: ()->Any) {}
+private fun suppressWarning(thing: () -> Any) {
+}
