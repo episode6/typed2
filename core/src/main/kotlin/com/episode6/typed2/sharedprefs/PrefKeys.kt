@@ -12,15 +12,13 @@ open class PrefKeyNamespace(private val prefix: String = "") {
   private class Builder(override val name: String) : PrefKeyBuilder
 
   protected fun key(name: String): PrefKeyBuilder = Builder(prefix + name)
+  protected fun <T : Any, BACKED_BY: Any> PrefKey<T?, BACKED_BY>.default(default: ()->T): PrefKey<T, BACKED_BY> = withDefault(default)
   protected fun <T : Any?, BACKED_BY : Any?> PrefKey<T, BACKED_BY>.async(context: CoroutineContext = Dispatchers.Default): AsyncPrefKey<T, BACKED_BY> = asAsync(context)
 }
 
 fun PrefKeyBuilder.double(default: Double): PrefKey<Double, String?> = double().withDefault { default }
 
-fun PrefKeyBuilder.stringSet(default: Set<String>): PrefKey<Set<String>, Set<String?>?> = stringSet { default }
-fun PrefKeyBuilder.stringSet(default: () -> Set<String>): PrefKey<Set<String>, Set<String?>?> = stringSet()
-  .withDefault(default)
-
+fun PrefKeyBuilder.stringSet(default: Set<String>): PrefKey<Set<String>, Set<String?>?> = stringSet().withDefault { default }
 fun PrefKeyBuilder.stringSet(): PrefKey<Set<String>?, Set<String?>?> = nullableStringSet().mapType(
   mapGet = { it?.filterNotNull()?.toSet() },
   mapSet = { it }
