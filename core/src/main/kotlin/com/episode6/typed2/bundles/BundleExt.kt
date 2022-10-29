@@ -1,8 +1,11 @@
 package com.episode6.typed2.bundles
 
+import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
+import android.os.Parcelable
 import com.episode6.typed2.KeyValueDelegate
+import kotlin.reflect.KClass
 
 class TypedBundle(private val delegate: Bundle) : BundleValueGetter, BundleValueSetter {
   override fun contains(name: String): Boolean = delegate.containsKey(name)
@@ -22,6 +25,11 @@ class TypedBundle(private val delegate: Bundle) : BundleValueGetter, BundleValue
   override fun getCharSequenceArrayList(name: String): ArrayList<CharSequence>? = delegate.getCharSequenceArrayList(name)
   override fun getFloatArray(name: String): FloatArray? = delegate.getFloatArray(name)
   override fun getIntArrayList(name: String): ArrayList<Int>? = delegate.getIntegerArrayList(name)
+  @Suppress("DEPRECATION")
+  override fun <T : Parcelable> getParcelable(name: String, kclass: KClass<T>): T? = when {
+    Build.VERSION.SDK_INT >= 33 -> delegate.getParcelable(name, kclass.java)
+    else                        -> delegate.getParcelable<T>(name)
+  }
   override fun getDouble(name: String, default: Double): Double = delegate.getDouble(name, default)
 
   override fun remove(name: String) = delegate.remove(name)
@@ -41,6 +49,7 @@ class TypedBundle(private val delegate: Bundle) : BundleValueGetter, BundleValue
   override fun setCharSequenceArrayList(name: String, value: ArrayList<CharSequence>?) { delegate.putCharSequenceArrayList(name, value) }
   override fun setFloatArray(name: String, value: FloatArray?) { delegate.putFloatArray(name, value) }
   override fun setIntArrayList(name: String, value: ArrayList<Int>?) { delegate.putIntegerArrayList(name, value) }
+  override fun <T : Parcelable> setParcelable(name: String, value: T?) { delegate.putParcelable(name, value) }
   override fun setDouble(name: String, value: Double) { delegate.putDouble(name, value) }
 }
 
