@@ -12,15 +12,13 @@ open class PersistableBundleKeyNamespace(private val prefix: String = "") {
   private class Builder(override val name: String) : PersistableBundleKeyBuilder
 
   protected fun key(name: String): PersistableBundleKeyBuilder = Builder(prefix + name)
-  protected fun <T : Any, BACKED_BY : Any?> PersistableBundleKey<T?, BACKED_BY>.default(default: () -> T): PersistableBundleKey<T, BACKED_BY> =
-    withDefault(default)
 
   protected fun <T : Any, BACKED_BY : Any?> PersistableBundleKey<T?, BACKED_BY>.required(): PersistableBundleKey<T, BACKED_BY> =
     asRequired { RequiredPersistableBundleKeyMissing(name) }
 }
 
 fun PersistableBundleKeyBuilder.persistableBundle(default: PersistableBundle): PersistableBundleKey<PersistableBundle, PersistableBundle?> =
-  persistableBundle().withDefault { default }
+  persistableBundle().defaultProvider { default }
 
 fun PersistableBundleKeyBuilder.persistableBundle(): PersistableBundleKey<PersistableBundle?, PersistableBundle?> = nativeKey(
   get = { getPersistableBundle(name) },

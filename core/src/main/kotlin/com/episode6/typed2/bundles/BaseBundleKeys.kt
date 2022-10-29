@@ -16,9 +16,6 @@ open class BaseBundleKeyNamespace(private val prefix: String = "") {
 
   protected fun key(name: String): BaseBundleKeyBuilder = Builder(prefix + name)
 
-  protected fun <T : Any, BACKED_BY : Any?> BaseBundleKey<T?, BACKED_BY>.default(default: () -> T): BaseBundleKey<T, BACKED_BY> =
-    withDefault(default)
-
   protected fun <T : Any, BACKED_BY : Any?> BaseBundleKey<T?, BACKED_BY>.required(): BaseBundleKey<T, BACKED_BY> =
     asRequired { RequiredBaseBundleKeyMissing(name) }
 }

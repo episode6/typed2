@@ -14,9 +14,6 @@ open class BundleKeyNamespace(private val prefix: String = "") {
 
   protected fun key(name: String): BundleKeyBuilder = Builder(prefix + name)
 
-  protected fun <T : Any, BACKED_BY : Any?> BundleKey<T?, BACKED_BY>.default(default: () -> T): BundleKey<T, BACKED_BY> =
-    withDefault(default)
-
   protected fun <T : Any, BACKED_BY : Any?> BundleKey<T?, BACKED_BY>.required(): BundleKey<T, BACKED_BY> =
     asRequired { RequiredBundleKeyMissing(name) }
 }
@@ -27,7 +24,7 @@ fun <T : IBinder> BundleKeyBuilder.binder(safeCast: Boolean = false): BundleKey<
   mapSet = { it }
 )
 
-fun BundleKeyBuilder.bundle(default: Bundle): BundleKey<Bundle, Bundle?> = bundle().withDefault { default }
+fun BundleKeyBuilder.bundle(default: Bundle): BundleKey<Bundle, Bundle?> = bundle().defaultProvider { default }
 fun BundleKeyBuilder.bundle(): BundleKey<Bundle?, Bundle?> = nativeKey(
   get = { getBundle(name) },
   set = { setBundle(name, it) },
@@ -44,7 +41,7 @@ fun BundleKeyBuilder.byte(): BundleKey<Byte?, String?> = int().mapType(
   mapSet = { it?.toInt() }
 )
 
-fun BundleKeyBuilder.byteArray(default: ByteArray): BundleKey<ByteArray, ByteArray?> = byteArray().withDefault { default }
+fun BundleKeyBuilder.byteArray(default: ByteArray): BundleKey<ByteArray, ByteArray?> = byteArray().defaultProvider { default }
 fun BundleKeyBuilder.byteArray(): BundleKey<ByteArray?, ByteArray?> = nativeKey(
   get = { getByteArray(name) },
   set = { setByteArray(name, it) }
@@ -61,20 +58,20 @@ fun BundleKeyBuilder.char(): BundleKey<Char?, String?> = string().mapType(
   mapSet = { it?.toString() }
 )
 
-fun BundleKeyBuilder.charArray(default: CharArray): BundleKey<CharArray, CharArray?> = charArray().withDefault { default }
+fun BundleKeyBuilder.charArray(default: CharArray): BundleKey<CharArray, CharArray?> = charArray().defaultProvider { default }
 fun BundleKeyBuilder.charArray(): BundleKey<CharArray?, CharArray?> = nativeKey(
   get = { getCharArray(name) },
   set = { setCharArray(name, it) }
 )
 
-fun BundleKeyBuilder.charSequence(default: CharSequence): BundleKey<CharSequence, CharSequence?> = charSequence().withDefault { default }
+fun BundleKeyBuilder.charSequence(default: CharSequence): BundleKey<CharSequence, CharSequence?> = charSequence().defaultProvider { default }
 fun BundleKeyBuilder.charSequence(): BundleKey<CharSequence?, CharSequence?> = nativeKey(
   get = { getCharSequence(name) },
   set = { setCharSequence(name, it) }
 )
 
 fun BundleKeyBuilder.charSequenceArray(default: Array<CharSequence>): BundleKey<Array<CharSequence>, Array<CharSequence>?> =
-  charSequenceArray().withDefault { default }
+  charSequenceArray().defaultProvider { default }
 
 fun BundleKeyBuilder.charSequenceArray(): BundleKey<Array<CharSequence>?, Array<CharSequence>?> = nativeKey(
   get = { getCharSequenceArray(name) },
@@ -82,7 +79,7 @@ fun BundleKeyBuilder.charSequenceArray(): BundleKey<Array<CharSequence>?, Array<
 )
 
 fun BundleKeyBuilder.charSequenceList(default: List<CharSequence>): BundleKey<List<CharSequence>, ArrayList<CharSequence>?> =
-  charSequenceList().withDefault { default }
+  charSequenceList().defaultProvider { default }
 
 fun BundleKeyBuilder.charSequenceList(): BundleKey<List<CharSequence>?, ArrayList<CharSequence>?> = charSequenceArrayList().mapType(
   mapGet = { it },

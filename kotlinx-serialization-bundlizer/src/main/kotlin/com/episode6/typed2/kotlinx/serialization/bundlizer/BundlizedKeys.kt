@@ -5,7 +5,7 @@ import com.episode6.typed2.bundles.BundleKey
 import com.episode6.typed2.bundles.BundleKeyBuilder
 import com.episode6.typed2.bundles.bundle
 import com.episode6.typed2.mapType
-import com.episode6.typed2.withDefault
+import com.episode6.typed2.defaultProvider
 import dev.ahmedmourad.bundlizer.bundle
 import dev.ahmedmourad.bundlizer.unbundle
 import kotlinx.serialization.KSerializer
@@ -13,7 +13,7 @@ import kotlinx.serialization.KSerializer
 fun <T : Any> BundleKeyBuilder.bundlized(
   default: T,
   serializer: () -> KSerializer<T>,
-): BundleKey<T, Bundle?> = bundlized(serializer).withDefault { default }
+): BundleKey<T, Bundle?> = bundlized(serializer).defaultProvider { default }
 
 fun <T : Any> BundleKeyBuilder.bundlized(
   serializer: () -> KSerializer<T>,
