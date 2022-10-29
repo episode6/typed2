@@ -12,12 +12,7 @@ object Typed2DefaultGson {
 inline fun <reified T : Any> PrimitiveKeyBuilder.gson(
   default: T,
   noinline gson: () -> Gson = Typed2DefaultGson::gson,
-): PrimitiveKey<T, String?> = gson<T>(defaultProvider = { default }, gson)
-
-inline fun <reified T : Any> PrimitiveKeyBuilder.gson(
-  noinline defaultProvider: () -> T,
-  noinline gson: () -> Gson = Typed2DefaultGson::gson,
-): PrimitiveKey<T, String?> = gson<T>(gson).withDefault(defaultProvider)
+): PrimitiveKey<T, String?> = gson<T>(gson).withDefault { default }
 
 inline fun <reified T : Any> PrimitiveKeyBuilder.gson(
   noinline gson: () -> Gson = Typed2DefaultGson::gson,

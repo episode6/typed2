@@ -13,12 +13,7 @@ import kotlinx.serialization.KSerializer
 fun <T : Any> BundleKeyBuilder.bundlized(
   default: T,
   serializer: () -> KSerializer<T>,
-): BundleKey<T, Bundle?> = bundlized(defaultProvider = { default }, serializer)
-
-fun <T : Any> BundleKeyBuilder.bundlized(
-  defaultProvider: () -> T,
-  serializer: () -> KSerializer<T>,
-): BundleKey<T, Bundle?> = bundlized(serializer).withDefault(defaultProvider)
+): BundleKey<T, Bundle?> = bundlized(serializer).withDefault { default }
 
 fun <T : Any> BundleKeyBuilder.bundlized(
   serializer: () -> KSerializer<T>,

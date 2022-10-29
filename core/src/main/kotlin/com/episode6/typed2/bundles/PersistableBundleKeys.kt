@@ -14,12 +14,12 @@ open class PersistableBundleKeyNamespace(private val prefix: String = "") {
   private class Builder(override val name: String) : PersistableBundleKeyBuilder
 
   protected fun key(name: String): PersistableBundleKeyBuilder = Builder(prefix + name)
+  protected fun <T : Any, BACKED_BY : Any?> PersistableBundleKey<T?, BACKED_BY>.default(default: ()->T): PersistableBundleKey<T, BACKED_BY> = withDefault(default)
   protected fun <T : Any, BACKED_BY : Any?> PersistableBundleKey<T?, BACKED_BY>.required(): PersistableBundleKey<T, BACKED_BY> = asRequired { RequiredPersistableBundleKeyMissing(name) }
   protected fun <T : Any?, BACKED_BY : Any?> PersistableBundleKey<T, BACKED_BY>.async(context: CoroutineContext = Dispatchers.Default): AsyncPersistableBundleKey<T, BACKED_BY> = asAsync(context)
 }
 
-fun PersistableBundleKeyBuilder.persistableBundle(default: PersistableBundle): PersistableBundleKey<PersistableBundle, PersistableBundle?> = persistableBundle { default }
-fun PersistableBundleKeyBuilder.persistableBundle(default: () -> PersistableBundle): PersistableBundleKey<PersistableBundle, PersistableBundle?> = persistableBundle().withDefault(default)
+fun PersistableBundleKeyBuilder.persistableBundle(default: PersistableBundle): PersistableBundleKey<PersistableBundle, PersistableBundle?> = persistableBundle().withDefault { default }
 fun PersistableBundleKeyBuilder.persistableBundle(): PersistableBundleKey<PersistableBundle?, PersistableBundle?> = nativeKey(
   get = { getPersistableBundle(name) },
   set = { setPersistableBundle(name, it) },
