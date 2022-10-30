@@ -20,7 +20,7 @@ interface BundleValueGetter : BaseBundleValueGetter {
   fun getFloatArray(name: String): FloatArray?
   fun getIntArrayList(name: String): ArrayList<Int>?
   fun <T: Parcelable> getParcelable(name: String, kclass: KClass<T>): T?
-  fun <T: Parcelable> getParcelableArray(name: String, kclass: KClass<T>): Array<in T>?
+  fun <T: Parcelable> getParcelableArray(name: String, kclass: KClass<T>, convertListToArray: List<T>.()->Array<T>): Array<T>?
   fun <T: Parcelable> getParcelableArrayList(name: String, kclass: KClass<T>): ArrayList<T>?
 }
 

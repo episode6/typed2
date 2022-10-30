@@ -30,10 +30,10 @@ class TypedBundle(private val delegate: Bundle) : BundleValueGetter, BundleValue
     Build.VERSION.SDK_INT >= 33 -> delegate.getParcelable(name, kclass.java)
     else                        -> delegate.getParcelable<T>(name)
   }
-  @Suppress("DEPRECATION")
-  override fun <T : Parcelable> getParcelableArray(name: String, kclass: KClass<T>): Array<in T>? = when {
+  @Suppress("DEPRECATION", "UNCHECKED_CAST")
+  override fun <T : Parcelable> getParcelableArray(name: String, kclass: KClass<T>, convertListToArray: List<T>.()->Array<T>): Array<T>? = when {
     Build.VERSION.SDK_INT >= 33 -> delegate.getParcelableArray(name, kclass.java)
-    else                        -> delegate.getParcelableArray(name)
+    else                        -> delegate.getParcelableArray(name)?.map { it as T }?.convertListToArray()
   }
   @Suppress("DEPRECATION")
   override fun <T : Parcelable> getParcelableArrayList(name: String, kclass: KClass<T>): ArrayList<T>? = when {
