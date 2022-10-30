@@ -77,7 +77,7 @@ fun BundleKeyBuilder.charSequenceArray(): BundleKey<Array<CharSequence>?, Array<
 
 fun BundleKeyBuilder.charSequenceList(default: List<CharSequence>): BundleKey<List<CharSequence>, ArrayList<CharSequence>?> = charSequenceList().defaultProvider { default }
 fun BundleKeyBuilder.charSequenceList(): BundleKey<List<CharSequence>?, ArrayList<CharSequence>?> = charSequenceArrayList().mapType(
-  mapGet = { it?.toList() },
+  mapGet = { it },
   mapSet = { it?.let { if (it is ArrayList<CharSequence>) it else ArrayList(it) } },
 )
 
@@ -89,7 +89,7 @@ fun BundleKeyBuilder.floatArray(): BundleKey<FloatArray?, FloatArray?> = nativeK
 
 fun BundleKeyBuilder.intList(default: List<Int>): BundleKey<List<Int>, ArrayList<Int>?> = intList().defaultProvider { default }
 fun BundleKeyBuilder.intList(): BundleKey<List<Int>?, ArrayList<Int>?> = intArrayList().mapType(
-  mapGet = { it?.toList() },
+  mapGet = { it },
   mapSet = { it?.let { if (it is ArrayList<Int>) it else ArrayList(it) } },
 )
 
@@ -110,7 +110,7 @@ inline fun <reified T : Parcelable> BundleKeyBuilder.parcelableArray(): BundleKe
 inline fun <reified T : Parcelable> BundleKeyBuilder.parcelableList(default: List<T>): BundleKey<List<T>, ArrayList<T>?> = parcelableList<T>().defaultProvider { default }
 inline fun <reified T : Parcelable> BundleKeyBuilder.parcelableList(): BundleKey<List<T>?, ArrayList<T>?> = parcelableList(T::class)
 fun <T : Parcelable> BundleKeyBuilder.parcelableList(kclass: KClass<T>): BundleKey<List<T>?, ArrayList<T>?> = parcelableArrayList(kclass).mapType(
-  mapGet = { it?.toList() },
+  mapGet = { it },
   mapSet = { it?.let { if (it is ArrayList<T>) it else ArrayList<T>(it) } }
 )
 
