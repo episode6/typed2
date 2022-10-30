@@ -20,6 +20,8 @@ interface BundleValueGetter : BaseBundleValueGetter {
   fun getFloatArray(name: String): FloatArray?
   fun getIntArrayList(name: String): ArrayList<Int>?
   fun <T: Parcelable> getParcelable(name: String, kclass: KClass<T>): T?
+  fun <T: Parcelable> getParcelableArray(name: String, kclass: KClass<T>): Array<in T>?
+  fun <T: Parcelable> getParcelableArrayList(name: String, kclass: KClass<T>): ArrayList<T>?
 }
 
 interface BundleValueSetter : BaseBundleValueSetter {
@@ -35,6 +37,8 @@ interface BundleValueSetter : BaseBundleValueSetter {
   fun setFloatArray(name: String, value: FloatArray?)
   fun setIntArrayList(name: String, value: ArrayList<Int>?)
   fun <T: Parcelable> setParcelable(name: String, value: T?)
+  fun <T: Parcelable> setParcelableArray(name: String, value: Array<T>?)
+  fun <T: Parcelable> setParcelableArrayList(name: String, value: ArrayList<T>?)
 }
 
 fun <T> BundleValueGetter.get(key: BundleKey<T, *>): T = key.get(this)

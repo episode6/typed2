@@ -30,6 +30,16 @@ class TypedBundle(private val delegate: Bundle) : BundleValueGetter, BundleValue
     Build.VERSION.SDK_INT >= 33 -> delegate.getParcelable(name, kclass.java)
     else                        -> delegate.getParcelable<T>(name)
   }
+  @Suppress("DEPRECATION")
+  override fun <T : Parcelable> getParcelableArray(name: String, kclass: KClass<T>): Array<in T>? = when {
+    Build.VERSION.SDK_INT >= 33 -> delegate.getParcelableArray(name, kclass.java)
+    else                        -> delegate.getParcelableArray(name)
+  }
+  @Suppress("DEPRECATION")
+  override fun <T : Parcelable> getParcelableArrayList(name: String, kclass: KClass<T>): ArrayList<T>? = when {
+    Build.VERSION.SDK_INT >= 33 -> delegate.getParcelableArrayList(name, kclass.java)
+    else                        -> delegate.getParcelableArrayList<T>(name)
+  }
   override fun getDouble(name: String, default: Double): Double = delegate.getDouble(name, default)
 
   override fun remove(name: String) = delegate.remove(name)
@@ -50,6 +60,8 @@ class TypedBundle(private val delegate: Bundle) : BundleValueGetter, BundleValue
   override fun setFloatArray(name: String, value: FloatArray?) { delegate.putFloatArray(name, value) }
   override fun setIntArrayList(name: String, value: ArrayList<Int>?) { delegate.putIntegerArrayList(name, value) }
   override fun <T : Parcelable> setParcelable(name: String, value: T?) { delegate.putParcelable(name, value) }
+  override fun <T : Parcelable> setParcelableArray(name: String, value: Array<T>?) { delegate.putParcelableArray(name, value) }
+  override fun <T : Parcelable> setParcelableArrayList(name: String, value: ArrayList<T>?) { delegate.putParcelableArrayList(name, value) }
   override fun setDouble(name: String, value: Double) { delegate.putDouble(name, value) }
 }
 
