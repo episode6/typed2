@@ -96,11 +96,10 @@ fun BundleKeyBuilder.intList(): BundleKey<List<Int>?, ArrayList<Int>?> = intArra
 inline fun <reified T : Parcelable> BundleKeyBuilder.parcelable(default: T) : BundleKey<T, T?> = parcelable<T>().defaultProvider { default }
 inline fun <reified T : Parcelable> BundleKeyBuilder.parcelable() : BundleKey<T?, T?> = parcelable(T::class)
 fun <T : Parcelable> BundleKeyBuilder.parcelable(kclass: KClass<T>) : BundleKey<T?, T?> = NativeKeys.create(
-  name = name,
+  this,
   backingClass = kclass,
   get = { getParcelable(name, kclass) },
   set = { setParcelable(name, it) },
-  newKeyCallback = newKeyCallback,
 )
 
 private fun BundleKeyBuilder.nativeBinder(): BundleKey<IBinder?, IBinder?> = nativeKey(
