@@ -46,34 +46,34 @@ jobs:
           disable-animations: false
           avd-name: API_30_AOSP_ATD
           script: |
-          echo 'create emulator and alter config.ini settings for caching'
-          # Create emulator
-          $ANDROID_HOME/emulator/emulator -list-avds
-          $ANDROID_HOME/emulator/emulator -accel-check 2>&1 | tee "$GITHUB_WORKSPACE"/haxm-check-"$GITHUB_RUN_NUMBER".txt
-          if false; then
-          emulator_config=~/.android/avd/API_30_AOSP_ATD.avd/config.ini
-          # The following madness is to support empty OR populated config.ini files,
-          # the state of which is dependant on the version of the emulator used (which we don't control),
-          # so let's be defensive to be safe.
-          # Replace existing config (NOTE we're on MacOS so sed works differently!)
-          sed -i .bak 's/hw.lcd.density=.*/hw.lcd.density=420/' "$emulator_config"
-          sed -i .bak 's/hw.lcd.height=.*/hw.lcd.height=1920/' "$emulator_config"
-          sed -i .bak 's/hw.lcd.width=.*/hw.lcd.width=1080/' "$emulator_config"
-          # Or, add new config
-          if ! grep -q "hw.lcd.density" "$emulator_config"; then
-          echo "hw.lcd.density=420" >> "$emulator_config"
-          fi
-          if ! grep -q "hw.lcd.height" "$emulator_config"; then
-          echo "hw.lcd.height=1920" >> "$emulator_config"
-          fi
-          if ! grep -q "hw.lcd.width" "$emulator_config"; then
-          echo "hw.lcd.width=1080" >> "$emulator_config"
-          fi
-          echo "Emulator settings ($emulator_config)"
-          cat "$emulator_config"
-          fi
-          # Optionally enable skia rendering https://developer.android.com/studio/run/emulator-acceleration#skia-emulator
-          $ANDROID_HOME/platform-tools/adb shell 'su;setprop debug.hwui.renderer skiagl;stop;start'
+            echo 'create emulator and alter config.ini settings for caching'
+            # Create emulator
+            $ANDROID_HOME/emulator/emulator -list-avds
+            $ANDROID_HOME/emulator/emulator -accel-check 2>&1 | tee "$GITHUB_WORKSPACE"/haxm-check-"$GITHUB_RUN_NUMBER".txt
+            if false; then
+            emulator_config=~/.android/avd/API_30_AOSP_ATD.avd/config.ini
+            # The following madness is to support empty OR populated config.ini files,
+            # the state of which is dependant on the version of the emulator used (which we don't control),
+            # so let's be defensive to be safe.
+            # Replace existing config (NOTE we're on MacOS so sed works differently!)
+            sed -i .bak 's/hw.lcd.density=.*/hw.lcd.density=420/' "$emulator_config"
+            sed -i .bak 's/hw.lcd.height=.*/hw.lcd.height=1920/' "$emulator_config"
+            sed -i .bak 's/hw.lcd.width=.*/hw.lcd.width=1080/' "$emulator_config"
+            # Or, add new config
+            if ! grep -q "hw.lcd.density" "$emulator_config"; then
+            echo "hw.lcd.density=420" >> "$emulator_config"
+            fi
+            if ! grep -q "hw.lcd.height" "$emulator_config"; then
+            echo "hw.lcd.height=1920" >> "$emulator_config"
+            fi
+            if ! grep -q "hw.lcd.width" "$emulator_config"; then
+            echo "hw.lcd.width=1080" >> "$emulator_config"
+            fi
+            echo "Emulator settings ($emulator_config)"
+            cat "$emulator_config"
+            fi
+            # Optionally enable skia rendering https://developer.android.com/studio/run/emulator-acceleration#skia-emulator
+            $ANDROID_HOME/platform-tools/adb shell 'su;setprop debug.hwui.renderer skiagl;stop;start'
 
       - name: record session
         run: |
