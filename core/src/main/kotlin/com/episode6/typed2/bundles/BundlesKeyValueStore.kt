@@ -5,6 +5,7 @@ import android.os.IBinder
 import android.os.Parcelable
 import android.util.Size
 import android.util.SizeF
+import android.util.SparseArray
 import com.episode6.typed2.get
 import com.episode6.typed2.set
 import kotlin.reflect.KClass
@@ -29,6 +30,8 @@ interface BundleValueGetter : BaseBundleValueGetter {
   fun getShortArray(name: String): ShortArray?
   fun getSize(name: String): Size?
   fun getSizeF(name: String): SizeF?
+  fun <T: Parcelable> getSparseParcelableArray(name: String, kclass: KClass<T>): SparseArray<T>?
+  fun getStringArrayList(name: String): ArrayList<String>?
 }
 
 interface BundleValueSetter : BaseBundleValueSetter {
@@ -51,6 +54,8 @@ interface BundleValueSetter : BaseBundleValueSetter {
   fun setShortArray(name: String, value: ShortArray?)
   fun setSize(name: String, value: Size?)
   fun setSizeF(name: String, value: SizeF?)
+  fun <T: Parcelable> setSparseParcelableArray(name: String, value: SparseArray<T>?)
+  fun setStringArrayList(name: String, value: ArrayList<String>?)
 }
 
 fun <T> BundleValueGetter.get(key: BundleKey<T, *>): T = key.get(this)

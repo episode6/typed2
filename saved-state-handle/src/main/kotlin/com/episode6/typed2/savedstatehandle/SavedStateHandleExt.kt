@@ -5,6 +5,7 @@ import android.os.IBinder
 import android.os.Parcelable
 import android.util.Size
 import android.util.SizeF
+import android.util.SparseArray
 import androidx.lifecycle.SavedStateHandle
 import com.episode6.typed2.KeyValueDelegate
 import com.episode6.typed2.bundles.*
@@ -34,6 +35,8 @@ class TypedSavedStateHandle(private val delegate: SavedStateHandle) : BundleValu
   override fun getShortArray(name: String): ShortArray? = delegate[name]
   override fun getSize(name: String): Size? = delegate[name]
   override fun getSizeF(name: String): SizeF? = delegate[name]
+  override fun <T : Parcelable> getSparseParcelableArray(name: String, kclass: KClass<T>): SparseArray<T>? = delegate[name]
+  override fun getStringArrayList(name: String): ArrayList<String>? = delegate[name]
   override fun getDouble(name: String, default: Double): Double = delegate[name] ?: default
   override fun getBoolean(name: String, default: Boolean): Boolean = delegate[name] ?: default
   override fun getFloat(name: String, default: Float): Float = delegate[name] ?: default
@@ -60,6 +63,8 @@ class TypedSavedStateHandle(private val delegate: SavedStateHandle) : BundleValu
   override fun setShortArray(name: String, value: ShortArray?) { delegate[name] = value }
   override fun setSize(name: String, value: Size?) { delegate[name] = value }
   override fun setSizeF(name: String, value: SizeF?) { delegate[name] = value }
+  override fun <T : Parcelable> setSparseParcelableArray(name: String, value: SparseArray<T>?) { delegate[name] = value }
+  override fun setStringArrayList(name: String, value: ArrayList<String>?) { delegate[name] = value }
   override fun setDouble(name: String, value: Double) { delegate[name] = value }
   override fun setInt(name: String, value: Int) { delegate[name] = value }
   override fun setString(name: String, value: String?) { delegate[name] = value }

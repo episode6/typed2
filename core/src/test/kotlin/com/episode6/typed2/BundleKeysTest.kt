@@ -5,6 +5,7 @@ import android.os.IBinder
 import android.os.Parcelable
 import android.util.Size
 import android.util.SizeF
+import android.util.SparseArray
 import assertk.assertThat
 import assertk.assertions.isEmpty
 import assertk.assertions.isEqualTo
@@ -38,6 +39,8 @@ class BundleKeysTest {
     val shortArray = key("shortArray").shortArray()
     val size = key("size").size()
     val sizeF = key("sizeF").sizeF()
+    val sparseParcelableArray = key("sparseParcelableArray").sparseParcelableArray<TestParcelable>()
+    val stringList = key("stringList").stringList()
   }
 
   private val getter: BundleValueGetter = mock {
@@ -49,6 +52,7 @@ class BundleKeysTest {
     on { getParcelableArrayList<TestParcelable>(any(), any()) } doReturn null
     on { getShort(any(), any()) } doAnswer { it.getArgument(1) }
     on { getString(any(), anyOrNull()) } doAnswer { it.getArgument(1) }
+    on { getStringArrayList(any()) } doReturn null
   }
 
   private val setter: BundleValueSetter = mock()
@@ -288,6 +292,28 @@ class BundleKeysTest {
     inOrder(getter, setter) {
       verify(getter).getSizeF("sizeF")
       verify(setter).setSizeF("sizeF", sizeF)
+    }
+  }
+
+  @Test fun testSparseParcelableArray() {
+    val sparseParcelableArray: SparseArray<TestParcelable> = mock()
+
+    assertThat(getter.get(Keys.sparseParcelableArray)).isNull()
+    setter.set(Keys.sparseParcelableArray, sparseParcelableArray)
+
+    inOrder(getter, setter) {
+      verify(getter).getSparseParcelableArray("sparseParcelableArray", TestParcelable::class)
+      verify(setter).setSparseParcelableArray("sparseParcelableArray", sparseParcelableArray)
+    }
+  }
+
+  @Test fun testStringList() {
+    assertThat(getter.get(Keys.stringList)).isNull()
+    setter.set(Keys.stringList, listOf("42"))
+
+    inOrder(getter, setter) {
+      verify(getter).getStringArrayList("stringList")
+      verify(setter).setStringArrayList("stringList", ArrayList(listOf("42")))
     }
   }
 }
