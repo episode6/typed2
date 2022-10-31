@@ -1,8 +1,7 @@
 package com.episode6.typed2.navigation.compose
 
 import androidx.navigation.NavController
-import com.episode6.typed2.KeyDescriptor
-import com.episode6.typed2.PrimitiveKeyValueSetter
+import com.episode6.typed2.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -19,7 +18,7 @@ fun NavController.navigateTo(screen: NavScreen) {
  *   set(Screen.Arg2, 42)
  * }
  */
-inline fun NavController.navigateTo(screen: NavScreen, args: PrimitiveKeyValueSetter.() -> Unit) {
+inline fun NavController.navigateTo(screen: NavScreen, args: ComposeNavArgBuilder.() -> Unit) {
   val builder = ComposeNavArgBuilder()
   builder.args()
   navigate(NavScreenRoute.build(screen, builder))
@@ -28,7 +27,7 @@ inline fun NavController.navigateTo(screen: NavScreen, args: PrimitiveKeyValueSe
 fun NavController.launchNavigateTo(
   screen: NavScreen,
   scope: CoroutineScope,
-  args: suspend PrimitiveKeyValueSetter.() -> Unit,
+  args: suspend ComposeNavArgBuilder.() -> Unit,
 ): Job = scope.launch { navigateTo(screen) { args() } }
 
 object NavScreenRoute {
@@ -62,6 +61,11 @@ class ComposeNavArgBuilder : PrimitiveKeyValueSetter {
   override fun setString(name: String, value: String?) { argMap[name] = value }
   override fun remove(name: String) { argMap.remove(name) }
 }
+
+fun <T> ComposeNavArgBuilder.set(key: NavArg<T, *>, value: T) = key.set(this, value)
+fun ComposeNavArgBuilder.remove(key: NavArg<*, *>) = remove(key.name)
+suspend fun <T> ComposeNavArgBuilder.set(key: AsyncNavArg<T, *>, value: T) = key.set(this, value)
+fun ComposeNavArgBuilder.remove(key: AsyncNavArg<*, *>) = remove(key.name)
 
 class MissingRequiredArgumentException(arg: KeyDescriptor<*, *>, screen: NavScreen) : IllegalArgumentException(
   "Missing required argument \"${arg.name}\" when navigating to screen \"${screen.name}\""
