@@ -28,6 +28,8 @@ class BundleKeysTest {
     val floatArray = key("floatArray").floatArray()
     val intList = key("intList").intList()
     val parcelable = key("parcelable").parcelable<TestParcelable>()
+    val parcelableArray = key("parcelableArray").parcelableArray<TestParcelable>()
+    val parcelableList = key("parcelableList").parcelableList<TestParcelable>()
   }
 
   private val getter: BundleValueGetter = mock {
@@ -36,6 +38,7 @@ class BundleKeysTest {
     on { getChar(any(), any()) } doAnswer { it.getArgument(1) }
     on { getCharSequenceArrayList(any()) } doReturn null
     on { getIntArrayList(any()) } doReturn null
+    on { getParcelableArrayList<TestParcelable>(any(), any()) } doReturn null
     on { getString(any(), anyOrNull()) } doAnswer { it.getArgument(1) }
   }
 
@@ -184,6 +187,32 @@ class BundleKeysTest {
     inOrder(getter, setter) {
       verify(getter).getParcelable("parcelable", TestParcelable::class)
       verify(setter).setParcelable("parcelable", mockParcelable)
+    }
+  }
+
+  @Test fun testParcelableArray() {
+    val mockParcelable = mock<TestParcelable>()
+    val array: Array<TestParcelable> = arrayOf(mockParcelable)
+
+    assertThat(getter.get(Keys.parcelableArray)).isNull()
+    setter.set(Keys.parcelableArray, array)
+
+    inOrder(getter, setter) {
+      verify(getter).getParcelableArray(eq("parcelableArray"), eq(TestParcelable::class), any())
+      verify(setter).setParcelableArray("parcelableArray", array)
+    }
+  }
+
+  @Test fun testParcelableList() {
+    val mockParcelable = mock<TestParcelable>()
+    val list: List<TestParcelable> = listOf(mockParcelable)
+
+    assertThat(getter.get(Keys.parcelableList)).isNull()
+    setter.set(Keys.parcelableList, list)
+
+    inOrder(getter, setter) {
+      verify(getter).getParcelableArrayList(eq("parcelableList"), eq(TestParcelable::class))
+      verify(setter).setParcelableArrayList("parcelableList", ArrayList(list))
     }
   }
 }

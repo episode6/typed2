@@ -31,6 +31,30 @@ object NativeKeys {
     mapper = KeyMapper({ it }, { it }),
     newKeyCallback = keyBuilder.newKeyCallback
   )
+
+  inline fun <reified T : Any, GETTER : KeyValueGetter, SETTER : KeyValueSetter> create(
+    keyBuilder: KeyBuilder,
+    backingDefault: T,
+    noinline get: GETTER.() -> T,
+    noinline set: SETTER.(T) -> Unit,
+  ): Key<T, T, GETTER, SETTER> = create(
+    keyBuilder,
+    backingDefault = backingDefault,
+    backingClass = T::class,
+    get = get,
+    set = set,
+  )
+
+  inline fun <reified T : Any, GETTER : KeyValueGetter, SETTER : KeyValueSetter> create(
+    keyBuilder: KeyBuilder,
+    noinline get: GETTER.() -> T?,
+    noinline set: SETTER.(T?) -> Unit,
+  ): Key<T?, T?, GETTER, SETTER> = create(
+    keyBuilder,
+    backingClass = T::class,
+    get = get,
+    set = set,
+  )
 }
 
 internal inline fun <reified T : Any, GETTER : KeyValueGetter, SETTER : KeyValueSetter> KeyBuilder.nativeKey(
@@ -40,7 +64,6 @@ internal inline fun <reified T : Any, GETTER : KeyValueGetter, SETTER : KeyValue
 ): Key<T, T, GETTER, SETTER> = NativeKeys.create(
   this,
   backingDefault = backingDefault,
-  backingClass = T::class,
   get = get,
   set = set,
 )
@@ -50,7 +73,6 @@ internal inline fun <reified T : Any, GETTER : KeyValueGetter, SETTER : KeyValue
   noinline set: SETTER.(T?) -> Unit,
 ): Key<T?, T?, GETTER, SETTER> = NativeKeys.create(
   this,
-  backingClass = T::class,
   get = get,
   set = set,
 )

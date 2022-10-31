@@ -22,6 +22,10 @@ class TypedSavedStateHandle(private val delegate: SavedStateHandle) : BundleValu
   override fun getFloatArray(name: String): FloatArray? = delegate[name]
   override fun getIntArrayList(name: String): ArrayList<Int>? = delegate[name]
   override fun <T : Parcelable> getParcelable(name: String, kclass: KClass<T>): T? = delegate[name]
+  @Suppress("UNCHECKED_CAST")
+  override fun <T : Parcelable> getParcelableArray(name: String, kclass: KClass<T>, convertListToArray: List<T>.()->Array<T>): Array<T>? =
+    delegate.get<Array<Parcelable>>(name)?.map { it as T }?.convertListToArray()
+  override fun <T : Parcelable> getParcelableArrayList(name: String, kclass: KClass<T>): ArrayList<T>? = delegate[name]
   override fun getDouble(name: String, default: Double): Double = delegate[name] ?: default
   override fun getBoolean(name: String, default: Boolean): Boolean = delegate[name] ?: default
   override fun getFloat(name: String, default: Float): Float = delegate[name] ?: default
@@ -41,6 +45,8 @@ class TypedSavedStateHandle(private val delegate: SavedStateHandle) : BundleValu
   override fun setFloatArray(name: String, value: FloatArray?) { delegate[name] = value }
   override fun setIntArrayList(name: String, value: ArrayList<Int>?) { delegate[name] = value }
   override fun <T : Parcelable> setParcelable(name: String, value: T?) { delegate[name] = value }
+  override fun <T : Parcelable> setParcelableArray(name: String, value: Array<T>?) { delegate[name] = value?.map { it as Parcelable }?.toTypedArray<Parcelable>() }
+  override fun <T : Parcelable> setParcelableArrayList(name: String, value: ArrayList<T>?) { delegate[name] = value }
   override fun setDouble(name: String, value: Double) { delegate[name] = value }
   override fun setInt(name: String, value: Int) { delegate[name] = value }
   override fun setString(name: String, value: String?) { delegate[name] = value }
