@@ -6,6 +6,7 @@ import android.os.IBinder
 import android.os.Parcelable
 import android.util.Size
 import android.util.SizeF
+import android.util.SparseArray
 import com.episode6.typed2.KeyValueDelegate
 import java.io.Serializable
 import kotlin.reflect.KClass
@@ -53,6 +54,12 @@ class TypedBundle(private val delegate: Bundle) : BundleValueGetter, BundleValue
   override fun getShortArray(name: String): ShortArray? = delegate.getShortArray(name)
   override fun getSize(name: String): Size? = delegate.getSize(name)
   override fun getSizeF(name: String): SizeF? = delegate.getSizeF(name)
+  @Suppress("DEPRECATION")
+  override fun <T : Parcelable> getSparseParcelableArray(name: String, kclass: KClass<T>): SparseArray<T>? = when {
+    Build.VERSION.SDK_INT >= 33 -> delegate.getSparseParcelableArray(name, kclass.java)
+    else                        -> delegate.getSparseParcelableArray<T>(name)
+  }
+  override fun getStringArrayList(name: String): ArrayList<String>? = delegate.getStringArrayList(name)
   override fun getDouble(name: String, default: Double): Double = delegate.getDouble(name, default)
 
   override fun remove(name: String) = delegate.remove(name)
@@ -80,6 +87,8 @@ class TypedBundle(private val delegate: Bundle) : BundleValueGetter, BundleValue
   override fun setShortArray(name: String, value: ShortArray?) { delegate.putShortArray(name, value) }
   override fun setSize(name: String, value: Size?) { delegate.putSize(name, value) }
   override fun setSizeF(name: String, value: SizeF?) { delegate.putSizeF(name, value) }
+  override fun <T : Parcelable> setSparseParcelableArray(name: String, value: SparseArray<T>?) { delegate.putSparseParcelableArray(name, value) }
+  override fun setStringArrayList(name: String, value: ArrayList<String>?) { delegate.putStringArrayList(name, value) }
   override fun setDouble(name: String, value: Double) { delegate.putDouble(name, value) }
 }
 
