@@ -31,6 +31,9 @@ class BundleKeysTest {
     val parcelableArray = key("parcelableArray").parcelableArray<TestParcelable>()
     val parcelableList = key("parcelableList").parcelableList<TestParcelable>()
     val serializable = key("serializable").serializable<TestSerializable>()
+    val short = key("short").short(default = 12)
+    val nullShort = key("nullShort").short()
+    val shortArray = key("shortArray").shortArray()
   }
 
   private val getter: BundleValueGetter = mock {
@@ -40,6 +43,7 @@ class BundleKeysTest {
     on { getCharSequenceArrayList(any()) } doReturn null
     on { getIntArrayList(any()) } doReturn null
     on { getParcelableArrayList<TestParcelable>(any(), any()) } doReturn null
+    on { getShort(any(), any()) } doAnswer { it.getArgument(1) }
     on { getString(any(), anyOrNull()) } doAnswer { it.getArgument(1) }
   }
 
@@ -226,6 +230,36 @@ class BundleKeysTest {
     inOrder(getter, setter) {
       verify(getter).getSerializable("serializable", TestSerializable::class)
       verify(setter).setSerializable("serializable", mockSerializable)
+    }
+  }
+
+  @Test fun testShort() {
+    assertThat(getter.get(Keys.short)).isEqualTo(12)
+    setter.set(Keys.short, 42)
+
+    inOrder(getter, setter) {
+      verify(getter).getShort("short", 12)
+      verify(setter).setShort("short", 42)
+    }
+  }
+
+  @Test fun testNullShort() {
+    assertThat(getter.get(Keys.nullShort)).isNull()
+    setter.set(Keys.nullShort, 9)
+
+    inOrder(getter, setter) {
+      verify(getter).getString("nullShort", null)
+      verify(setter).setString("nullShort", "9")
+    }
+  }
+
+  @Test fun testShortArray() {
+    assertThat(getter.get(Keys.shortArray)).isNull()
+    setter.set(Keys.shortArray, shortArrayOf(8, 10))
+
+    inOrder(getter, setter) {
+      verify(getter).getShortArray("shortArray")
+      verify(setter).setShortArray("shortArray", shortArrayOf(8, 10))
     }
   }
 }
