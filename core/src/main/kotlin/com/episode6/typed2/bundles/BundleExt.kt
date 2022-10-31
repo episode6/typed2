@@ -4,6 +4,8 @@ import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
 import android.os.Parcelable
+import android.util.Size
+import android.util.SizeF
 import com.episode6.typed2.KeyValueDelegate
 import java.io.Serializable
 import kotlin.reflect.KClass
@@ -49,6 +51,8 @@ class TypedBundle(private val delegate: Bundle) : BundleValueGetter, BundleValue
   }
   override fun getShort(name: String, default: Short): Short = delegate.getShort(name, default)
   override fun getShortArray(name: String): ShortArray? = delegate.getShortArray(name)
+  override fun getSize(name: String): Size? = delegate.getSize(name)
+  override fun getSizeF(name: String): SizeF? = delegate.getSizeF(name)
   override fun getDouble(name: String, default: Double): Double = delegate.getDouble(name, default)
 
   override fun remove(name: String) = delegate.remove(name)
@@ -74,6 +78,8 @@ class TypedBundle(private val delegate: Bundle) : BundleValueGetter, BundleValue
   override fun <T : Serializable> setSerializable(name: String, value: T?) { delegate.putSerializable(name, value) }
   override fun setShort(name: String, value: Short) { delegate.putShort(name, value) }
   override fun setShortArray(name: String, value: ShortArray?) { delegate.putShortArray(name, value) }
+  override fun setSize(name: String, value: Size?) { delegate.putSize(name, value) }
+  override fun setSizeF(name: String, value: SizeF?) { delegate.putSizeF(name, value) }
   override fun setDouble(name: String, value: Double) { delegate.putDouble(name, value) }
 }
 

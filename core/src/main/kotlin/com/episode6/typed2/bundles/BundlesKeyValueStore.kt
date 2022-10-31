@@ -3,6 +3,8 @@ package com.episode6.typed2.bundles
 import android.os.Bundle
 import android.os.IBinder
 import android.os.Parcelable
+import android.util.Size
+import android.util.SizeF
 import com.episode6.typed2.get
 import com.episode6.typed2.set
 import kotlin.reflect.KClass
@@ -25,6 +27,8 @@ interface BundleValueGetter : BaseBundleValueGetter {
   fun <T: java.io.Serializable> getSerializable(name: String, kclass: KClass<T>): T?
   fun getShort(name: String, default: Short): Short
   fun getShortArray(name: String): ShortArray?
+  fun getSize(name: String): Size?
+  fun getSizeF(name: String): SizeF?
 }
 
 interface BundleValueSetter : BaseBundleValueSetter {
@@ -45,6 +49,8 @@ interface BundleValueSetter : BaseBundleValueSetter {
   fun <T: java.io.Serializable> setSerializable(name: String, value: T?)
   fun setShort(name: String, value: Short)
   fun setShortArray(name: String, value: ShortArray?)
+  fun setSize(name: String, value: Size?)
+  fun setSizeF(name: String, value: SizeF?)
 }
 
 fun <T> BundleValueGetter.get(key: BundleKey<T, *>): T = key.get(this)

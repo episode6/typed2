@@ -3,6 +3,8 @@ package com.episode6.typed2.savedstatehandle
 import android.os.Bundle
 import android.os.IBinder
 import android.os.Parcelable
+import android.util.Size
+import android.util.SizeF
 import androidx.lifecycle.SavedStateHandle
 import com.episode6.typed2.KeyValueDelegate
 import com.episode6.typed2.bundles.*
@@ -30,6 +32,8 @@ class TypedSavedStateHandle(private val delegate: SavedStateHandle) : BundleValu
   override fun <T : Serializable> getSerializable(name: String, kclass: KClass<T>): T? = delegate[name]
   override fun getShort(name: String, default: Short): Short = delegate[name] ?: default
   override fun getShortArray(name: String): ShortArray? = delegate[name]
+  override fun getSize(name: String): Size? = delegate[name]
+  override fun getSizeF(name: String): SizeF? = delegate[name]
   override fun getDouble(name: String, default: Double): Double = delegate[name] ?: default
   override fun getBoolean(name: String, default: Boolean): Boolean = delegate[name] ?: default
   override fun getFloat(name: String, default: Float): Float = delegate[name] ?: default
@@ -54,6 +58,8 @@ class TypedSavedStateHandle(private val delegate: SavedStateHandle) : BundleValu
   override fun <T : Serializable> setSerializable(name: String, value: T?) { delegate[name] = value }
   override fun setShort(name: String, value: Short) { delegate[name] = value }
   override fun setShortArray(name: String, value: ShortArray?) { delegate[name] = value }
+  override fun setSize(name: String, value: Size?) { delegate[name] = value }
+  override fun setSizeF(name: String, value: SizeF?) { delegate[name] = value }
   override fun setDouble(name: String, value: Double) { delegate[name] = value }
   override fun setInt(name: String, value: Int) { delegate[name] = value }
   override fun setString(name: String, value: String?) { delegate[name] = value }

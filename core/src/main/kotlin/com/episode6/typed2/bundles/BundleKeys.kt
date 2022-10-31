@@ -3,6 +3,8 @@ package com.episode6.typed2.bundles
 import android.os.Bundle
 import android.os.IBinder
 import android.os.Parcelable
+import android.util.Size
+import android.util.SizeF
 import com.episode6.typed2.*
 import kotlin.reflect.KClass
 
@@ -135,6 +137,18 @@ fun BundleKeyBuilder.shortArray(default: ShortArray): BundleKey<ShortArray, Shor
 fun BundleKeyBuilder.shortArray(): BundleKey<ShortArray?, ShortArray?> = nativeKey(
   get = { getShortArray(name) },
   set = { setShortArray(name, it) }
+)
+
+fun BundleKeyBuilder.size(default: Size): BundleKey<Size, Size?> = size().defaultProvider { default }
+fun BundleKeyBuilder.size(): BundleKey<Size?, Size?> = nativeKey(
+  get = { getSize(name) },
+  set = { setSize(name, it) }
+)
+
+fun BundleKeyBuilder.sizeF(default: SizeF): BundleKey<SizeF, SizeF?> = sizeF().defaultProvider { default }
+fun BundleKeyBuilder.sizeF(): BundleKey<SizeF?, SizeF?> = nativeKey(
+  get = { getSizeF(name) },
+  set = { setSizeF(name, it) }
 )
 
 private fun BundleKeyBuilder.nativeBinder(): BundleKey<IBinder?, IBinder?> = nativeKey(
