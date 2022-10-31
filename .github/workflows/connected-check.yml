@@ -1,0 +1,109 @@
+# Minorly adjusted from https://gist.github.com/badsyntax/ce848ab40b952d944c496575d40e5427 and https://github.com/igorboskovic3/actions-test/actions/runs/3239143575/workflow
+
+name: HAXM Installation before Android Test Snippet
+
+# Controls when the workflow will run
+on:
+  push:
+    branches:
+      - 'release/**'
+  pull_request:
+
+jobs:
+  install-haxm-and-run-emulator:
+    runs-on: macos-12
+    strategy:
+      matrix:
+        api-level: [21, 30]
+    timeout-minutes: 45 # No default
+    env:
+      JAVA_TOOL_OPTIONS: -Xmx4g
+      GITHUB_WORKSPACE: ${{ github.workspace }}
+      GITHUB_RUN_NUMBER: ${{ github.run_number }}
+      HOMEBREW_NO_INSTALL_CLEANUP: 1
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+
+      - name: Gradle cache
+        uses: gradle/gradle-build-action@v2
+
+      - name: Install Haxm
+        run: brew install --cask intel-haxm
+
+      - name: install ffmpeg session
+        run: brew install ffmpeg
+
+      - name: create AVD and generate snapshot for caching
+        if: steps.avd-cache.outputs.cache-hit != 'true'
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ matrix.api-level }}
+          force-avd-creation: false
+          emulator-options: -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -partition-size 2048 -qemu -m 2048
+          disable-animations: false
+          avd-name: API_30_AOSP_ATD
+          script: |
+          echo 'create emulator and alter config.ini settings for caching'
+          # Create emulator
+          $ANDROID_HOME/emulator/emulator -list-avds
+          $ANDROID_HOME/emulator/emulator -accel-check 2>&1 | tee "$GITHUB_WORKSPACE"/haxm-check-"$GITHUB_RUN_NUMBER".txt
+          if false; then
+          emulator_config=~/.android/avd/API_30_AOSP_ATD.avd/config.ini
+          # The following madness is to support empty OR populated config.ini files,
+          # the state of which is dependant on the version of the emulator used (which we don't control),
+          # so let's be defensive to be safe.
+          # Replace existing config (NOTE we're on MacOS so sed works differently!)
+          sed -i .bak 's/hw.lcd.density=.*/hw.lcd.density=420/' "$emulator_config"
+          sed -i .bak 's/hw.lcd.height=.*/hw.lcd.height=1920/' "$emulator_config"
+          sed -i .bak 's/hw.lcd.width=.*/hw.lcd.width=1080/' "$emulator_config"
+          # Or, add new config
+          if ! grep -q "hw.lcd.density" "$emulator_config"; then
+          echo "hw.lcd.density=420" >> "$emulator_config"
+          fi
+          if ! grep -q "hw.lcd.height" "$emulator_config"; then
+          echo "hw.lcd.height=1920" >> "$emulator_config"
+          fi
+          if ! grep -q "hw.lcd.width" "$emulator_config"; then
+          echo "hw.lcd.width=1080" >> "$emulator_config"
+          fi
+          echo "Emulator settings ($emulator_config)"
+          cat "$emulator_config"
+          fi
+          # Optionally enable skia rendering https://developer.android.com/studio/run/emulator-acceleration#skia-emulator
+          $ANDROID_HOME/platform-tools/adb shell 'su;setprop debug.hwui.renderer skiagl;stop;start'
+
+      - name: record session
+        run: |
+          ffmpeg -f avfoundation -i 0 -t 120 out.mov &
+
+      - name: run tests
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ matrix.api-level }}
+          force-avd-creation: false
+          emulator-options: -no-snapshot-save -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -partition-size 2048 -qemu -m 2048
+          disable-animations: true
+          script: |
+            # Take Screenshot of VM to verify emulator start
+            screencapture screenshot.jpg
+            # Take picture of emulator to verify emulator start
+            $ANDROID_HOME/platform-tools/adb exec-out screencap -p > emulator.png
+            ./gradlew :sample-app:connectedCheck
+
+      - name: upload video
+        uses: actions/upload-artifact@master
+        with:
+          name: out
+          path: out.mov
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: screenshot.jpg
+          path: screenshot.jpg
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: emulator.png
+          path: emulator.png
