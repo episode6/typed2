@@ -26,6 +26,12 @@ fun <T : IBinder> BundleKeyBuilder.binder(safeCast: Boolean = false): BundleKey<
   mapSet = { it }
 )
 
+fun BundleKeyBuilder.booleanArray(default: BooleanArray): BundleKey<BooleanArray, BooleanArray?> = booleanArray().defaultProvider { default }
+fun BundleKeyBuilder.booleanArray(): BundleKey<BooleanArray?, BooleanArray?> = nativeKey(
+  get = { getBooleanArray(name) },
+  set = { setBooleanArray(name, it) }
+)
+
 fun BundleKeyBuilder.bundle(default: Bundle): BundleKey<Bundle, Bundle?> = bundle().defaultProvider { default }
 fun BundleKeyBuilder.bundle(): BundleKey<Bundle?, Bundle?> = nativeKey(
   get = { getBundle(name) },

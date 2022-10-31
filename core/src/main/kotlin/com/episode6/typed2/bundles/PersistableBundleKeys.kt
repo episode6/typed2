@@ -1,5 +1,6 @@
 package com.episode6.typed2.bundles
 
+import android.annotation.TargetApi
 import android.os.PersistableBundle
 import com.episode6.typed2.*
 
@@ -13,6 +14,14 @@ open class PersistableBundleKeyNamespace(private val prefix: String = "") : Requ
 
   protected fun key(name: String): PersistableBundleKeyBuilder = Builder(prefix + name)
 }
+
+@TargetApi(22)
+fun PersistableBundleKeyBuilder.booleanArray(default: BooleanArray): PersistableBundleKey<BooleanArray, BooleanArray?> = booleanArray().defaultProvider { default }
+@TargetApi(22)
+fun PersistableBundleKeyBuilder.booleanArray(): PersistableBundleKey<BooleanArray?, BooleanArray?> = nativeKey(
+  get = { getBooleanArray(name) },
+  set = { setBooleanArray(name, it) }
+)
 
 fun PersistableBundleKeyBuilder.persistableBundle(default: PersistableBundle): PersistableBundleKey<PersistableBundle, PersistableBundle?> =
   persistableBundle().defaultProvider { default }
