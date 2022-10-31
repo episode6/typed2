@@ -30,6 +30,7 @@ class BundleKeysTest {
     val parcelable = key("parcelable").parcelable<TestParcelable>()
     val parcelableArray = key("parcelableArray").parcelableArray<TestParcelable>()
     val parcelableList = key("parcelableList").parcelableList<TestParcelable>()
+    val serializable = key("serializable").serializable<TestSerializable>()
   }
 
   private val getter: BundleValueGetter = mock {
@@ -215,7 +216,20 @@ class BundleKeysTest {
       verify(setter).setParcelableArrayList("parcelableList", ArrayList(list))
     }
   }
+
+  @Test fun testSerializable() {
+    val mockSerializable = mock<TestSerializable>()
+
+    assertThat(getter.get(Keys.serializable)).isNull()
+    setter.set(Keys.serializable, mockSerializable)
+
+    inOrder(getter, setter) {
+      verify(getter).getSerializable("serializable", TestSerializable::class)
+      verify(setter).setSerializable("serializable", mockSerializable)
+    }
+  }
 }
 
 private interface TestBinder: IBinder
 private interface TestParcelable : Parcelable
+private interface TestSerializable : java.io.Serializable
