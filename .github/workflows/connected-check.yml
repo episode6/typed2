@@ -15,7 +15,7 @@ jobs:
     runs-on: macos-12
     strategy:
       matrix:
-        api-level: [30]
+        api-level: [21]
     timeout-minutes: 45 # No default
     env:
       JAVA_TOOL_OPTIONS: -Xmx4g
