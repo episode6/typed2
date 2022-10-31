@@ -5,6 +5,7 @@ import android.os.IBinder
 import android.os.Parcelable
 import android.util.Size
 import android.util.SizeF
+import android.util.SparseArray
 import com.episode6.typed2.*
 import kotlin.reflect.KClass
 
@@ -151,6 +152,19 @@ fun BundleKeyBuilder.sizeF(): BundleKey<SizeF?, SizeF?> = nativeKey(
   set = { setSizeF(name, it) }
 )
 
+inline fun <reified T: Parcelable> BundleKeyBuilder.sparseParcelableArray(default: SparseArray<T>): BundleKey<SparseArray<T>, SparseArray<T>?> = sparseParcelableArray<T>().defaultProvider { default }
+inline fun <reified T: Parcelable> BundleKeyBuilder.sparseParcelableArray(): BundleKey<SparseArray<T>?, SparseArray<T>?> = NativeKeys.create(
+  this,
+  get = { getSparseParcelableArray(name, T::class) },
+  set = { setSparseParcelableArray(name, it)}
+)
+
+fun BundleKeyBuilder.stringList(default: List<String>): BundleKey<List<String>, ArrayList<String>?> = stringList().defaultProvider { default }
+fun BundleKeyBuilder.stringList(): BundleKey<List<String>?, ArrayList<String>?> = stringArrayList().mapType(
+  mapGet = { it },
+  mapSet = { it?.let { if (it is ArrayList<String>) it else ArrayList(it) } },
+)
+
 private fun BundleKeyBuilder.nativeBinder(): BundleKey<IBinder?, IBinder?> = nativeKey(
   get = { getBinder(name) },
   set = { setBinder(name, it) }
@@ -170,4 +184,9 @@ private fun <T : Parcelable> BundleKeyBuilder.parcelableArrayList(kclass: KClass
   this,
   get = { getParcelableArrayList(name, kclass) },
   set = { setParcelableArrayList(name, it) },
+)
+
+private fun BundleKeyBuilder.stringArrayList(): BundleKey<ArrayList<String>?, ArrayList<String>?> = nativeKey(
+  get = { getStringArrayList(name) },
+  set = { setStringArrayList(name, it) }
 )
