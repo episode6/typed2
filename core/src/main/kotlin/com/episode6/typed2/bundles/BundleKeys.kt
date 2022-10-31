@@ -1,6 +1,5 @@
 package com.episode6.typed2.bundles
 
-import android.annotation.TargetApi
 import android.os.Bundle
 import android.os.IBinder
 import android.os.Parcelable
