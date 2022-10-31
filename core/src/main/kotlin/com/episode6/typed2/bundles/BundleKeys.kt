@@ -114,6 +114,14 @@ fun <T : Parcelable> BundleKeyBuilder.parcelableList(kclass: KClass<T>): BundleK
   mapSet = { it?.let { if (it is ArrayList<T>) it else ArrayList<T>(it) } }
 )
 
+inline fun <reified T : java.io.Serializable> BundleKeyBuilder.serializable(default: T) : BundleKey<T, T?> = serializable<T>().defaultProvider { default }
+inline fun <reified T : java.io.Serializable> BundleKeyBuilder.serializable() : BundleKey<T?, T?> = NativeKeys.create(
+  this,
+  get = { getSerializable(name, T::class) },
+  set = { setSerializable(name, it) },
+)
+
+
 private fun BundleKeyBuilder.nativeBinder(): BundleKey<IBinder?, IBinder?> = nativeKey(
   get = { getBinder(name) },
   set = { setBinder(name, it) }

@@ -6,6 +6,7 @@ import android.os.Parcelable
 import androidx.lifecycle.SavedStateHandle
 import com.episode6.typed2.KeyValueDelegate
 import com.episode6.typed2.bundles.*
+import java.io.Serializable
 import kotlin.reflect.KClass
 
 class TypedSavedStateHandle(private val delegate: SavedStateHandle) : BundleValueGetter, BundleValueSetter {
@@ -26,6 +27,7 @@ class TypedSavedStateHandle(private val delegate: SavedStateHandle) : BundleValu
   override fun <T : Parcelable> getParcelableArray(name: String, kclass: KClass<T>, convertListToArray: List<T>.()->Array<T>): Array<T>? =
     delegate.get<Array<Parcelable>>(name)?.map { it as T }?.convertListToArray()
   override fun <T : Parcelable> getParcelableArrayList(name: String, kclass: KClass<T>): ArrayList<T>? = delegate[name]
+  override fun <T : Serializable> getSerializable(name: String, kclass: KClass<T>): T? = delegate[name]
   override fun getDouble(name: String, default: Double): Double = delegate[name] ?: default
   override fun getBoolean(name: String, default: Boolean): Boolean = delegate[name] ?: default
   override fun getFloat(name: String, default: Float): Float = delegate[name] ?: default
@@ -47,6 +49,7 @@ class TypedSavedStateHandle(private val delegate: SavedStateHandle) : BundleValu
   override fun <T : Parcelable> setParcelable(name: String, value: T?) { delegate[name] = value }
   override fun <T : Parcelable> setParcelableArray(name: String, value: Array<T>?) { delegate[name] = value?.map { it as Parcelable }?.toTypedArray<Parcelable>() }
   override fun <T : Parcelable> setParcelableArrayList(name: String, value: ArrayList<T>?) { delegate[name] = value }
+  override fun <T : Serializable> setSerializable(name: String, value: T?) { delegate[name] = value }
   override fun setDouble(name: String, value: Double) { delegate[name] = value }
   override fun setInt(name: String, value: Int) { delegate[name] = value }
   override fun setString(name: String, value: String?) { delegate[name] = value }
