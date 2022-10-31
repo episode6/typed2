@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.os.IBinder
 import android.os.Parcelable
 import com.episode6.typed2.KeyValueDelegate
+import java.io.Serializable
 import kotlin.reflect.KClass
 
 class TypedBundle(private val delegate: Bundle) : BundleValueGetter, BundleValueSetter {
@@ -40,6 +41,13 @@ class TypedBundle(private val delegate: Bundle) : BundleValueGetter, BundleValue
     Build.VERSION.SDK_INT >= 33 -> delegate.getParcelableArrayList(name, kclass.java)
     else                        -> delegate.getParcelableArrayList<T>(name)
   }
+
+  @Suppress("DEPRECATION", "UNCHECKED_CAST")
+  override fun <T : Serializable> getSerializable(name: String, kclass: KClass<T>): T? = when {
+    Build.VERSION.SDK_INT >= 33 -> delegate.getSerializable(name, kclass.java)
+    else                        -> delegate.getSerializable(name) as T?
+  }
+
   override fun getDouble(name: String, default: Double): Double = delegate.getDouble(name, default)
 
   override fun remove(name: String) = delegate.remove(name)
@@ -62,6 +70,7 @@ class TypedBundle(private val delegate: Bundle) : BundleValueGetter, BundleValue
   override fun <T : Parcelable> setParcelable(name: String, value: T?) { delegate.putParcelable(name, value) }
   override fun <T : Parcelable> setParcelableArray(name: String, value: Array<T>?) { delegate.putParcelableArray(name, value) }
   override fun <T : Parcelable> setParcelableArrayList(name: String, value: ArrayList<T>?) { delegate.putParcelableArrayList(name, value) }
+  override fun <T : Serializable> setSerializable(name: String, value: T?) { delegate.putSerializable(name, value) }
   override fun setDouble(name: String, value: Double) { delegate.putDouble(name, value) }
 }
 
