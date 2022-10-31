@@ -7,9 +7,7 @@ import app.cash.turbine.test
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isNull
-import com.episode6.typed2.sharedprefs.PrefKeyNamespace
-import com.episode6.typed2.sharedprefs.sharedFlow
-import com.episode6.typed2.sharedprefs.stateFlow
+import com.episode6.typed2.sharedprefs.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.BufferOverflow
@@ -22,9 +20,9 @@ import org.mockito.kotlin.*
 class GetSharedPrefFlowTest {
 
   object Keys : PrefKeyNamespace() {
-    val intKey = key("intKey").int(default = 2)
-    val nullableIntKey = key("nullableInt").int()
-    val asyncKey = key("asyncInt").int().async()
+    val intKey: PrefKey<Int> = key("intKey").int(default = 2)
+    val nullableIntKey: PrefKey<Int?> = key("nullableInt").int()
+    val asyncKey: AsyncPrefKey<Int?> = key("asyncInt").int().async()
   }
 
   private val listener = MutableSharedFlow<SharedPreferences.OnSharedPreferenceChangeListener>(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)

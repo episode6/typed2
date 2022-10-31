@@ -15,11 +15,11 @@ import org.mockito.kotlin.*
 class SharedPrefTest {
 
   object Keys : PrefKeyNamespace("com.prefix.") {
-    val myInt = key("intKey").int(default = 42)
-    val myNullInt = key("nullableInt").int()
-    val myStringSet = key("stringSet").stringSet()
-    val myAsyncString = key("asyncString").string().async()
-    val myDouble = key("double").double()
+    val myInt: PrefKey<Int> = key("intKey").int(default = 42)
+    val myNullInt: PrefKey<Int?> = key("nullableInt").int()
+    val myStringSet: PrefKey<Set<String>?> = key("stringSet").stringSet()
+    val myAsyncString: AsyncPrefKey<String?> = key("asyncString").string().async()
+    val myDouble: PrefKey<Double?> = key("double").double()
   }
 
   val editor: SharedPreferences.Editor = mock()
