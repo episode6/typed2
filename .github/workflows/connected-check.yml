@@ -6,6 +6,7 @@ name: HAXM Installation before Android Test Snippet
 on:
   push:
     branches:
+      - main
       - 'release/**'
   pull_request:
 
