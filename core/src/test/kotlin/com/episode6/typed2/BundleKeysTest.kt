@@ -7,10 +7,7 @@ import android.util.Size
 import android.util.SizeF
 import android.util.SparseArray
 import assertk.assertThat
-import assertk.assertions.isEmpty
-import assertk.assertions.isEqualTo
-import assertk.assertions.isNotNull
-import assertk.assertions.isNull
+import assertk.assertions.*
 import com.episode6.typed2.bundles.*
 import org.junit.Test
 import org.mockito.kotlin.*
@@ -47,6 +44,16 @@ class BundleKeysTest {
     val intArray = key("intArray").intArray()
     val longArray = key("longArray").longArray()
     val stringArray = key("stringArray").stringArray()
+    val bool = key("bool").boolean(default = true)
+    val nullBool = key("nullBool").boolean()
+    val float = key("float").float(default = 12.5f)
+    val nullFloat = key("nullFloat").float()
+    val int = key("int").int(default = 42)
+    val nullInt = key("nullInt").int()
+    val long = key("long").long(default = 42L)
+    val nullLong = key("nullLong").long()
+    val string = key("string").string(default = "default")
+    val nullString = key("nullString").string()
   }
 
   private val getter: BundleValueGetter = mock {
@@ -59,7 +66,11 @@ class BundleKeysTest {
     on { getShort(any(), any()) } doAnswer { it.getArgument(1) }
     on { getString(any(), anyOrNull()) } doAnswer { it.getArgument(1) }
     on { getStringArrayList(any()) } doReturn null
+    on { getBoolean(any(), any()) } doAnswer { it.getArgument(1) }
     on { getDouble(any(), any()) } doAnswer { it.getArgument(1) }
+    on { getFloat(any(), any()) } doAnswer { it.getArgument(1) }
+    on { getInt(any(), any()) } doAnswer { it.getArgument(1) }
+    on { getLong(any(), any()) } doAnswer { it.getArgument(1) }
   }
 
   private val setter: BundleValueSetter = mock()
@@ -381,6 +392,106 @@ class BundleKeysTest {
     inOrder(getter, setter) {
       verify(getter).getStringArray("stringArray")
       verify(setter).setStringArray("stringArray", arrayOf("hi", "there"))
+    }
+  }
+
+  @Test fun testBool() {
+    assertThat(getter.get(Keys.bool)).isTrue()
+    setter.set(Keys.bool, false)
+
+    inOrder(getter, setter) {
+      verify(getter).getBoolean("bool", true)
+      verify(setter).setBoolean("bool", false)
+    }
+  }
+
+  @Test fun testNullBool() {
+    assertThat(getter.get(Keys.nullBool)).isNull()
+    setter.set(Keys.nullBool, false)
+
+    inOrder(getter, setter) {
+      verify(getter).getString("nullBool", null)
+      verify(setter).setString("nullBool", "false")
+    }
+  }
+
+  @Test fun testFloat() {
+    assertThat(getter.get(Keys.float)).isEqualTo(12.5f)
+    setter.set(Keys.float, 127f)
+
+    inOrder(getter, setter) {
+      verify(getter).getFloat("float", 12.5f)
+      verify(setter).setFloat("float", 127f)
+    }
+  }
+
+  @Test fun testNullFloat() {
+    assertThat(getter.get(Keys.nullFloat)).isNull()
+    setter.set(Keys.nullFloat, 52f)
+
+    inOrder(getter, setter) {
+      verify(getter).getString("nullFloat", null)
+      verify(setter).setString("nullFloat", "52.0")
+    }
+  }
+
+  @Test fun testInt() {
+    assertThat(getter.get(Keys.int)).isEqualTo(42)
+    setter.set(Keys.int, 127)
+
+    inOrder(getter, setter) {
+      verify(getter).getInt("int", 42)
+      verify(setter).setInt("int", 127)
+    }
+  }
+
+  @Test fun testNullInt() {
+    assertThat(getter.get(Keys.nullInt)).isNull()
+    setter.set(Keys.nullInt, 52)
+
+    inOrder(getter, setter) {
+      verify(getter).getString("nullInt", null)
+      verify(setter).setString("nullInt", "52")
+    }
+  }
+
+  @Test fun testLong() {
+    assertThat(getter.get(Keys.long)).isEqualTo(42L)
+    setter.set(Keys.long, 127L)
+
+    inOrder(getter, setter) {
+      verify(getter).getLong("long", 42L)
+      verify(setter).setLong("long", 127L)
+    }
+  }
+
+  @Test fun testNullLong() {
+    assertThat(getter.get(Keys.nullLong)).isNull()
+    setter.set(Keys.nullLong, 52)
+
+    inOrder(getter, setter) {
+      verify(getter).getString("nullLong", null)
+      verify(setter).setString("nullLong", "52")
+    }
+  }
+
+  @Test fun testString() {
+    assertThat(getter.get(Keys.string)).isEqualTo("default")
+    setter.set(Keys.string, "hi")
+
+    inOrder(getter, setter) {
+      verify(getter).getString("string", "default")
+      verify(setter).setString("string", "hi")
+    }
+  }
+
+  @Test fun testNullString() {
+    assertThat(getter.get(Keys.nullString)).isNull()
+    setter.set(Keys.nullString, "yo")
+
+    inOrder(getter, setter) {
+      verify(getter).getString("nullString", null)
+      verify(setter).setString("nullString", "yo")
     }
   }
 }
