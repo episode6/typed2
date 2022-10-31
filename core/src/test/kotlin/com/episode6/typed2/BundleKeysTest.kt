@@ -18,6 +18,7 @@ import org.mockito.kotlin.*
 class BundleKeysTest {
   private object Keys : BundleKeyNamespace() {
     val binder = key("binder").binder<TestBinder>()
+    val booleanArray = key("booleanArray").booleanArray()
     val bundle = key("bundle").bundle()
     val byte = key("byte").byte(default = 3)
     val nullByte = key("nullByte").byte()
@@ -66,6 +67,16 @@ class BundleKeysTest {
     inOrder(getter, setter) {
       verify(getter).getBinder("binder")
       verify(setter).setBinder("binder", mockBinder)
+    }
+  }
+
+  @Test fun testBooleanArray() {
+    assertThat(getter.get(Keys.booleanArray)).isNull()
+    setter.set(Keys.booleanArray, booleanArrayOf(true, false))
+
+    inOrder(getter, setter) {
+      verify(getter).getBooleanArray("booleanArray")
+      verify(setter).setBooleanArray("booleanArray", booleanArrayOf(true, false))
     }
   }
 

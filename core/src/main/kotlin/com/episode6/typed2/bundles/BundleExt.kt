@@ -60,7 +60,12 @@ class TypedBundle(private val delegate: Bundle) : BundleValueGetter, BundleValue
     else                        -> delegate.getSparseParcelableArray<T>(name)
   }
   override fun getStringArrayList(name: String): ArrayList<String>? = delegate.getStringArrayList(name)
+  override fun getBooleanArray(name: String): BooleanArray? = delegate.getBooleanArray(name)
   override fun getDouble(name: String, default: Double): Double = delegate.getDouble(name, default)
+  override fun getDoubleArray(name: String): DoubleArray? = delegate.getDoubleArray(name)
+  override fun getIntArray(name: String): IntArray? = delegate.getIntArray(name)
+  override fun getLongArray(name: String): LongArray? = delegate.getLongArray(name)
+  override fun getStringArray(name: String): Array<String>? = delegate.getStringArray(name)
 
   override fun remove(name: String) = delegate.remove(name)
   override fun setString(name: String, value: String?) = delegate.putString(name, value)
@@ -89,7 +94,12 @@ class TypedBundle(private val delegate: Bundle) : BundleValueGetter, BundleValue
   override fun setSizeF(name: String, value: SizeF?) { delegate.putSizeF(name, value) }
   override fun <T : Parcelable> setSparseParcelableArray(name: String, value: SparseArray<T>?) { delegate.putSparseParcelableArray(name, value) }
   override fun setStringArrayList(name: String, value: ArrayList<String>?) { delegate.putStringArrayList(name, value) }
+  override fun setBooleanArray(name: String, value: BooleanArray?) { delegate.putBooleanArray(name, value) }
   override fun setDouble(name: String, value: Double) { delegate.putDouble(name, value) }
+  override fun setDoubleArray(name: String, value: DoubleArray?) { delegate.putDoubleArray(name, value) }
+  override fun setIntArray(name: String, value: IntArray?) { delegate.putIntArray(name, value) }
+  override fun setLongArray(name: String, value: LongArray?) { delegate.putLongArray(name, value) }
+  override fun setStringArray(name: String, value: Array<String>?) { delegate.putStringArray(name, value) }
 }
 
 fun Bundle.typed(): TypedBundle = TypedBundle(this)

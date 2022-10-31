@@ -37,7 +37,12 @@ class TypedSavedStateHandle(private val delegate: SavedStateHandle) : BundleValu
   override fun getSizeF(name: String): SizeF? = delegate[name]
   override fun <T : Parcelable> getSparseParcelableArray(name: String, kclass: KClass<T>): SparseArray<T>? = delegate[name]
   override fun getStringArrayList(name: String): ArrayList<String>? = delegate[name]
+  override fun getBooleanArray(name: String): BooleanArray? = delegate[name]
   override fun getDouble(name: String, default: Double): Double = delegate[name] ?: default
+  override fun getDoubleArray(name: String): DoubleArray? = delegate[name]
+  override fun getIntArray(name: String): IntArray? = delegate[name]
+  override fun getLongArray(name: String): LongArray? = delegate[name]
+  override fun getStringArray(name: String): Array<String>? = delegate[name]
   override fun getBoolean(name: String, default: Boolean): Boolean = delegate[name] ?: default
   override fun getFloat(name: String, default: Float): Float = delegate[name] ?: default
   override fun getLong(name: String, default: Long): Long = delegate[name] ?: default
@@ -65,7 +70,12 @@ class TypedSavedStateHandle(private val delegate: SavedStateHandle) : BundleValu
   override fun setSizeF(name: String, value: SizeF?) { delegate[name] = value }
   override fun <T : Parcelable> setSparseParcelableArray(name: String, value: SparseArray<T>?) { delegate[name] = value }
   override fun setStringArrayList(name: String, value: ArrayList<String>?) { delegate[name] = value }
+  override fun setBooleanArray(name: String, value: BooleanArray?) { delegate[name] = value }
   override fun setDouble(name: String, value: Double) { delegate[name] = value }
+  override fun setDoubleArray(name: String, value: DoubleArray?) { delegate[name] = value }
+  override fun setIntArray(name: String, value: IntArray?) { delegate[name] = value }
+  override fun setLongArray(name: String, value: LongArray?) { delegate[name] = value }
+  override fun setStringArray(name: String, value: Array<String>?) { delegate[name] = value }
   override fun setInt(name: String, value: Int) { delegate[name] = value }
   override fun setString(name: String, value: String?) { delegate[name] = value }
   override fun setBoolean(name: String, value: Boolean) { delegate[name] = value }

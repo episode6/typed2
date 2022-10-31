@@ -1,5 +1,6 @@
 package com.episode6.typed2.bundles
 
+import android.annotation.TargetApi
 import android.os.Bundle
 import android.os.IBinder
 import android.os.Parcelable
@@ -24,6 +25,12 @@ open class BundleKeyNamespace(private val prefix: String = "") : RequiredEnabled
 fun <T : IBinder> BundleKeyBuilder.binder(safeCast: Boolean = false): BundleKey<T?, IBinder?> = nativeBinder().mapType(
   mapGet = { if (safeCast) it as? T else it as T? },
   mapSet = { it }
+)
+
+fun BundleKeyBuilder.booleanArray(default: BooleanArray): BundleKey<BooleanArray, BooleanArray?> = booleanArray().defaultProvider { default }
+fun BundleKeyBuilder.booleanArray(): BundleKey<BooleanArray?, BooleanArray?> = nativeKey(
+  get = { getBooleanArray(name) },
+  set = { setBooleanArray(name, it) }
 )
 
 fun BundleKeyBuilder.bundle(default: Bundle): BundleKey<Bundle, Bundle?> = bundle().defaultProvider { default }

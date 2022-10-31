@@ -12,6 +12,7 @@ import kotlin.reflect.KClass
 
 interface BundleValueGetter : BaseBundleValueGetter {
   fun getBinder(name: String): IBinder?
+  fun getBooleanArray(name: String): BooleanArray?
   fun getBundle(name: String): Bundle?
   fun getByte(name: String, default: Byte): Byte
   fun getByteArray(name: String): ByteArray?
@@ -36,6 +37,7 @@ interface BundleValueGetter : BaseBundleValueGetter {
 
 interface BundleValueSetter : BaseBundleValueSetter {
   fun setBinder(name: String, value: IBinder?)
+  fun setBooleanArray(name: String, value: BooleanArray?)
   fun setBundle(name: String, value: Bundle?)
   fun setByte(name: String, value: Byte)
   fun setByteArray(name: String, value: ByteArray?)

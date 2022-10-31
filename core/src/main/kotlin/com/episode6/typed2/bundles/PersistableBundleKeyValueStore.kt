@@ -5,10 +5,12 @@ import com.episode6.typed2.get
 import com.episode6.typed2.set
 
 interface PersistableBundleValueGetter : BaseBundleValueGetter {
+  fun getBooleanArray(name: String): BooleanArray?
   fun getPersistableBundle(name: String): PersistableBundle?
 }
 
 interface PersistableBundleValueSetter : BaseBundleValueSetter {
+  fun setBooleanArray(name: String, value: BooleanArray?)
   fun setPersistableBundle(name: String, value: PersistableBundle?)
 }
 
