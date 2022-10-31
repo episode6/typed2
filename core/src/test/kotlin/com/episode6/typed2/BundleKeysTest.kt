@@ -47,6 +47,7 @@ class BundleKeysTest {
     val intArray = key("intArray").intArray()
     val longArray = key("longArray").longArray()
     val stringArray = key("stringArray").stringArray()
+    val boolean = key("boolean").boolean(default = true)
   }
 
   private val getter: BundleValueGetter = mock {
@@ -59,6 +60,7 @@ class BundleKeysTest {
     on { getShort(any(), any()) } doAnswer { it.getArgument(1) }
     on { getString(any(), anyOrNull()) } doAnswer { it.getArgument(1) }
     on { getStringArrayList(any()) } doReturn null
+    on { getBoolean(any(), any()) } doAnswer { it.getArgument(1) }
     on { getDouble(any(), any()) } doAnswer { it.getArgument(1) }
   }
 
@@ -381,6 +383,16 @@ class BundleKeysTest {
     inOrder(getter, setter) {
       verify(getter).getStringArray("stringArray")
       verify(setter).setStringArray("stringArray", arrayOf("hi", "there"))
+    }
+  }
+
+  @Test fun testBoolean() {
+    assertThat(getter.get(Keys.boolean)).isEqualTo(true)
+    setter.set(Keys.boolean, false)
+
+    inOrder(getter, setter) {
+      verify(getter).getBoolean("boolean", true)
+      verify(setter).setBoolean("boolean", false)
     }
   }
 }
