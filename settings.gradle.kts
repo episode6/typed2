@@ -22,5 +22,6 @@ include(
   ":kotlinx-serialization-bundlizer",
   ":kotlinx-serialization-json",
   ":navigation-compose",
+  ":sample-app",
   ":saved-state-handle",
 )
