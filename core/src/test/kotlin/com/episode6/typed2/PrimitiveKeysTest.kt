@@ -38,6 +38,9 @@ class PrimitiveKeysTest {
 
   private val setter: PrimitiveKeyValueSetter = mock()
 
+  private fun <T> PrimitiveKeyValueGetter.get(key: PrimitiveKey<T, *>): T = key.get(this)
+  private fun <T> PrimitiveKeyValueSetter.set(key: PrimitiveKey<T, *>, value: T) = key.set(this, value)
+
   @Test fun testBool() {
     assertThat(getter.get(Keys.bool)).isTrue()
     setter.set(Keys.bool, false)

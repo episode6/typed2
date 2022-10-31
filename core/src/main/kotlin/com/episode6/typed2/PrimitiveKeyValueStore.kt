@@ -15,10 +15,3 @@ interface PrimitiveKeyValueSetter : KeyValueSetter {
   fun setLong(name: String, value: Long)
   fun setString(name: String, value: String?)
 }
-
-fun <T> PrimitiveKeyValueGetter.get(key: PrimitiveKey<T, *>): T = key.get(this)
-fun <T> PrimitiveKeyValueSetter.set(key: PrimitiveKey<T, *>, value: T) = key.set(this, value)
-fun PrimitiveKeyValueSetter.remove(key: PrimitiveKey<*, *>) = remove(key.name)
-suspend fun <T> PrimitiveKeyValueGetter.get(key: AsyncPrimitiveKey<T, *>): T = key.get(this)
-suspend fun <T> PrimitiveKeyValueSetter.set(key: AsyncPrimitiveKey<T, *>, value: T) = key.set(this, value)
-fun PrimitiveKeyValueSetter.remove(key: AsyncPrimitiveKey<*, *>) = remove(key.name)
