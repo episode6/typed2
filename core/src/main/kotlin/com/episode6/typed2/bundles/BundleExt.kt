@@ -47,7 +47,8 @@ class TypedBundle(private val delegate: Bundle) : BundleValueGetter, BundleValue
     Build.VERSION.SDK_INT >= 33 -> delegate.getSerializable(name, kclass.java)
     else                        -> delegate.getSerializable(name) as T?
   }
-
+  override fun getShort(name: String, default: Short): Short = delegate.getShort(name, default)
+  override fun getShortArray(name: String): ShortArray? = delegate.getShortArray(name)
   override fun getDouble(name: String, default: Double): Double = delegate.getDouble(name, default)
 
   override fun remove(name: String) = delegate.remove(name)
@@ -71,6 +72,8 @@ class TypedBundle(private val delegate: Bundle) : BundleValueGetter, BundleValue
   override fun <T : Parcelable> setParcelableArray(name: String, value: Array<T>?) { delegate.putParcelableArray(name, value) }
   override fun <T : Parcelable> setParcelableArrayList(name: String, value: ArrayList<T>?) { delegate.putParcelableArrayList(name, value) }
   override fun <T : Serializable> setSerializable(name: String, value: T?) { delegate.putSerializable(name, value) }
+  override fun setShort(name: String, value: Short) { delegate.putShort(name, value) }
+  override fun setShortArray(name: String, value: ShortArray?) { delegate.putShortArray(name, value) }
   override fun setDouble(name: String, value: Double) { delegate.putDouble(name, value) }
 }
 

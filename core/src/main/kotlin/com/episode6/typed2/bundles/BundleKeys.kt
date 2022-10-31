@@ -121,6 +121,21 @@ inline fun <reified T : java.io.Serializable> BundleKeyBuilder.serializable() : 
   set = { setSerializable(name, it) },
 )
 
+fun BundleKeyBuilder.short(default: Short): BundleKey<Short, Short> = nativeKey(
+  get = { getShort(name, default) },
+  set = { setShort(name, it) },
+  backingDefault = default
+)
+fun BundleKeyBuilder.short(): BundleKey<Short?, String?> = string().mapType(
+  mapGet = { it?.toShort() },
+  mapSet = { it?.toString() }
+)
+
+fun BundleKeyBuilder.shortArray(default: ShortArray): BundleKey<ShortArray, ShortArray?> = shortArray().defaultProvider { default }
+fun BundleKeyBuilder.shortArray(): BundleKey<ShortArray?, ShortArray?> = nativeKey(
+  get = { getShortArray(name) },
+  set = { setShortArray(name, it) }
+)
 
 private fun BundleKeyBuilder.nativeBinder(): BundleKey<IBinder?, IBinder?> = nativeKey(
   get = { getBinder(name) },

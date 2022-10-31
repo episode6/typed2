@@ -23,6 +23,8 @@ interface BundleValueGetter : BaseBundleValueGetter {
   fun <T: Parcelable> getParcelableArray(name: String, kclass: KClass<T>, convertListToArray: List<T>.()->Array<T>): Array<T>?
   fun <T: Parcelable> getParcelableArrayList(name: String, kclass: KClass<T>): ArrayList<T>?
   fun <T: java.io.Serializable> getSerializable(name: String, kclass: KClass<T>): T?
+  fun getShort(name: String, default: Short): Short
+  fun getShortArray(name: String): ShortArray?
 }
 
 interface BundleValueSetter : BaseBundleValueSetter {
@@ -41,6 +43,8 @@ interface BundleValueSetter : BaseBundleValueSetter {
   fun <T: Parcelable> setParcelableArray(name: String, value: Array<T>?)
   fun <T: Parcelable> setParcelableArrayList(name: String, value: ArrayList<T>?)
   fun <T: java.io.Serializable> setSerializable(name: String, value: T?)
+  fun setShort(name: String, value: Short)
+  fun setShortArray(name: String, value: ShortArray?)
 }
 
 fun <T> BundleValueGetter.get(key: BundleKey<T, *>): T = key.get(this)
