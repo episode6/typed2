@@ -3,6 +3,8 @@ package com.episode6.typed2
 import android.os.Bundle
 import android.os.IBinder
 import android.os.Parcelable
+import android.util.Size
+import android.util.SizeF
 import assertk.assertThat
 import assertk.assertions.isEmpty
 import assertk.assertions.isEqualTo
@@ -34,6 +36,8 @@ class BundleKeysTest {
     val short = key("short").short(default = 12)
     val nullShort = key("nullShort").short()
     val shortArray = key("shortArray").shortArray()
+    val size = key("size").size()
+    val sizeF = key("sizeF").sizeF()
   }
 
   private val getter: BundleValueGetter = mock {
@@ -260,6 +264,30 @@ class BundleKeysTest {
     inOrder(getter, setter) {
       verify(getter).getShortArray("shortArray")
       verify(setter).setShortArray("shortArray", shortArrayOf(8, 10))
+    }
+  }
+
+  @Test fun testSize() {
+    val size: Size = mock()
+
+    assertThat(getter.get(Keys.size)).isNull()
+    setter.set(Keys.size, size)
+
+    inOrder(getter, setter) {
+      verify(getter).getSize("size")
+      verify(setter).setSize("size", size)
+    }
+  }
+
+  @Test fun testSizeF() {
+    val sizeF: SizeF = mock()
+
+    assertThat(getter.get(Keys.sizeF)).isNull()
+    setter.set(Keys.sizeF, sizeF)
+
+    inOrder(getter, setter) {
+      verify(getter).getSizeF("sizeF")
+      verify(setter).setSizeF("sizeF", sizeF)
     }
   }
 }
