@@ -42,6 +42,11 @@ class BundleKeysTest {
     val sizeF = key("sizeF").sizeF()
     val sparseParcelableArray = key("sparseParcelableArray").sparseParcelableArray<TestParcelable>()
     val stringList = key("stringList").stringList()
+    val double = key("double").double(default = 10.0)
+    val doubleArray = key("doubleArray").doubleArray()
+    val intArray = key("intArray").intArray()
+    val longArray = key("longArray").longArray()
+    val stringArray = key("stringArray").stringArray()
   }
 
   private val getter: BundleValueGetter = mock {
@@ -54,6 +59,7 @@ class BundleKeysTest {
     on { getShort(any(), any()) } doAnswer { it.getArgument(1) }
     on { getString(any(), anyOrNull()) } doAnswer { it.getArgument(1) }
     on { getStringArrayList(any()) } doReturn null
+    on { getDouble(any(), any()) } doAnswer { it.getArgument(1) }
   }
 
   private val setter: BundleValueSetter = mock()
@@ -325,6 +331,56 @@ class BundleKeysTest {
     inOrder(getter, setter) {
       verify(getter).getStringArrayList("stringList")
       verify(setter).setStringArrayList("stringList", ArrayList(listOf("42")))
+    }
+  }
+
+  @Test fun testDouble() {
+    assertThat(getter.get(Keys.double)).isEqualTo(10.0)
+    setter.set(Keys.double, 42.0)
+
+    inOrder(getter, setter) {
+      verify(getter).getDouble("double", 10.0)
+      verify(setter).setDouble("double", 42.0)
+    }
+  }
+
+  @Test fun testDoubleArray() {
+    assertThat(getter.get(Keys.doubleArray)).isNull()
+    setter.set(Keys.doubleArray, doubleArrayOf(99.0, 101.2))
+
+    inOrder(getter, setter) {
+      verify(getter).getDoubleArray("doubleArray")
+      verify(setter).setDoubleArray("doubleArray", doubleArrayOf(99.0, 101.2))
+    }
+  }
+
+  @Test fun testIntArray() {
+    assertThat(getter.get(Keys.intArray)).isNull()
+    setter.set(Keys.intArray, intArrayOf(99, 101))
+
+    inOrder(getter, setter) {
+      verify(getter).getIntArray("intArray")
+      verify(setter).setIntArray("intArray", intArrayOf(99, 101))
+    }
+  }
+
+  @Test fun testLongArray() {
+    assertThat(getter.get(Keys.longArray)).isNull()
+    setter.set(Keys.longArray, longArrayOf(99, 101))
+
+    inOrder(getter, setter) {
+      verify(getter).getLongArray("longArray")
+      verify(setter).setLongArray("longArray", longArrayOf(99, 101))
+    }
+  }
+
+  @Test fun testStringArray() {
+    assertThat(getter.get(Keys.stringArray)).isNull()
+    setter.set(Keys.stringArray, arrayOf("hi", "there"))
+
+    inOrder(getter, setter) {
+      verify(getter).getStringArray("stringArray")
+      verify(setter).setStringArray("stringArray", arrayOf("hi", "there"))
     }
   }
 }

@@ -21,10 +21,3 @@ interface BaseBundleValueSetter : PrimitiveKeyValueSetter {
   fun setLongArray(name: String, value: LongArray?)
   fun setStringArray(name: String, value: Array<String>?)
 }
-
-fun <T> BaseBundleValueGetter.get(key: BaseBundleKey<T, *>): T = key.get(this)
-fun <T> BaseBundleValueSetter.set(key: BaseBundleKey<T, *>, value: T) = key.set(this, value)
-fun BaseBundleValueSetter.remove(key: BaseBundleKey<*, *>) = remove(key.name)
-suspend fun <T> BaseBundleValueGetter.get(key: AsyncBaseBundleKey<T, *>): T = key.get(this)
-suspend fun <T> BaseBundleValueSetter.set(key: AsyncBaseBundleKey<T, *>, value: T) = key.set(this, value)
-fun BaseBundleValueSetter.remove(key: AsyncBaseBundleKey<*, *>) = remove(key.name)

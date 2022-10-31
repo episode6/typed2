@@ -20,6 +20,30 @@ open class BaseBundleKeyNamespace(private val prefix: String = "") : RequiredEna
 
 fun BaseBundleKeyBuilder.double(default: Double): BaseBundleKey<Double, Double> = nativeKey(
   get = { getDouble(name, default) },
-  set = { setDouble(name, default) },
+  set = { setDouble(name, it) },
   backingDefault = default,
+)
+
+fun BaseBundleKeyBuilder.doubleArray(default: DoubleArray): BaseBundleKey<DoubleArray, DoubleArray?> = doubleArray().defaultProvider { default }
+fun BaseBundleKeyBuilder.doubleArray(): BaseBundleKey<DoubleArray?, DoubleArray?> = nativeKey(
+  get = { getDoubleArray(name) },
+  set = { setDoubleArray(name, it) }
+)
+
+fun BaseBundleKeyBuilder.intArray(default: IntArray): BaseBundleKey<IntArray, IntArray?> = intArray().defaultProvider { default }
+fun BaseBundleKeyBuilder.intArray(): BaseBundleKey<IntArray?, IntArray?> = nativeKey(
+  get = { getIntArray(name) },
+  set = { setIntArray(name, it) }
+)
+
+fun BaseBundleKeyBuilder.longArray(default: LongArray): BaseBundleKey<LongArray, LongArray?> = longArray().defaultProvider { default }
+fun BaseBundleKeyBuilder.longArray(): BaseBundleKey<LongArray?, LongArray?> = nativeKey(
+  get = { getLongArray(name) },
+  set = { setLongArray(name, it) }
+)
+
+fun BaseBundleKeyBuilder.stringArray(default: Array<String>): BaseBundleKey<Array<String>, Array<String>?> = stringArray().defaultProvider { default }
+fun BaseBundleKeyBuilder.stringArray(): BaseBundleKey<Array<String>?, Array<String>?> = nativeKey(
+  get = { getStringArray(name) },
+  set = { setStringArray(name, it) }
 )
