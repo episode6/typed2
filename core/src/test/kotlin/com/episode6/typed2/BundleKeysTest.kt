@@ -38,6 +38,7 @@ class BundleKeysTest {
     on { getChar(any(), any()) } doAnswer { it.getArgument(1) }
     on { getCharSequenceArrayList(any()) } doReturn null
     on { getIntArrayList(any()) } doReturn null
+    on { getParcelableArrayList<TestParcelable>(any(), any()) } doReturn null
     on { getString(any(), anyOrNull()) } doAnswer { it.getArgument(1) }
   }
 
