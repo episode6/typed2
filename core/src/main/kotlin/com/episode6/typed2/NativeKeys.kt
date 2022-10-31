@@ -64,7 +64,6 @@ internal inline fun <reified T : Any, GETTER : KeyValueGetter, SETTER : KeyValue
 ): Key<T, T, GETTER, SETTER> = NativeKeys.create(
   this,
   backingDefault = backingDefault,
-  backingClass = T::class,
   get = get,
   set = set,
 )
@@ -74,7 +73,6 @@ internal inline fun <reified T : Any, GETTER : KeyValueGetter, SETTER : KeyValue
   noinline set: SETTER.(T?) -> Unit,
 ): Key<T?, T?, GETTER, SETTER> = NativeKeys.create(
   this,
-  backingClass = T::class,
   get = get,
   set = set,
 )
