@@ -1,6 +1,6 @@
 # Minorly adjusted from https://gist.github.com/badsyntax/ce848ab40b952d944c496575d40e5427 and https://github.com/igorboskovic3/actions-test/actions/runs/3239143575/workflow
 
-name: HAXM Installation before Android Test Snippet
+name: Sample App connectedCheck
 
 # Controls when the workflow will run
 on:
@@ -11,11 +11,11 @@ on:
   pull_request:
 
 jobs:
-  install-haxm-and-run-emulator:
+  sample-app-connected-check:
     runs-on: macos-12
     strategy:
       matrix:
-        api-level: [21, 30]
+        api-level: [30]
     timeout-minutes: 45 # No default
     env:
       JAVA_TOOL_OPTIONS: -Xmx4g
