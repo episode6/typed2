@@ -1,16 +1,17 @@
 package com.episode6.typed2.bundles
 
+import android.annotation.TargetApi
 import android.os.PersistableBundle
 import com.episode6.typed2.get
 import com.episode6.typed2.set
 
 interface PersistableBundleValueGetter : BaseBundleValueGetter {
-  fun getBooleanArray(name: String): BooleanArray?
+  @TargetApi(22) fun getBooleanArray(name: String): BooleanArray?
   fun getPersistableBundle(name: String): PersistableBundle?
 }
 
 interface PersistableBundleValueSetter : BaseBundleValueSetter {
-  fun setBooleanArray(name: String, value: BooleanArray?)
+  @TargetApi(22) fun setBooleanArray(name: String, value: BooleanArray?)
   fun setPersistableBundle(name: String, value: PersistableBundle?)
 }
 
