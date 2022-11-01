@@ -7,6 +7,7 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import com.episode6.typed2.sampleapp.ui.theme.AppScaffold
@@ -22,7 +23,7 @@ import javax.inject.Inject
     super.onCreate(savedInstanceState)
     setContent {
       AppScaffold {
-        Text(text = viewModel.sampleText, modifier = Modifier.padding(8.dp))
+        Text(text = viewModel.sampleText, modifier = Modifier.padding(8.dp).testTag("TEST_TAG"))
       }
     }
   }

@@ -14,7 +14,7 @@ android {
     versionCode = 1
     versionName = "1.0"
 
-    testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    testInstrumentationRunner = "com.episode6.typed2.sampleapp.HiltTestRunner"
   }
 
   buildTypes {
@@ -44,7 +44,13 @@ dependencies {
   implementation(libs.hilt.android.core)
   kapt(libs.hilt.compiler)
 
+  kaptAndroidTest(libs.hilt.compiler)
   androidTestImplementation(libs.androidx.test.ext.junit)
   androidTestImplementation(libs.androidx.espresso.core)
   androidTestImplementation(libs.compose.ui.test.junit4)
+  androidTestImplementation(libs.hilt.android.testing)
+  androidTestImplementation(libs.assertk.core)
+  androidTestImplementation(libs.turbine.core)
+  androidTestImplementation(libs.kotlinx.coroutines.test)
+
 }
