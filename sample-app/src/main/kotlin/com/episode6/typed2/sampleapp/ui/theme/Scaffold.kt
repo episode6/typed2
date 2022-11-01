@@ -8,9 +8,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import com.episode6.typed2.sampleapp.R
 
 @Composable fun AppScaffold(
-  title: String,
+  title: String = stringResource(id = R.string.app_name),
   navigationIcon: @Composable () -> Unit = {},
   actions: @Composable RowScope.() -> Unit = {},
   content: @Composable () -> Unit,

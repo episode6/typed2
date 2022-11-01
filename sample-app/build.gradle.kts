@@ -2,7 +2,9 @@ plugins {
   id("com.android.application")
   id("config-android")
   id("config-compose")
+  kotlin("kapt")
   kotlin("plugin.serialization")
+  id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -38,6 +40,8 @@ dependencies {
   implementation(project(":navigation-compose"))
   implementation(project(":saved-state-handle"))
 
+  implementation(libs.hilt.android.core)
+  kapt(libs.hilt.compiler)
 
   androidTestImplementation(libs.androidx.test.ext.junit)
   androidTestImplementation(libs.androidx.espresso.core)
