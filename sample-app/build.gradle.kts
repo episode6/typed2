@@ -8,6 +8,7 @@ plugins {
 }
 
 android {
+  namespace = "com.episode6.typed2.sampleapp"
   defaultConfig {
     applicationId = "com.episode6.typed2.sampleapp"
     versionCode = 1
