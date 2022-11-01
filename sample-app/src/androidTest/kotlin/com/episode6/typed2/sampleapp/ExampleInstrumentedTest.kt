@@ -30,6 +30,6 @@ class ExampleInstrumentedTest {
 
     composeTestRule.onNodeWithTag("TEST_TAG")
       .assertExists()
-      .assertTextContains("Hello there1")
+      .assertTextContains("Hello there")
   }
 }
