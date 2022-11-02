@@ -1,6 +1,7 @@
 package com.episode6.typed2.sharedprefs
 
 import android.content.SharedPreferences
+import androidx.core.content.edit
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -24,6 +25,7 @@ class TypedSharedPreferences(private val delegate: SharedPreferences) : PrefValu
     override fun setFloat(name: String, value: Float) { delegate.putFloat(name, value) }
     override fun setLong(name: String, value: Long) { delegate.putLong(name, value) }
     override fun setStringSet(name: String, value: Set<String?>?) { delegate.putStringSet(name, value) }
+    fun clear() { delegate.clear() }
     fun commit() { delegate.commit() }
     fun apply() { delegate.apply() }
   }
@@ -39,11 +41,6 @@ suspend fun <T> SharedPreferences.get(key: AsyncPrefKey<T, *>): T = typed().get(
 suspend fun <T> SharedPreferences.Editor.set(key: AsyncPrefKey<T, *>, value: T) = typed().set(key, value)
 fun SharedPreferences.Editor.remove(key: AsyncPrefKey<*, *>) = typed().remove(key)
 
-inline fun SharedPreferences.edit(
-  commit: Boolean = false,
-  action: TypedSharedPreferences.Editor.() -> Unit,
-) = typed().edit(commit = commit, action = action)
-
 inline fun TypedSharedPreferences.edit(
   commit: Boolean = false,
   action: TypedSharedPreferences.Editor.() -> Unit,
@@ -57,8 +54,8 @@ inline fun TypedSharedPreferences.edit(
 fun SharedPreferences.launchEdit(
   scope: CoroutineScope,
   commit: Boolean = false,
-  action: suspend TypedSharedPreferences.Editor.() -> Unit,
-): Job = typed().launchEdit(scope = scope, commit = commit, action = action)
+  action: suspend SharedPreferences.Editor.() -> Unit,
+): Job = scope.launch { edit(commit = commit) { action() } }
 
 fun TypedSharedPreferences.launchEdit(
   scope: CoroutineScope,
