@@ -5,6 +5,7 @@ plugins {
   kotlin("kapt")
   kotlin("plugin.serialization")
   id("com.google.dagger.hilt.android")
+  id("kotlin-parcelize")
 }
 
 android {
@@ -43,8 +44,8 @@ dependencies {
 
   implementation(libs.hilt.android.core)
   kapt(libs.hilt.compiler)
-
   kaptAndroidTest(libs.hilt.compiler)
+
   androidTestImplementation(libs.androidx.test.ext.junit)
   androidTestImplementation(libs.androidx.espresso.core)
   androidTestImplementation(libs.compose.ui.test.junit4)
