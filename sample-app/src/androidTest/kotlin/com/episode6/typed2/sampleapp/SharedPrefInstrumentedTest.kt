@@ -7,7 +7,6 @@ import androidx.test.platform.app.InstrumentationRegistry
 import assertk.assertThat
 import assertk.assertions.*
 import com.episode6.typed2.*
-import com.episode6.typed2.sharedprefs.PrefKey
 import com.episode6.typed2.sharedprefs.PrefKeyNamespace
 import com.episode6.typed2.sharedprefs.get
 import com.episode6.typed2.sharedprefs.set
@@ -38,7 +37,6 @@ class SharedPrefInstrumentedTest {
       .getSharedPreferences("SharedPrefInstrumentedTest", Context.MODE_PRIVATE)
   }
 
-  private fun <T> SharedPreferences.set(key: PrefKey<T, *>, value: T) = edit(true) { set(key, value) }
 
   @Before fun setup() {
     sharedPrefs.edit(true) { clear() }
@@ -51,7 +49,7 @@ class SharedPrefInstrumentedTest {
   @Test fun testBool() {
     assertThat(sharedPrefs.get(Keys.bool)).isTrue()
 
-    sharedPrefs.set(Keys.bool, false)
+    sharedPrefs.edit(true) { set(Keys.bool, false) }
     val raw = sharedPrefs.getBoolean("bool", true)
     val typed = sharedPrefs.get(Keys.bool)
 
@@ -62,7 +60,7 @@ class SharedPrefInstrumentedTest {
   @Test fun testNullBool() {
     assertThat(sharedPrefs.get(Keys.nullBool)).isNull()
 
-    sharedPrefs.set(Keys.nullBool, true)
+    sharedPrefs.edit(true) { set(Keys.nullBool, true) }
     val raw = sharedPrefs.getString("nullBool", null)
     val typed = sharedPrefs.get(Keys.nullBool)
 
@@ -73,7 +71,7 @@ class SharedPrefInstrumentedTest {
   @Test fun testFloat() {
     assertThat(sharedPrefs.get(Keys.float)).isEqualTo(12.5f)
 
-    sharedPrefs.set(Keys.float, 127f)
+    sharedPrefs.edit(true) { set(Keys.float, 127f) }
     val raw = sharedPrefs.getFloat("float", -1f)
     val typed = sharedPrefs.get(Keys.float)
 
@@ -84,7 +82,7 @@ class SharedPrefInstrumentedTest {
   @Test fun testNullFloat() {
     assertThat(sharedPrefs.get(Keys.nullFloat)).isNull()
 
-    sharedPrefs.set(Keys.nullFloat, 52f)
+    sharedPrefs.edit(true) { set(Keys.nullFloat, 52f) }
     val raw = sharedPrefs.getString("nullFloat", null)
     val typed = sharedPrefs.get(Keys.nullFloat)
 
@@ -95,7 +93,7 @@ class SharedPrefInstrumentedTest {
   @Test fun testInt() {
     assertThat(sharedPrefs.get(Keys.int)).isEqualTo(42)
 
-    sharedPrefs.set(Keys.int, 127)
+    sharedPrefs.edit(true) { set(Keys.int, 127) }
     val raw = sharedPrefs.getInt("int", -1)
     val typed = sharedPrefs.get(Keys.int)
 
@@ -106,7 +104,7 @@ class SharedPrefInstrumentedTest {
   @Test fun testNullInt() {
     assertThat(sharedPrefs.get(Keys.nullInt)).isNull()
 
-    sharedPrefs.set(Keys.nullInt, 52)
+    sharedPrefs.edit(true) { set(Keys.nullInt, 52) }
     val raw = sharedPrefs.getString("nullInt", null)
     val typed = sharedPrefs.get(Keys.nullInt)
 
@@ -117,7 +115,7 @@ class SharedPrefInstrumentedTest {
   @Test fun testLong() {
     assertThat(sharedPrefs.get(Keys.long)).isEqualTo(42L)
 
-    sharedPrefs.set(Keys.long, 127L)
+    sharedPrefs.edit(true) { set(Keys.long, 127L) }
     val raw = sharedPrefs.getLong("long", -1)
     val typed = sharedPrefs.get(Keys.long)
 
@@ -128,7 +126,7 @@ class SharedPrefInstrumentedTest {
   @Test fun testNullLong() {
     assertThat(sharedPrefs.get(Keys.nullLong)).isNull()
 
-    sharedPrefs.set(Keys.nullLong, 52)
+    sharedPrefs.edit(true) { set(Keys.nullLong, 52) }
     val raw = sharedPrefs.getString("nullLong", null)
     val typed = sharedPrefs.get(Keys.nullLong)
 
@@ -139,7 +137,7 @@ class SharedPrefInstrumentedTest {
   @Test fun testString() {
     assertThat(sharedPrefs.get(Keys.string)).isEqualTo("default")
 
-    sharedPrefs.set(Keys.string, "hi")
+    sharedPrefs.edit(true) { set(Keys.string, "hi") }
     val raw = sharedPrefs.getString("string", null)
     val typed = sharedPrefs.get(Keys.string)
 
@@ -150,7 +148,7 @@ class SharedPrefInstrumentedTest {
   @Test fun testNullString() {
     assertThat(sharedPrefs.get(Keys.nullString)).isNull()
 
-    sharedPrefs.set(Keys.nullString, "yo")
+    sharedPrefs.edit(true) { set(Keys.nullString, "yo") }
     val raw = sharedPrefs.getString("nullString", null)
     val typed = sharedPrefs.get(Keys.nullString)
 
