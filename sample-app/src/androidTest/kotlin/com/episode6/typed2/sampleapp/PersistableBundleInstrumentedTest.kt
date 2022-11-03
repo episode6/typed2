@@ -9,7 +9,6 @@ import org.junit.Test
 
 class PersistableBundleInstrumentedTest {
   private object Keys : PersistableBundleKeyNamespace() {
-    val booleanArray = key("booleanArray").booleanArray()
     val double = key("double").double(default = 10.0)
     val doubleArray = key("doubleArray").doubleArray()
     val intArray = key("intArray").intArray()
@@ -29,17 +28,6 @@ class PersistableBundleInstrumentedTest {
   }
 
   private val bundle = PersistableBundle()
-
-  @Test fun testBooleanArray() {
-    assertThat(bundle.get(Keys.booleanArray)).isNull()
-
-    bundle.set(Keys.booleanArray, booleanArrayOf(true, false))
-    val raw = bundle.getBooleanArray("booleanArray")
-    val typed = bundle.get(Keys.booleanArray)
-
-    assertThat(raw?.toList()).isEqualTo(listOf(true, false))
-    assertThat(typed?.toList()).isEqualTo(listOf(true, false))
-  }
 
   @Test fun testDouble() {
     assertThat(bundle.get(Keys.double)).isEqualTo(10.0)
