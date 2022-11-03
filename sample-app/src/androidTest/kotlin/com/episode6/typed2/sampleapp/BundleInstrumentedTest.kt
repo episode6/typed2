@@ -3,8 +3,7 @@ package com.episode6.typed2.sampleapp
 import android.os.Bundle
 import androidx.core.os.bundleOf
 import assertk.assertThat
-import assertk.assertions.isEqualTo
-import assertk.assertions.isNull
+import assertk.assertions.*
 import com.episode6.typed2.*
 import com.episode6.typed2.bundles.*
 import com.episode6.typed2.sampleapp.data.AndroidParcelable
@@ -123,126 +122,137 @@ class BundleInstrumentedTest {
     assertThat(typed).isEqualTo('q')
   }
 
-//  @Test fun testNullChar() {
-//    assertThat(bundle.get(Keys.nullChar)).isNull()
-//    bundle.set(Keys.nullChar, 't')
-//
-//    inOrder(bundle, bundle) {
-//      verify(bundle).getString("nullChar", null)
-//      verify(bundle).setString("nullChar", "t")
-//    }
-//  }
-//
-//  @Test fun testCharArray() {
-//    assertThat(bundle.get(Keys.charArray)).isNotNull().isEmpty()
-//    bundle.set(Keys.charArray, charArrayOf('r', 't'))
-//
-//    inOrder(bundle, bundle) {
-//      verify(bundle).contains("charArray")
-//      verify(bundle).setCharArray("charArray", charArrayOf('r', 't'))
-//    }
-//  }
-//
-//  @Test fun testCharSequence() {
-//    assertThat(bundle.get(Keys.charSequence)).isNull()
-//    bundle.set(Keys.charSequence, "hi")
-//
-//    inOrder(bundle, bundle) {
-//      verify(bundle).getCharSequence("charSequence")
-//      verify(bundle).setCharSequence("charSequence", "hi")
-//    }
-//  }
-//
-//  @Test fun testCharSequenceArray() {
-//    assertThat(bundle.get(Keys.charSequenceArray)).isNull()
-//    bundle.set(Keys.charSequenceArray, arrayOf("hi"))
-//
-//    inOrder(bundle, bundle) {
-//      verify(bundle).getCharSequenceArray("charSequenceArray")
-//      verify(bundle).setCharSequenceArray("charSequenceArray", arrayOf("hi"))
-//    }
-//  }
-//
-//  @Test fun testCharSequenceList() {
-//    assertThat(bundle.get(Keys.charSequenceList)).isNull()
-//    bundle.set(Keys.charSequenceList, listOf("hi"))
-//
-//    inOrder(bundle, bundle) {
-//      verify(bundle).getCharSequenceArrayList("charSequenceList")
-//      verify(bundle).setCharSequenceArrayList("charSequenceList", ArrayList(listOf("hi")))
-//    }
-//  }
-//
-//  @Test fun testFloatArray() {
-//    assertThat(bundle.get(Keys.floatArray)).isNull()
-//    bundle.set(Keys.floatArray, floatArrayOf(1.2f))
-//
-//    inOrder(bundle, bundle) {
-//      verify(bundle).getFloatArray("floatArray")
-//      verify(bundle).setFloatArray("floatArray", floatArrayOf(1.2f))
-//    }
-//  }
-//
-//  @Test fun testIntList() {
-//    assertThat(bundle.get(Keys.intList)).isNull()
-//    bundle.set(Keys.intList, listOf(42))
-//
-//    inOrder(bundle, bundle) {
-//      verify(bundle).getIntArrayList("intList")
-//      verify(bundle).setIntArrayList("intList", ArrayList(listOf(42)))
-//    }
-//  }
-//
-//  @Test fun testParcelable() {
-//    val mockParcelable = mock<TestParcelable>()
-//
-//    assertThat(bundle.get(Keys.parcelable)).isNull()
-//    bundle.set(Keys.parcelable, mockParcelable)
-//
-//    inOrder(bundle, bundle) {
-//      verify(bundle).getParcelable("parcelable", TestParcelable::class)
-//      verify(bundle).setParcelable("parcelable", mockParcelable)
-//    }
-//  }
-//
-//  @Test fun testParcelableArray() {
-//    val mockParcelable = mock<TestParcelable>()
-//    val array: Array<TestParcelable> = arrayOf(mockParcelable)
-//
-//    assertThat(bundle.get(Keys.parcelableArray)).isNull()
-//    bundle.set(Keys.parcelableArray, array)
-//
-//    inOrder(bundle, bundle) {
-//      verify(bundle).getParcelableArray(eq("parcelableArray"), eq(TestParcelable::class), any())
-//      verify(bundle).setParcelableArray("parcelableArray", array)
-//    }
-//  }
-//
-//  @Test fun testParcelableList() {
-//    val mockParcelable = mock<TestParcelable>()
-//    val list: List<TestParcelable> = listOf(mockParcelable)
-//
-//    assertThat(bundle.get(Keys.parcelableList)).isNull()
-//    bundle.set(Keys.parcelableList, list)
-//
-//    inOrder(bundle, bundle) {
-//      verify(bundle).getParcelableArrayList(eq("parcelableList"), eq(TestParcelable::class))
-//      verify(bundle).setParcelableArrayList("parcelableList", ArrayList(list))
-//    }
-//  }
-//
-//  @Test fun testSerializable() {
-//    val mockSerializable = mock<TestSerializable>()
-//
-//    assertThat(bundle.get(Keys.serializable)).isNull()
-//    bundle.set(Keys.serializable, mockSerializable)
-//
-//    inOrder(bundle, bundle) {
-//      verify(bundle).getSerializable("serializable", TestSerializable::class)
-//      verify(bundle).setSerializable("serializable", mockSerializable)
-//    }
-//  }
-//
+  @Test fun testNullChar() {
+    assertThat(bundle.get(Keys.nullChar)).isNull()
+
+    bundle.set(Keys.nullChar, 't')
+    val raw = bundle.getString("nullChar", null)
+    val typed = bundle.get(Keys.nullChar)
+
+    assertThat(raw).isEqualTo("t")
+    assertThat(typed).isEqualTo('t')
+  }
+
+  @Test fun testCharArray() {
+    assertThat(bundle.get(Keys.charArray)).isNotNull().isEmpty()
+    bundle.set(Keys.charArray, charArrayOf('r', 't'))
+
+    val raw = bundle.getCharArray("charArray")
+    val typed = bundle.get(Keys.charArray)
+
+    assertThat(raw?.toList()).isEqualTo(listOf('r', 't'))
+    assertThat(typed.toList()).isEqualTo(listOf('r', 't'))
+  }
+
+  @Test fun testCharSequence() {
+    assertThat(bundle.get(Keys.charSequence)).isNull()
+
+    bundle.set(Keys.charSequence, "hi")
+    val raw = bundle.getCharSequence("charSequence")
+    val typed = bundle.get(Keys.charSequence)
+
+    assertThat(raw).isEqualTo("hi")
+    assertThat(typed).isEqualTo("hi")
+  }
+
+  @Test fun testCharSequenceArray() {
+    assertThat(bundle.get(Keys.charSequenceArray)).isNull()
+
+    bundle.set(Keys.charSequenceArray, arrayOf("hi"))
+    val raw = bundle.getCharSequenceArray("charSequenceArray")
+    val typed = bundle.get(Keys.charSequenceArray)
+
+    assertThat(raw?.toList()).isEqualTo(listOf("hi"))
+    assertThat(typed?.toList()).isEqualTo(listOf("hi"))
+  }
+
+  @Test fun testCharSequenceList() {
+    assertThat(bundle.get(Keys.charSequenceList)).isNull()
+
+    bundle.set(Keys.charSequenceList, listOf("hi"))
+    val raw = bundle.getCharSequenceArrayList("charSequenceList")
+    val typed = bundle.get(Keys.charSequenceList)
+
+    assertThat(raw).isEqualTo(listOf("hi"))
+    assertThat(typed).isEqualTo(listOf("hi"))
+  }
+
+  @Test fun testFloatArray() {
+    assertThat(bundle.get(Keys.floatArray)).isNull()
+
+    bundle.set(Keys.floatArray, floatArrayOf(1.2f))
+    val raw = bundle.getFloatArray("floatArray")
+    val typed = bundle.get(Keys.floatArray)
+
+    assertThat(raw?.toList()).isEqualTo(listOf(1.2f))
+    assertThat(typed?.toList()).isEqualTo(listOf(1.2f))
+  }
+
+  @Test fun testIntList() {
+    assertThat(bundle.get(Keys.intList)).isNull()
+
+    bundle.set(Keys.intList, listOf(42))
+    val raw = bundle.getIntegerArrayList("intList")
+    val typed = bundle.get(Keys.intList)
+
+    assertThat(raw?.toList()).isEqualTo(listOf(42))
+    assertThat(typed?.toList()).isEqualTo(listOf(42))
+  }
+
+  @Suppress("DEPRECATION")
+  @Test fun testParcelable() {
+    val testParcelable = AndroidParcelable("hi")
+
+    assertThat(bundle.get(Keys.parcelable)).isNull()
+    bundle.set(Keys.parcelable, testParcelable)
+    val raw = bundle.getParcelable<AndroidParcelable>("parcelable")
+    val typed = bundle.get(Keys.parcelable)
+
+    assertThat(raw).isEqualTo(testParcelable)
+    assertThat(typed).isEqualTo(testParcelable)
+  }
+
+  @Suppress("DEPRECATION")
+  @Test fun testParcelableArray() {
+    val mockParcelable = AndroidParcelable("hi")
+    val array: Array<AndroidParcelable> = arrayOf(mockParcelable)
+
+    assertThat(bundle.get(Keys.parcelableArray)).isNull()
+    bundle.set(Keys.parcelableArray, array)
+    val raw = bundle.getParcelableArray("parcelableArray")
+    val typed = bundle.get(Keys.parcelableArray)
+
+    assertThat(raw?.toList()).isEqualTo(array.toList())
+    assertThat(typed?.toList()).isEqualTo(array.toList())
+  }
+
+  @Suppress("DEPRECATION")
+  @Test fun testParcelableList() {
+    val mockParcelable = AndroidParcelable("hi")
+    val list: List<AndroidParcelable> = listOf(mockParcelable)
+
+    assertThat(bundle.get(Keys.parcelableList)).isNull()
+    bundle.set(Keys.parcelableList, list)
+    val raw = bundle.getParcelableArrayList<AndroidParcelable>("parcelableList")
+    val typed = bundle.get(Keys.parcelableList)
+
+    assertThat(raw).isEqualTo(list)
+    assertThat(typed).isEqualTo(list)
+  }
+
+  @Suppress("DEPRECATION")
+  @Test fun testSerializable() {
+    val mockSerializable = JavaIoSerializable("hello")
+
+    assertThat(bundle.get(Keys.serializable)).isNull()
+    bundle.set(Keys.serializable, mockSerializable)
+    val raw = bundle.getSerializable("serializable")
+    val typed = bundle.get(Keys.serializable)
+
+    assertThat(raw).isEqualTo(mockSerializable)
+    assertThat(typed).isEqualTo(mockSerializable)
+  }
+
 //  @Test fun testShort() {
 //    assertThat(bundle.get(Keys.short)).isEqualTo(12)
 //    bundle.set(Keys.short, 42)
@@ -369,103 +379,113 @@ class BundleInstrumentedTest {
 //    }
 //  }
 //
-//  @Test fun testBool() {
-//    assertThat(bundle.get(Keys.bool)).isTrue()
-//    bundle.set(Keys.bool, false)
-//
-//    inOrder(bundle, bundle) {
-//      verify(bundle).getBoolean("bool", true)
-//      verify(bundle).setBoolean("bool", false)
-//    }
-//  }
-//
-//  @Test fun testNullBool() {
-//    assertThat(bundle.get(Keys.nullBool)).isNull()
-//    bundle.set(Keys.nullBool, false)
-//
-//    inOrder(bundle, bundle) {
-//      verify(bundle).getString("nullBool", null)
-//      verify(bundle).setString("nullBool", "false")
-//    }
-//  }
-//
-//  @Test fun testFloat() {
-//    assertThat(bundle.get(Keys.float)).isEqualTo(12.5f)
-//    bundle.set(Keys.float, 127f)
-//
-//    inOrder(bundle, bundle) {
-//      verify(bundle).getFloat("float", 12.5f)
-//      verify(bundle).setFloat("float", 127f)
-//    }
-//  }
-//
-//  @Test fun testNullFloat() {
-//    assertThat(bundle.get(Keys.nullFloat)).isNull()
-//    bundle.set(Keys.nullFloat, 52f)
-//
-//    inOrder(bundle, bundle) {
-//      verify(bundle).getString("nullFloat", null)
-//      verify(bundle).setString("nullFloat", "52.0")
-//    }
-//  }
-//
-//  @Test fun testInt() {
-//    assertThat(bundle.get(Keys.int)).isEqualTo(42)
-//    bundle.set(Keys.int, 127)
-//
-//    inOrder(bundle, bundle) {
-//      verify(bundle).getInt("int", 42)
-//      verify(bundle).setInt("int", 127)
-//    }
-//  }
-//
-//  @Test fun testNullInt() {
-//    assertThat(bundle.get(Keys.nullInt)).isNull()
-//    bundle.set(Keys.nullInt, 52)
-//
-//    inOrder(bundle, bundle) {
-//      verify(bundle).getString("nullInt", null)
-//      verify(bundle).setString("nullInt", "52")
-//    }
-//  }
-//
-//  @Test fun testLong() {
-//    assertThat(bundle.get(Keys.long)).isEqualTo(42L)
-//    bundle.set(Keys.long, 127L)
-//
-//    inOrder(bundle, bundle) {
-//      verify(bundle).getLong("long", 42L)
-//      verify(bundle).setLong("long", 127L)
-//    }
-//  }
-//
-//  @Test fun testNullLong() {
-//    assertThat(bundle.get(Keys.nullLong)).isNull()
-//    bundle.set(Keys.nullLong, 52)
-//
-//    inOrder(bundle, bundle) {
-//      verify(bundle).getString("nullLong", null)
-//      verify(bundle).setString("nullLong", "52")
-//    }
-//  }
-//
-//  @Test fun testString() {
-//    assertThat(bundle.get(Keys.string)).isEqualTo("default")
-//    bundle.set(Keys.string, "hi")
-//
-//    inOrder(bundle, bundle) {
-//      verify(bundle).getString("string", "default")
-//      verify(bundle).setString("string", "hi")
-//    }
-//  }
-//
-//  @Test fun testNullString() {
-//    assertThat(bundle.get(Keys.nullString)).isNull()
-//    bundle.set(Keys.nullString, "yo")
-//
-//    inOrder(bundle, bundle) {
-//      verify(bundle).getString("nullString", null)
-//      verify(bundle).setString("nullString", "yo")
-//    }
-//  }
+@Test fun testBool() {
+  assertThat(bundle.get(Keys.bool)).isTrue()
+
+  bundle.set(Keys.bool, false)
+  val raw = bundle.getBoolean("bool", true)
+  val typed = bundle.get(Keys.bool)
+
+  assertThat(raw).isFalse()
+  assertThat(typed).isFalse()
+}
+
+  @Test fun testNullBool() {
+    assertThat(bundle.get(Keys.nullBool)).isNull()
+
+    bundle.set(Keys.nullBool, true)
+    val raw = bundle.getString("nullBool", null)
+    val typed = bundle.get(Keys.nullBool)
+
+    assertThat(raw).isEqualTo("true")
+    assertThat(typed).isNotNull().isTrue()
+  }
+
+  @Test fun testFloat() {
+    assertThat(bundle.get(Keys.float)).isEqualTo(12.5f)
+
+    bundle.set(Keys.float, 127f)
+    val raw = bundle.getFloat("float", -1f)
+    val typed = bundle.get(Keys.float)
+
+    assertThat(raw).isEqualTo(127f)
+    assertThat(typed).isEqualTo(127f)
+  }
+
+  @Test fun testNullFloat() {
+    assertThat(bundle.get(Keys.nullFloat)).isNull()
+
+    bundle.set(Keys.nullFloat, 52f)
+    val raw = bundle.getString("nullFloat", null)
+    val typed = bundle.get(Keys.nullFloat)
+
+    assertThat(raw).isEqualTo("52.0")
+    assertThat(typed).isEqualTo(52f)
+  }
+
+  @Test fun testInt() {
+    assertThat(bundle.get(Keys.int)).isEqualTo(42)
+
+    bundle.set(Keys.int, 127)
+    val raw = bundle.getInt("int", -1)
+    val typed = bundle.get(Keys.int)
+
+    assertThat(raw).isEqualTo(127)
+    assertThat(typed).isEqualTo(127)
+  }
+
+  @Test fun testNullInt() {
+    assertThat(bundle.get(Keys.nullInt)).isNull()
+
+    bundle.set(Keys.nullInt, 52)
+    val raw = bundle.getString("nullInt", null)
+    val typed = bundle.get(Keys.nullInt)
+
+    assertThat(raw).isEqualTo("52")
+    assertThat(typed).isEqualTo(52)
+  }
+
+  @Test fun testLong() {
+    assertThat(bundle.get(Keys.long)).isEqualTo(42L)
+
+    bundle.set(Keys.long, 127L)
+    val raw = bundle.getLong("long", -1)
+    val typed = bundle.get(Keys.long)
+
+    assertThat(raw).isEqualTo(127)
+    assertThat(typed).isEqualTo(127)
+  }
+
+  @Test fun testNullLong() {
+    assertThat(bundle.get(Keys.nullLong)).isNull()
+
+    bundle.set(Keys.nullLong, 52)
+    val raw = bundle.getString("nullLong", null)
+    val typed = bundle.get(Keys.nullLong)
+
+    assertThat(raw).isEqualTo("52")
+    assertThat(typed).isEqualTo(52)
+  }
+
+  @Test fun testString() {
+    assertThat(bundle.get(Keys.string)).isEqualTo("default")
+
+    bundle.set(Keys.string, "hi")
+    val raw = bundle.getString("string", null)
+    val typed = bundle.get(Keys.string)
+
+    assertThat(raw).isEqualTo("hi")
+    assertThat(typed).isEqualTo("hi")
+  }
+
+  @Test fun testNullString() {
+    assertThat(bundle.get(Keys.nullString)).isNull()
+
+    bundle.set(Keys.nullString, "yo")
+    val raw = bundle.getString("nullString", null)
+    val typed = bundle.get(Keys.nullString)
+
+    assertThat(raw).isEqualTo("yo")
+    assertThat(typed).isEqualTo("yo")
+  }
 }
