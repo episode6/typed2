@@ -1,6 +1,9 @@
 package com.episode6.typed2.sampleapp
 
 import android.os.Bundle
+import android.util.Size
+import android.util.SizeF
+import android.util.SparseArray
 import androidx.core.os.bundleOf
 import assertk.assertThat
 import assertk.assertions.*
@@ -253,82 +256,88 @@ class BundleInstrumentedTest {
     assertThat(typed).isEqualTo(mockSerializable)
   }
 
-//  @Test fun testShort() {
-//    assertThat(bundle.get(Keys.short)).isEqualTo(12)
-//    bundle.set(Keys.short, 42)
-//
-//    inOrder(bundle, bundle) {
-//      verify(bundle).getShort("short", 12)
-//      verify(bundle).setShort("short", 42)
-//    }
-//  }
-//
-//  @Test fun testNullShort() {
-//    assertThat(bundle.get(Keys.nullShort)).isNull()
-//    bundle.set(Keys.nullShort, 9)
-//
-//    inOrder(bundle, bundle) {
-//      verify(bundle).getString("nullShort", null)
-//      verify(bundle).setString("nullShort", "9")
-//    }
-//  }
-//
-//  @Test fun testShortArray() {
-//    assertThat(bundle.get(Keys.shortArray)).isNull()
-//    bundle.set(Keys.shortArray, shortArrayOf(8, 10))
-//
-//    inOrder(bundle, bundle) {
-//      verify(bundle).getShortArray("shortArray")
-//      verify(bundle).setShortArray("shortArray", shortArrayOf(8, 10))
-//    }
-//  }
-//
-//  @Test fun testSize() {
-//    val size: Size = mock()
-//
-//    assertThat(bundle.get(Keys.size)).isNull()
-//    bundle.set(Keys.size, size)
-//
-//    inOrder(bundle, bundle) {
-//      verify(bundle).getSize("size")
-//      verify(bundle).setSize("size", size)
-//    }
-//  }
-//
-//  @Test fun testSizeF() {
-//    val sizeF: SizeF = mock()
-//
-//    assertThat(bundle.get(Keys.sizeF)).isNull()
-//    bundle.set(Keys.sizeF, sizeF)
-//
-//    inOrder(bundle, bundle) {
-//      verify(bundle).getSizeF("sizeF")
-//      verify(bundle).setSizeF("sizeF", sizeF)
-//    }
-//  }
-//
-//  @Test fun testSparseParcelableArray() {
-//    val sparseParcelableArray: SparseArray<TestParcelable> = mock()
-//
-//    assertThat(bundle.get(Keys.sparseParcelableArray)).isNull()
-//    bundle.set(Keys.sparseParcelableArray, sparseParcelableArray)
-//
-//    inOrder(bundle, bundle) {
-//      verify(bundle).getSparseParcelableArray("sparseParcelableArray", TestParcelable::class)
-//      verify(bundle).setSparseParcelableArray("sparseParcelableArray", sparseParcelableArray)
-//    }
-//  }
-//
-//  @Test fun testStringList() {
-//    assertThat(bundle.get(Keys.stringList)).isNull()
-//    bundle.set(Keys.stringList, listOf("42"))
-//
-//    inOrder(bundle, bundle) {
-//      verify(bundle).getStringArrayList("stringList")
-//      verify(bundle).setStringArrayList("stringList", ArrayList(listOf("42")))
-//    }
-//  }
-//
+  @Test fun testShort() {
+    assertThat(bundle.get(Keys.short)).isEqualTo(12)
+
+    bundle.set(Keys.short, 42)
+    val raw = bundle.getShort("short", 12)
+    val typed = bundle.get(Keys.short)
+
+    assertThat(raw).isEqualTo(42)
+    assertThat(typed).isEqualTo(42)
+  }
+
+  @Test fun testNullShort() {
+    assertThat(bundle.get(Keys.nullShort)).isNull()
+
+    bundle.set(Keys.nullShort, 9)
+    val raw = bundle.getString("nullShort", null)
+    val typed = bundle.get(Keys.nullShort)
+
+    assertThat(raw).isEqualTo("9")
+    assertThat(typed).isEqualTo(9)
+  }
+
+  @Test fun testShortArray() {
+    assertThat(bundle.get(Keys.shortArray)).isNull()
+
+    bundle.set(Keys.shortArray, shortArrayOf(8, 10))
+    val raw = bundle.getShortArray("shortArray")
+    val typed = bundle.get(Keys.shortArray)
+
+    assertThat(raw?.toList()).isEqualTo(listOf<Short>(8, 10))
+    assertThat(typed?.toList()).isEqualTo(listOf<Short>(8, 10))
+  }
+
+  @Test fun testSize() {
+    val size = Size(2, 4)
+
+    assertThat(bundle.get(Keys.size)).isNull()
+    bundle.set(Keys.size, size)
+    val raw = bundle.getSize("size")
+    val typed = bundle.get(Keys.size)
+
+    assertThat(raw).isEqualTo(size)
+    assertThat(typed).isEqualTo(size)
+  }
+
+  @Test fun testSizeF() {
+    val sizeF = SizeF(2.5f, 8.6f)
+
+    assertThat(bundle.get(Keys.sizeF)).isNull()
+    bundle.set(Keys.sizeF, sizeF)
+    val raw = bundle.getSizeF("sizeF")
+    val typed = bundle.get(Keys.sizeF)
+
+    assertThat(raw).isEqualTo(sizeF)
+    assertThat(typed).isEqualTo(sizeF)
+  }
+
+  @Suppress("DEPRECATION")
+  @Test fun testSparseParcelableArray() {
+    val sparseParcelableArray: SparseArray<AndroidParcelable> = SparseArray()
+    sparseParcelableArray.put(2, AndroidParcelable("heyo"))
+
+    assertThat(bundle.get(Keys.sparseParcelableArray)).isNull()
+    bundle.set(Keys.sparseParcelableArray, sparseParcelableArray)
+    val raw = bundle.getSparseParcelableArray<AndroidParcelable>("sparseParcelableArray")
+    val typed = bundle.get(Keys.sparseParcelableArray)
+
+    assertThat(raw).isEqualTo(sparseParcelableArray)
+    assertThat(typed).isEqualTo(sparseParcelableArray)
+  }
+
+  @Test fun testStringList() {
+    assertThat(bundle.get(Keys.stringList)).isNull()
+
+    bundle.set(Keys.stringList, listOf("42"))
+    val raw = bundle.getStringArrayList("stringList")
+    val typed = bundle.get(Keys.stringList)
+
+    assertThat(raw).isEqualTo(listOf("42"))
+    assertThat(typed).isEqualTo(listOf("42"))
+  }
+
 //  @Test fun testDouble() {
 //    assertThat(bundle.get(Keys.double)).isEqualTo(10.0)
 //    bundle.set(Keys.double, 42.0)
