@@ -338,56 +338,61 @@ class BundleInstrumentedTest {
     assertThat(typed).isEqualTo(listOf("42"))
   }
 
-//  @Test fun testDouble() {
-//    assertThat(bundle.get(Keys.double)).isEqualTo(10.0)
-//    bundle.set(Keys.double, 42.0)
-//
-//    inOrder(bundle, bundle) {
-//      verify(bundle).getDouble("double", 10.0)
-//      verify(bundle).setDouble("double", 42.0)
-//    }
-//  }
-//
-//  @Test fun testDoubleArray() {
-//    assertThat(bundle.get(Keys.doubleArray)).isNull()
-//    bundle.set(Keys.doubleArray, doubleArrayOf(99.0, 101.2))
-//
-//    inOrder(bundle, bundle) {
-//      verify(bundle).getDoubleArray("doubleArray")
-//      verify(bundle).setDoubleArray("doubleArray", doubleArrayOf(99.0, 101.2))
-//    }
-//  }
-//
-//  @Test fun testIntArray() {
-//    assertThat(bundle.get(Keys.intArray)).isNull()
-//    bundle.set(Keys.intArray, intArrayOf(99, 101))
-//
-//    inOrder(bundle, bundle) {
-//      verify(bundle).getIntArray("intArray")
-//      verify(bundle).setIntArray("intArray", intArrayOf(99, 101))
-//    }
-//  }
-//
-//  @Test fun testLongArray() {
-//    assertThat(bundle.get(Keys.longArray)).isNull()
-//    bundle.set(Keys.longArray, longArrayOf(99, 101))
-//
-//    inOrder(bundle, bundle) {
-//      verify(bundle).getLongArray("longArray")
-//      verify(bundle).setLongArray("longArray", longArrayOf(99, 101))
-//    }
-//  }
-//
-//  @Test fun testStringArray() {
-//    assertThat(bundle.get(Keys.stringArray)).isNull()
-//    bundle.set(Keys.stringArray, arrayOf("hi", "there"))
-//
-//    inOrder(bundle, bundle) {
-//      verify(bundle).getStringArray("stringArray")
-//      verify(bundle).setStringArray("stringArray", arrayOf("hi", "there"))
-//    }
-//  }
-//
+  @Test fun testDouble() {
+    assertThat(bundle.get(Keys.double)).isEqualTo(10.0)
+
+    bundle.set(Keys.double, 42.0)
+    val raw = bundle.getDouble("double")
+    val typed = bundle.get(Keys.double)
+
+    assertThat(raw).isEqualTo(42.0)
+    assertThat(typed).isEqualTo(42.0)
+  }
+
+  @Test fun testDoubleArray() {
+    assertThat(bundle.get(Keys.doubleArray)).isNull()
+
+    bundle.set(Keys.doubleArray, doubleArrayOf(99.0, 101.2))
+    val raw = bundle.getDoubleArray("doubleArray")
+    val typed = bundle.get(Keys.doubleArray)
+
+    assertThat(raw?.toList()).isEqualTo(listOf(99.0, 101.2))
+    assertThat(typed?.toList()).isEqualTo(listOf(99.0, 101.2))
+  }
+
+  @Test fun testIntArray() {
+    assertThat(bundle.get(Keys.intArray)).isNull()
+
+    bundle.set(Keys.intArray, intArrayOf(99, 101))
+    val raw = bundle.getIntArray("intArray")
+    val typed = bundle.get(Keys.intArray)
+
+    assertThat(raw?.toList()).isEqualTo(listOf(99, 101))
+    assertThat(typed?.toList()).isEqualTo(listOf(99, 101))
+  }
+
+  @Test fun testLongArray() {
+    assertThat(bundle.get(Keys.longArray)).isNull()
+
+    bundle.set(Keys.longArray, longArrayOf(99, 101))
+    val raw = bundle.getLongArray("longArray")
+    val typed = bundle.get(Keys.longArray)
+
+    assertThat(raw?.toList()).isEqualTo(listOf(99L, 101L))
+    assertThat(typed?.toList()).isEqualTo(listOf(99L, 101L))
+  }
+
+  @Test fun testStringArray() {
+    assertThat(bundle.get(Keys.stringArray)).isNull()
+
+    bundle.set(Keys.stringArray, arrayOf("hi", "there"))
+    val raw = bundle.getStringArray("stringArray")
+    val typed = bundle.get(Keys.stringArray)
+
+    assertThat(raw?.toList()).isEqualTo(listOf("hi", "there"))
+    assertThat(typed?.toList()).isEqualTo(listOf("hi", "there"))
+  }
+
 @Test fun testBool() {
   assertThat(bundle.get(Keys.bool)).isTrue()
 
