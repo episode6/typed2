@@ -12,12 +12,14 @@ fun <T> SharedPreferences.flow(key: PrefKey<T, *>): Flow<T> =
   changedKeyNames()
     .filter { it == key.name }
     .mapLatest { get(key) }
+    .onStart { emit(get(key)) }
     .distinctUntilChanged()
 
 fun <T> SharedPreferences.flow(key: AsyncPrefKey<T, *>): Flow<T> =
   changedKeyNames()
     .filter { it == key.name }
     .mapLatest { get(key) }
+    .onStart { emit(get(key)) }
     .distinctUntilChanged()
 
 fun <T> SharedPreferences.stateFlow(key: PrefKey<T, *>, scope: CoroutineScope, started: SharingStarted): StateFlow<T> =
@@ -25,7 +27,6 @@ fun <T> SharedPreferences.stateFlow(key: PrefKey<T, *>, scope: CoroutineScope, s
 
 fun <T> SharedPreferences.sharedFlow(key: AsyncPrefKey<T, *>, scope: CoroutineScope, started: SharingStarted, replay: Int = 1): SharedFlow<T> =
   flow(key)
-    .onStart { emit(get(key)) }
     .conflate()
     .shareIn(scope, started, replay)
 
