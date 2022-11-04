@@ -14,8 +14,6 @@ import com.episode6.typed2.savedstatehandle.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.test.*
-import org.junit.After
-import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import kotlin.time.Duration.Companion.seconds
@@ -27,19 +25,7 @@ class SavedStateHandleFlowLiveDataInstrumentedTest {
     val asyncString = key("asyncString").string(default = "default").async(UnconfinedTestDispatcher())
   }
 
-  private val dispatcher = StandardTestDispatcher()
-
   @get:Rule val instantExecutor = InstantTaskExecutorRule()
-
-  @Before
-  fun setup() {
-    Dispatchers.setMain(dispatcher)
-  }
-
-  @After
-  fun tearDown() {
-    Dispatchers.resetMain()
-  }
 
   private val handle = SavedStateHandle()
 
