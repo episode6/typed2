@@ -85,7 +85,9 @@ class SavedStateHandleFlowLiveDataInstrumentedTest {
       liveData.asFlow().test(timeout = 10.seconds) {
         assertThat(awaitItem()).isEqualTo("default")
 
-        liveData.value = "newValue"
+        withContext(UnconfinedTestDispatcher()) {
+          liveData.value = "newValue"
+        }
 
         assertThat(awaitItem()).isEqualTo("newValue")
 
