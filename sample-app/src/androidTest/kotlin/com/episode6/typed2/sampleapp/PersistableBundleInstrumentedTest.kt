@@ -88,10 +88,8 @@ class PersistableBundleInstrumentedTest {
     assertThat(bundle.get(Keys.bool)).isTrue()
 
     bundle.set(Keys.bool, false)
-    val raw = bundle.getBoolean("bool", true)
     val typed = bundle.get(Keys.bool)
 
-    assertThat(raw).isFalse()
     assertThat(typed).isFalse()
   }
 
