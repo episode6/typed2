@@ -41,7 +41,7 @@ class GetStateFlowTest {
     }
 
     launch {
-      val result: StateFlow<Int> = savedStateHandle.stateFlow(Keys.intKey, this, SharingStarted.Eagerly)
+      val result: StateFlow<Int> = savedStateHandle.getStateFlow(Keys.intKey, this, SharingStarted.Eagerly)
 
       assertThat(result.value).isEqualTo(2)
 
@@ -64,7 +64,7 @@ class GetStateFlowTest {
     }
 
     launch {
-      val result: StateFlow<Int?> = savedStateHandle.stateFlow(Keys.nullableIntKey, this, SharingStarted.Eagerly)
+      val result: StateFlow<Int?> = savedStateHandle.getStateFlow(Keys.nullableIntKey, this, SharingStarted.Eagerly)
 
       assertThat(result.value).isNull()
 
@@ -86,7 +86,7 @@ class GetStateFlowTest {
       onGeneric { getStateFlow<String?>(any(), anyOrNull()) } doReturn backingStateFlow
     }
 
-    assertThat { savedStateHandle.stateFlow(Keys.requiredInt, this, SharingStarted.Eagerly) }
+    assertThat { savedStateHandle.getStateFlow(Keys.requiredInt, this, SharingStarted.Eagerly) }
       .isFailure().hasClass(RequiredKeyMissingException::class)
   }
 
@@ -97,7 +97,7 @@ class GetStateFlowTest {
     }
 
     launch {
-      val result: StateFlow<Int?> = savedStateHandle.stateFlow(Keys.requiredInt, this, SharingStarted.Eagerly)
+      val result: StateFlow<Int?> = savedStateHandle.getStateFlow(Keys.requiredInt, this, SharingStarted.Eagerly)
 
       assertThat(result.value).isEqualTo(5)
 
@@ -120,7 +120,7 @@ class GetStateFlowTest {
       onGeneric { getStateFlow<String?>(any(), anyOrNull()) } doReturn backingStateFlow
     }
 
-    val result = savedStateHandle.sharedFlow(Keys.asyncRequiredInt, this, SharingStarted.Eagerly)
+    val result = savedStateHandle.getSharedFlow(Keys.asyncRequiredInt, this, SharingStarted.Eagerly)
     assertThat(result.first()).isNull()
     result.testIn(this)
   }
@@ -132,7 +132,7 @@ class GetStateFlowTest {
     }
 
     launch {
-      val result: SharedFlow<Int?> = savedStateHandle.sharedFlow(Keys.asyncRequiredInt, this, SharingStarted.Eagerly)
+      val result: SharedFlow<Int?> = savedStateHandle.getSharedFlow(Keys.asyncRequiredInt, this, SharingStarted.Eagerly)
 
       result.test {
         assertThat(awaitItem()).isEqualTo(5)

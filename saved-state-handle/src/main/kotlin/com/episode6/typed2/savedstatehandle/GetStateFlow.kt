@@ -6,7 +6,7 @@ import com.episode6.typed2.Key
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.*
 
-fun <T, BACKED_BY> SavedStateHandle.stateFlow(
+fun <T, BACKED_BY> SavedStateHandle.getStateFlow(
   key: Key<T, BACKED_BY, *, *>,
   scope: CoroutineScope,
   started: SharingStarted,
@@ -14,7 +14,7 @@ fun <T, BACKED_BY> SavedStateHandle.stateFlow(
   map { key.mapper.mapGet(it) }.stateIn(scope, started, initialValue = key.mapper.mapGet(value))
 }
 
-fun <T, BACKED_BY> SavedStateHandle.sharedFlow(
+fun <T, BACKED_BY> SavedStateHandle.getSharedFlow(
   key: AsyncKey<T, BACKED_BY, *, *>,
   scope: CoroutineScope,
   started: SharingStarted,

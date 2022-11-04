@@ -23,8 +23,8 @@ fun <T, BACKED_BY> SavedStateHandle.getLiveData(key: Key<T, BACKED_BY, *, *>): M
 }
 
 fun <T, BACKED_BY> SavedStateHandle.getLiveData(
-  scope: CoroutineScope,
   key: AsyncKey<T, BACKED_BY, *, *>,
+  scope: CoroutineScope,
 ): MutableLiveData<T> {
   val newValues = MutableSharedFlow<T>(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
   val backingLiveData = getLiveData(key.name, key.backingTypeInfo.default)
@@ -40,11 +40,13 @@ fun <T, BACKED_BY> SavedStateHandle.getLiveData(
 
 private class MutableMediatorLiveData<T>(private val onNewValue: (T) -> Unit) : MediatorLiveData<T>() {
   override fun setValue(value: T) {
+    if (this.value == value) return
     super.setValue(value)
     onNewValue(value)
   }
 
   fun setValueSkipCallback(value: T) {
+    if (this.value == value) return
     super.setValue(value)
   }
 }
