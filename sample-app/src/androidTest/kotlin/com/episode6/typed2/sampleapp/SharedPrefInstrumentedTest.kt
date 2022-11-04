@@ -165,7 +165,7 @@ class SharedPrefInstrumentedTest {
   }
 
   @Test fun testFlow() = runTest {
-    sharedPrefs.flow(Keys.string).test {
+    sharedPrefs.flow(Keys.string).test(timeout = 10.seconds) {
       assertThat(awaitItem()).isEqualTo("default")
 
       sharedPrefs.edit(true) { set(Keys.string, "newValue") }
@@ -175,7 +175,7 @@ class SharedPrefInstrumentedTest {
   }
 
   @Test fun testAsyncFlow() = runTest {
-    sharedPrefs.flow(Keys.asyncString).test {
+    sharedPrefs.flow(Keys.asyncString).test(timeout = 10.seconds) {
       assertThat(awaitItem()).isEqualTo("default")
 
       sharedPrefs.edit(true) { set(Keys.asyncString, "newValue") }
@@ -190,7 +190,7 @@ class SharedPrefInstrumentedTest {
 
       assertThat(stateFlow.value).isEqualTo("default")
 
-      stateFlow.test {
+      stateFlow.test(timeout = 10.seconds) {
         assertThat(awaitItem()).isEqualTo("default")
 
         sharedPrefs.edit(true) { set(Keys.string, "newValue") }
@@ -203,7 +203,7 @@ class SharedPrefInstrumentedTest {
 
   @Test fun testAsyncSharedFlow() = runTest {
     launch {
-      sharedPrefs.sharedFlow(Keys.asyncString, this, SharingStarted.WhileSubscribed()).test {
+      sharedPrefs.sharedFlow(Keys.asyncString, this, SharingStarted.WhileSubscribed()).test(timeout = 10.seconds) {
         assertThat(awaitItem()).isEqualTo("default")
 
         sharedPrefs.edit(true) { set(Keys.asyncString, "newValue") }
