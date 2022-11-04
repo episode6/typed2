@@ -207,7 +207,7 @@ class SharedPrefInstrumentedTest {
       sharedPrefs.sharedFlow(Keys.asyncString, this, SharingStarted.WhileSubscribed()).test(timeout = 10.seconds) {
         assertThat(awaitItem()).isEqualTo("default")
 
-        sharedPrefs.edit { set(Keys.asyncString, "newValue") }
+        sharedPrefs.edit(true) { set(Keys.asyncString, "newValue") }
 
         assertThat(awaitItem()).isEqualTo("newValue")
       }
