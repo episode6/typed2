@@ -39,11 +39,9 @@ class GetLiveDataTest {
 
   @get:Rule val instantExecutor = InstantTaskExecutorRule()
 
-  val dispatcher = StandardTestDispatcher()
-
   @Before
   fun setup() {
-    Dispatchers.setMain(dispatcher)
+    Dispatchers.setMain(StandardTestDispatcher())
   }
 
   @After
@@ -164,7 +162,7 @@ class GetLiveDataTest {
       onGeneric { getLiveData<String?>(any(), anyOrNull()) } doReturn backingLiveData
     }
 
-    val result = savedStateHandle.getLiveData(this, Keys.asyncRequiredInt)
+    val result = savedStateHandle.getLiveData(Keys.asyncRequiredInt, this)
     assertThat(result.value).isNull()
     result.asFlow().testIn(this)
   }
@@ -176,7 +174,7 @@ class GetLiveDataTest {
     }
 
     launch {
-      val result: MutableLiveData<Int> = savedStateHandle.getLiveData(this, Keys.asyncRequiredInt)
+      val result: MutableLiveData<Int> = savedStateHandle.getLiveData(Keys.asyncRequiredInt, this)
 
       result.asFlow().test {
         assertThat(awaitItem()).isEqualTo(5)

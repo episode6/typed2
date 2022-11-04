@@ -15,6 +15,8 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.plus
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Before
@@ -37,7 +39,7 @@ class SharedPrefInstrumentedTest {
 
     val string = key("string").string(default = "default")
     val nullString = key("nullString").string()
-    val asyncString = key("asyncString").string(default = "default").async()
+    val asyncString = key("asyncString").string(default = "default").async(UnconfinedTestDispatcher())
   }
 
   private val sharedPrefs: SharedPreferences by lazy {
@@ -186,7 +188,7 @@ class SharedPrefInstrumentedTest {
 
   @Test fun testStateFlow() = runTest {
     launch {
-      val stateFlow = sharedPrefs.stateFlow(Keys.string, this, SharingStarted.WhileSubscribed())
+      val stateFlow = sharedPrefs.stateFlow(Keys.string, this + UnconfinedTestDispatcher(), SharingStarted.WhileSubscribed())
 
       assertThat(stateFlow.value).isEqualTo("default")
 
@@ -203,7 +205,7 @@ class SharedPrefInstrumentedTest {
 
   @Test fun testAsyncSharedFlow() = runTest {
     launch {
-      sharedPrefs.sharedFlow(Keys.asyncString, this, SharingStarted.WhileSubscribed()).test(timeout = 10.seconds) {
+      sharedPrefs.sharedFlow(Keys.asyncString, this + UnconfinedTestDispatcher(), SharingStarted.WhileSubscribed()).test(timeout = 10.seconds) {
         assertThat(awaitItem()).isEqualTo("default")
 
         sharedPrefs.edit(true) { set(Keys.asyncString, "newValue") }
