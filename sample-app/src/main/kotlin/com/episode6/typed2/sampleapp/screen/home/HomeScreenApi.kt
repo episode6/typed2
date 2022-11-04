@@ -6,7 +6,5 @@ import com.episode6.typed2.sampleapp.nav.AppNavigators
 
 object HomeScreen : NavScreen("home")
 
-typealias HomeScreenNavigator = ()->Unit
-fun AppNavigators.homeScreen(): HomeScreenNavigator {
-  return { navController.navigateTo(HomeScreen) }
-}
+fun interface HomeScreenNavigator { fun go() }
+fun AppNavigators.homeScreen(): HomeScreenNavigator = HomeScreenNavigator { navController.navigateTo(HomeScreen) }
