@@ -1,18 +1,25 @@
+@file:OptIn(ExperimentalCoroutinesApi::class)
+
 package com.episode6.typed2.sampleapp
 
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.core.content.edit
 import androidx.test.platform.app.InstrumentationRegistry
+import app.cash.turbine.test
 import assertk.assertThat
 import assertk.assertions.*
 import com.episode6.typed2.*
-import com.episode6.typed2.sharedprefs.PrefKeyNamespace
-import com.episode6.typed2.sharedprefs.get
-import com.episode6.typed2.sharedprefs.set
+import com.episode6.typed2.sharedprefs.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
+import kotlin.time.Duration.Companion.seconds
 
 class SharedPrefInstrumentedTest {
   object Keys : PrefKeyNamespace() {
@@ -30,6 +37,7 @@ class SharedPrefInstrumentedTest {
 
     val string = key("string").string(default = "default")
     val nullString = key("nullString").string()
+    val asyncString = key("asyncString").string(default = "default").async()
   }
 
   private val sharedPrefs: SharedPreferences by lazy {
@@ -154,5 +162,56 @@ class SharedPrefInstrumentedTest {
 
     assertThat(raw).isEqualTo("yo")
     assertThat(typed).isEqualTo("yo")
+  }
+
+  @Test fun testFlow() = runTest {
+    sharedPrefs.flow(Keys.string).test(timeout = 10.seconds) {
+      assertThat(awaitItem()).isEqualTo("default")
+
+      sharedPrefs.edit(true) { set(Keys.string, "newValue") }
+
+      assertThat(awaitItem()).isEqualTo("newValue")
+    }
+  }
+
+  @Test fun testAsyncFlow() = runTest {
+    sharedPrefs.flow(Keys.asyncString).test(timeout = 10.seconds) {
+      assertThat(awaitItem()).isEqualTo("default")
+
+      sharedPrefs.edit(true) { set(Keys.asyncString, "newValue") }
+
+      assertThat(awaitItem()).isEqualTo("newValue")
+    }
+  }
+
+  @Test fun testStateFlow() = runTest {
+    launch {
+      val stateFlow = sharedPrefs.stateFlow(Keys.string, this, SharingStarted.WhileSubscribed())
+
+      assertThat(stateFlow.value).isEqualTo("default")
+
+      stateFlow.test(timeout = 10.seconds) {
+        assertThat(awaitItem()).isEqualTo("default")
+
+        sharedPrefs.edit(true) { set(Keys.string, "newValue") }
+
+        assertThat(awaitItem()).isEqualTo("newValue")
+      }
+      cancel()
+    }
+  }
+
+  @Test fun testAsyncSharedFlow() = runTest {
+    launch {
+      sharedPrefs.sharedFlow(Keys.asyncString, this, SharingStarted.WhileSubscribed()).test(timeout = 10.seconds) {
+        assertThat(awaitItem()).isEqualTo("default")
+
+        sharedPrefs.edit(true) { set(Keys.asyncString, "newValue") }
+
+        assertThat(awaitItem()).isEqualTo("newValue")
+      }
+
+      cancel()
+    }
   }
 }
