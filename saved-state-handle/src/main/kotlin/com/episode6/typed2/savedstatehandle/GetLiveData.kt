@@ -1,9 +1,6 @@
 package com.episode6.typed2.savedstatehandle
 
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.asFlow
+import androidx.lifecycle.*
 import com.episode6.typed2.AsyncKey
 import com.episode6.typed2.Key
 import com.episode6.typed2.provider
@@ -18,7 +15,7 @@ fun <T, BACKED_BY> SavedStateHandle.getLiveData(key: Key<T, BACKED_BY, *, *>): M
   val backingLiveData = getLiveData(key.name, key.backingTypeInfo.default)
   val result = MutableMediatorLiveData<T>(onNewValue = { backingLiveData.value = key.mapper.mapSet(it) })
   backingLiveData.value?.let { result.setValueSkipCallback(key.mapper.mapGet(it)) } ?: key.outputDefault?.provider()?.invoke()?.let {  result.setValueSkipCallback(it) }
-  result.addSource(backingLiveData) { result.setValueSkipCallback(key.mapper.mapGet(it)) }
+  result.addSource(backingLiveData.distinctUntilChanged()) { result.setValueSkipCallback(key.mapper.mapGet(it)) }
   return result
 }
 
@@ -39,14 +36,18 @@ fun <T, BACKED_BY> SavedStateHandle.getLiveData(
 }
 
 private class MutableMediatorLiveData<T>(private val onNewValue: (T) -> Unit) : MediatorLiveData<T>() {
+  private var initialValSet = false
+
   override fun setValue(value: T) {
-    if (this.value == value) return
+    if (initialValSet && value == this.value) return
+    initialValSet = true
     super.setValue(value)
     onNewValue(value)
   }
 
   fun setValueSkipCallback(value: T) {
-    if (this.value == value) return
+    if (initialValSet && value == this.value) return
+    initialValSet = true
     super.setValue(value)
   }
 }

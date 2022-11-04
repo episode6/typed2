@@ -39,11 +39,9 @@ class GetLiveDataTest {
 
   @get:Rule val instantExecutor = InstantTaskExecutorRule()
 
-  val dispatcher = StandardTestDispatcher()
-
   @Before
   fun setup() {
-    Dispatchers.setMain(dispatcher)
+    Dispatchers.setMain(StandardTestDispatcher())
   }
 
   @After
