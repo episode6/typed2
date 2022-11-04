@@ -16,9 +16,7 @@ import dagger.multibindings.IntoSet
 
 @Module @InstallIn(ViewModelComponent::class)
 object HomeScreenModule {
-  @Provides @IntoSet fun homeScreen() = ScreenRegistration(HomeScreen) {
-    HomeScreenUI()
-  }
+  @Provides @IntoSet fun homeScreen() = ScreenRegistration(HomeScreen) { HomeScreenUI() }
 }
 
 @Composable private fun HomeScreenUI() = AppScaffold {
