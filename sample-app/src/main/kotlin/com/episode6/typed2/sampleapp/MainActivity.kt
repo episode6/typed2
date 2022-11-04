@@ -10,6 +10,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
+import androidx.navigation.compose.rememberNavController
+import com.episode6.typed2.sampleapp.nav.AppNavGraph
+import com.episode6.typed2.sampleapp.nav.ScreenRegistration
 import com.episode6.typed2.sampleapp.ui.theme.AppScaffold
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,13 +25,11 @@ import javax.inject.Inject
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContent {
-      AppScaffold {
-        Text(text = viewModel.sampleText, modifier = Modifier.padding(8.dp).testTag("TEST_TAG"))
-      }
+      AppNavGraph(navController = rememberNavController(), screens = viewModel.screens)
     }
   }
 }
 
-@HiltViewModel class MainActivityViewModel @Inject constructor() : ViewModel() {
-  val sampleText = "Hello there"
-}
+@HiltViewModel class MainActivityViewModel @Inject constructor(
+  val screens: Set<@JvmSuppressWildcards ScreenRegistration>
+) : ViewModel()
