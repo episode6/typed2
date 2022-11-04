@@ -1,6 +1,9 @@
 package com.episode6.typed2.savedstatehandle
 
-import androidx.lifecycle.*
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.asFlow
 import com.episode6.typed2.AsyncKey
 import com.episode6.typed2.Key
 import com.episode6.typed2.provider
@@ -15,7 +18,7 @@ fun <T, BACKED_BY> SavedStateHandle.getLiveData(key: Key<T, BACKED_BY, *, *>): M
   val backingLiveData = getLiveData(key.name, key.backingTypeInfo.default)
   val result = MutableMediatorLiveData<T>(onNewValue = { backingLiveData.value = key.mapper.mapSet(it) })
   backingLiveData.value?.let { result.setValueSkipCallback(key.mapper.mapGet(it)) } ?: key.outputDefault?.provider()?.invoke()?.let {  result.setValueSkipCallback(it) }
-  result.addSource(backingLiveData.distinctUntilChanged()) { result.setValueSkipCallback(key.mapper.mapGet(it)) }
+  result.addSource(backingLiveData) { result.setValueSkipCallback(key.mapper.mapGet(it)) }
   return result
 }
 
