@@ -31,7 +31,7 @@ class SavedStateHandleFlowLiveDataInstrumentedTest {
 
   @Test fun testStateFlow() = runTest {
     launch {
-      val stateFlow = handle.getStateFlow(Keys.string, this, SharingStarted.WhileSubscribed())
+      val stateFlow = handle.getStateFlow(Keys.string, this + UnconfinedTestDispatcher(), SharingStarted.WhileSubscribed())
 
       assertThat(stateFlow.value).isEqualTo("default")
 
@@ -48,7 +48,7 @@ class SavedStateHandleFlowLiveDataInstrumentedTest {
 
   @Test fun testSharedFlow() = runTest {
     launch {
-      handle.getSharedFlow(Keys.asyncString, this, SharingStarted.WhileSubscribed()).test(timeout = 10.seconds) {
+      handle.getSharedFlow(Keys.asyncString, this + UnconfinedTestDispatcher(), SharingStarted.WhileSubscribed()).test(timeout = 10.seconds) {
         assertThat(awaitItem()).isEqualTo("default")
 
         handle.set(Keys.asyncString, "newValue")
@@ -80,7 +80,7 @@ class SavedStateHandleFlowLiveDataInstrumentedTest {
 
   @Test fun testAsyncLiveData() = runTest {
     launch {
-      val liveData = handle.getLiveData(Keys.asyncString, this)
+      val liveData = handle.getLiveData(Keys.asyncString, this + UnconfinedTestDispatcher())
 
       liveData.asFlow().test(timeout = 10.seconds) {
         assertThat(awaitItem()).isEqualTo("default")
