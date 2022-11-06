@@ -8,8 +8,7 @@ import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isNull
 import com.episode6.typed2.sharedprefs.PrefKeyNamespace
-import com.episode6.typed2.sharedprefs.sharedFlow
-import com.episode6.typed2.sharedprefs.stateFlow
+import com.episode6.typed2.sharedprefs.flow
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.BufferOverflow
@@ -27,7 +26,8 @@ class GetSharedPrefFlowTest {
     val asyncKey = key("asyncInt").int().async()
   }
 
-  private val listener = MutableSharedFlow<SharedPreferences.OnSharedPreferenceChangeListener>(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
+  private val listener =
+    MutableSharedFlow<SharedPreferences.OnSharedPreferenceChangeListener>(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
   private val prefs: SharedPreferences = mock {
     on { registerOnSharedPreferenceChangeListener(any()) } doAnswer {
       listener.tryEmit(it.getArgument(0))
@@ -39,15 +39,13 @@ class GetSharedPrefFlowTest {
     listener.first().onSharedPreferenceChanged(prefs, key.name)
   }
 
-  @Test fun testIntStateFlow() = runTest {
+  @Test fun testIntFlow() = runTest {
     prefs.stub {
       on { getInt(any(), any()) } doReturnConsecutively listOf(2, 10)
     }
 
     launch {
-      val result: StateFlow<Int> = prefs.stateFlow(Keys.intKey, this, SharingStarted.Eagerly)
-
-      assertThat(result.value).isEqualTo(2)
+      val result: Flow<Int> = prefs.flow(Keys.intKey)
 
       result.test {
         assertThat(awaitItem()).isEqualTo(2)
@@ -61,15 +59,13 @@ class GetSharedPrefFlowTest {
     }
   }
 
-  @Test fun testNullableIntStateFlow() = runTest {
+  @Test fun testNullableIntFlow() = runTest {
     prefs.stub {
       on { getString(any(), anyOrNull()) } doReturnConsecutively listOf(null, "10")
     }
 
     launch {
-      val result: StateFlow<Int?> = prefs.stateFlow(Keys.nullableIntKey, this, SharingStarted.Eagerly)
-
-      assertThat(result.value).isNull()
+      val result: Flow<Int?> = prefs.flow(Keys.nullableIntKey)
 
       result.test {
         assertThat(awaitItem()).isNull()
@@ -84,13 +80,13 @@ class GetSharedPrefFlowTest {
   }
 
 
-  @Test fun testRequiredAsyncIntStateFlow_hasValue() = runTest {
+  @Test fun testRequiredAsyncIntFlow_hasValue() = runTest {
     prefs.stub {
       on { getString(any(), anyOrNull()) } doReturnConsecutively listOf("5", "10")
     }
 
     launch {
-      val result: SharedFlow<Int?> = prefs.sharedFlow(Keys.asyncKey, this, SharingStarted.Eagerly)
+      val result: Flow<Int?> = prefs.flow(Keys.asyncKey)
 
       result.test {
         assertThat(awaitItem()).isEqualTo(5)

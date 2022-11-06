@@ -3,10 +3,12 @@
 package com.episode6.typed2.sharedprefs
 
 import android.content.SharedPreferences
+import androidx.core.content.edit
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 
 fun <T> SharedPreferences.flow(key: PrefKey<T, *>): Flow<T> =
   changedKeyNames()
@@ -22,16 +24,27 @@ fun <T> SharedPreferences.flow(key: AsyncPrefKey<T, *>): Flow<T> =
     .onStart { emit(get(key)) }
     .distinctUntilChanged()
 
-fun <T> SharedPreferences.stateFlow(key: PrefKey<T, *>, scope: CoroutineScope, started: SharingStarted): StateFlow<T> =
-  flow(key).stateIn(scope, started, get(key))
 
-fun <T> SharedPreferences.stateFlow(key: AsyncPrefKey<T, *>, scope: CoroutineScope, started: SharingStarted): StateFlow<T?> =
-  flow(key).stateIn(scope, started, null)
+fun <T> SharedPreferences.mutableStateFlow(key: PrefKey<T, *>, scope: CoroutineScope): MutableStateFlow<T> = MutableStateFlow(get(key)).also { mutable ->
+  scope.launch { // write changes to backing storage
+    mutable.filter { it != get(key) }.collectLatest { edit(commit = true) { set(key, it) } }
+  }
+  scope.launch { // update mutable with the latest from backing storage
+    flow(key).collectLatest { mutable.value = it }
+  }
+}
 
-fun <T> SharedPreferences.sharedFlow(key: AsyncPrefKey<T, *>, scope: CoroutineScope, started: SharingStarted, replay: Int = 1): SharedFlow<T> =
-  flow(key)
-    .conflate()
-    .shareIn(scope, started, replay)
+fun <T> SharedPreferences.mutableStateFlow(key: AsyncPrefKey<T, *>, scope: CoroutineScope): MutableStateFlow<T?> = MutableStateFlow<T?>(null).also { mutable ->
+  scope.launch { // write changes to backing storage
+    mutable.filterNotNull().filter { it != get(key) }.collectLatest { edit(commit = true) { set(key, it) } }
+  }
+  scope.launch { // remove key when set to null
+    mutable.drop(1).filter { it == null }.collectLatest { edit(commit = true) { remove(key) } }
+  }
+  scope.launch { // update mutable with the latest from backing storage
+    flow(key).collectLatest { mutable.value = it }
+  }
+}
 
 private fun SharedPreferences.changedKeyNames(): Flow<String> = callbackFlow {
   val listener = SharedPreferences.OnSharedPreferenceChangeListener { _, name -> trySend(name) }
