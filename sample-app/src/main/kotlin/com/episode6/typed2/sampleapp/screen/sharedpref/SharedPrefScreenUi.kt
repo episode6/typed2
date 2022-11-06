@@ -48,6 +48,18 @@ import javax.inject.Inject
   }
 }
 
+@HiltViewModel class SharedPrefScreenViewModel @Inject constructor(sharedPrefs: SharedPreferences) : ViewModel() {
+  private object PrefKeys : PrefKeyNamespace() {
+    val STRING = key("string").string()
+    val KTX_SERIALIZABLE = key("ktxSerializable").json(KtxSerializable::serializer).async()
+    val REGULAR_DATA_CLASS = key("dataClass").gson<RegularAssDataClass>().async()
+  }
+
+  val stringState = sharedPrefs.mutableStateFlow(PrefKeys.STRING, viewModelScope)
+  val ktxState = sharedPrefs.mutableStateFlow(PrefKeys.KTX_SERIALIZABLE, viewModelScope)
+  val regularState = sharedPrefs.mutableStateFlow(PrefKeys.REGULAR_DATA_CLASS, viewModelScope)
+}
+
 @Composable private fun SharedPrefScreenUi(
   viewModel: SharedPrefScreenViewModel,
   goUpNavigator: GoUpNavigator,
@@ -90,15 +102,3 @@ import javax.inject.Inject
   label = { Text(text = label) },
   keyboardOptions = KeyboardOptions(autoCorrect = false, keyboardType = KeyboardType.Ascii)
 )
-
-@HiltViewModel class SharedPrefScreenViewModel @Inject constructor(sharedPrefs: SharedPreferences) : ViewModel() {
-  private object PrefKeys : PrefKeyNamespace() {
-    val STRING = key("string").string()
-    val KTX_SERIALIZABLE = key("ktxSerializable").json(KtxSerializable::serializer).async()
-    val REGULAR_DATA_CLASS = key("dataClass").gson<RegularAssDataClass>().async()
-  }
-
-  val stringState = sharedPrefs.mutableStateFlow(PrefKeys.STRING, viewModelScope)
-  val ktxState = sharedPrefs.mutableStateFlow(PrefKeys.KTX_SERIALIZABLE, viewModelScope)
-  val regularState = sharedPrefs.mutableStateFlow(PrefKeys.REGULAR_DATA_CLASS, viewModelScope)
-}
