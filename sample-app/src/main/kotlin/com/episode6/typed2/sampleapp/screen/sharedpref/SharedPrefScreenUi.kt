@@ -2,11 +2,14 @@ package com.episode6.typed2.sampleapp.screen.sharedpref
 
 import android.content.SharedPreferences
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -70,6 +73,13 @@ import javax.inject.Inject
   Column(modifier = Modifier
     .verticalScroll(rememberScrollState())
     .padding(8.dp)) {
+
+    Text(
+      text = "The fields below are all backed by SharedPreferences using typed2 PrefKeys.",
+      style = MaterialTheme.typography.bodyLarge
+    )
+    Spacer(modifier = Modifier.height(8.dp))
+
     val string by viewModel.stringState.collectAsState()
     val ktx by viewModel.ktxState.collectAsState()
     val regular by viewModel.regularState.collectAsState()
@@ -78,11 +88,13 @@ import javax.inject.Inject
       onValueChange = { viewModel.stringState.value = it },
       label = "String pref",
     )
+    Spacer(modifier = Modifier.height(8.dp))
     TextCard(
       value = ktx?.content ?: "",
       onValueChange = { viewModel.ktxState.value = KtxSerializable(it) },
       label = "KtxSerializable pref",
     )
+    Spacer(modifier = Modifier.height(8.dp))
     TextCard(
       value = regular?.content ?: "",
       onValueChange = { viewModel.regularState.value = RegularAssDataClass(it) },
