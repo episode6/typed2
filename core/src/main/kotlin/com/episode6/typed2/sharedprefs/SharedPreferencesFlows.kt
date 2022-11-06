@@ -39,7 +39,10 @@ fun <T> SharedPreferences.mutableStateFlow(key: AsyncPrefKey<T, *>, scope: Corou
     mutable.filterNotNull().filter { it != get(key) }.collectLatest { edit(commit = true) { set(key, it) } }
   }
   scope.launch { // remove key when set to null
-    mutable.drop(1).filter { it == null }.collectLatest { edit(commit = true) { remove(key) } }
+    mutable.drop(1).filter { it == null }.collectLatest {
+      edit(commit = true) { remove(key) }
+      mutable.value = get(key)
+    }
   }
   scope.launch { // update mutable with the latest from backing storage
     flow(key).collectLatest { mutable.value = it }
