@@ -25,6 +25,9 @@ fun <T> SharedPreferences.flow(key: AsyncPrefKey<T, *>): Flow<T> =
 fun <T> SharedPreferences.stateFlow(key: PrefKey<T, *>, scope: CoroutineScope, started: SharingStarted): StateFlow<T> =
   flow(key).stateIn(scope, started, get(key))
 
+fun <T> SharedPreferences.stateFlow(key: AsyncPrefKey<T, *>, scope: CoroutineScope, started: SharingStarted): StateFlow<T?> =
+  flow(key).stateIn(scope, started, null)
+
 fun <T> SharedPreferences.sharedFlow(key: AsyncPrefKey<T, *>, scope: CoroutineScope, started: SharingStarted, replay: Int = 1): SharedFlow<T> =
   flow(key)
     .conflate()
