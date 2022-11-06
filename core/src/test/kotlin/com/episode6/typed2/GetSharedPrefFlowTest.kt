@@ -26,8 +26,8 @@ class GetSharedPrefFlowTest {
   object Keys : PrefKeyNamespace() {
     val intKey = key("intKey").int(default = 2)
     val nullableIntKey = key("nullableInt").int()
-    val asyncKey = key("asyncInt").int().async()
-    val asyncNonNullKey = key("nonNull").int(default = 42).async()
+    val asyncKey = key("asyncInt").int().async(UnconfinedTestDispatcher())
+    val asyncNonNullKey = key("nonNull").int(default = 42).async(UnconfinedTestDispatcher())
   }
 
   private val listener =
@@ -136,7 +136,6 @@ class GetSharedPrefFlowTest {
       val result: MutableStateFlow<Int?> = prefs.mutableStateFlow(Keys.asyncKey, this + UnconfinedTestDispatcher())
 
       result.test {
-        assertThat(awaitItem()).isNull()
         assertThat(awaitItem()).isEqualTo(5)
 
         result.value = 10
@@ -157,7 +156,6 @@ class GetSharedPrefFlowTest {
       val result: MutableStateFlow<Int?> = prefs.mutableStateFlow(Keys.asyncNonNullKey, this + UnconfinedTestDispatcher())
 
       result.test {
-        assertThat(awaitItem()).isNull()
         assertThat(awaitItem()).isEqualTo(42)
 
         result.value = 10
@@ -167,7 +165,6 @@ class GetSharedPrefFlowTest {
 
         result.value = null
 
-        assertThat(awaitItem()).isNull()
         assertThat(awaitItem()).isEqualTo(42)
         verify(editor).remove("nonNull")
       }
