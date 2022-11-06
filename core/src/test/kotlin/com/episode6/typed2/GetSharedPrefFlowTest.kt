@@ -9,11 +9,14 @@ import assertk.assertions.isEqualTo
 import assertk.assertions.isNull
 import com.episode6.typed2.sharedprefs.PrefKeyNamespace
 import com.episode6.typed2.sharedprefs.flow
+import com.episode6.typed2.sharedprefs.mutableStateFlow
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.plus
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 import org.mockito.kotlin.*
@@ -28,11 +31,13 @@ class GetSharedPrefFlowTest {
 
   private val listener =
     MutableSharedFlow<SharedPreferences.OnSharedPreferenceChangeListener>(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
+  private val editor: SharedPreferences.Editor = mock()
   private val prefs: SharedPreferences = mock {
     on { registerOnSharedPreferenceChangeListener(any()) } doAnswer {
       listener.tryEmit(it.getArgument(0))
       null
     }
+    on { edit() } doReturn editor
   }
 
   private suspend fun pingListener(key: KeyDescriptor<*, *>) {
@@ -53,6 +58,27 @@ class GetSharedPrefFlowTest {
         pingListener(Keys.intKey)
 
         assertThat(awaitItem()).isEqualTo(10)
+      }
+
+      cancel()
+    }
+  }
+
+  @Test fun testIntMutableStateFlow() = runTest {
+    prefs.stub {
+      on { getInt(any(), any()) } doReturnConsecutively listOf(2)
+    }
+
+    launch {
+      val result: MutableStateFlow<Int> = prefs.mutableStateFlow(Keys.intKey, this + UnconfinedTestDispatcher())
+
+      result.test {
+        assertThat(awaitItem()).isEqualTo(2)
+
+        result.value = 10
+
+        assertThat(awaitItem()).isEqualTo(10)
+        verify(editor).putInt("intKey", 10)
       }
 
       cancel()
@@ -94,6 +120,28 @@ class GetSharedPrefFlowTest {
         pingListener(Keys.asyncKey)
 
         assertThat(awaitItem()).isEqualTo(10)
+      }
+
+      cancel()
+    }
+  }
+
+  @Test fun testRequiredAsyncIntMutableStateFlow_hasValue() = runTest {
+    prefs.stub {
+      on { getString(any(), anyOrNull()) } doReturnConsecutively listOf("5")
+    }
+
+    launch {
+      val result: MutableStateFlow<Int?> = prefs.mutableStateFlow(Keys.asyncKey, this + UnconfinedTestDispatcher())
+
+      result.test {
+        assertThat(awaitItem()).isNull()
+        assertThat(awaitItem()).isEqualTo(5)
+
+        result.value = 10
+
+        assertThat(awaitItem()).isEqualTo(10)
+        verify(editor).putString("asyncInt", "10")
       }
 
       cancel()
