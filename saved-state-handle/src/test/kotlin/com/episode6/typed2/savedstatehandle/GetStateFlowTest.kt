@@ -29,7 +29,7 @@ class GetStateFlowTest {
     val intKey = key("intKey").int(default = 2)
     val nullableIntKey = key("nullableInt").int()
     val requiredInt = key("requiredInt").int().required()
-    val asyncRequiredInt = key("asyncRequiredInt").int().required().async()
+    val asyncRequiredInt = key("asyncRequiredInt").int().required().async(UnconfinedTestDispatcher())
   }
 
   private val savedStateHandle: SavedStateHandle = mock()
@@ -120,7 +120,7 @@ class GetStateFlowTest {
       onGeneric { getStateFlow<String?>(any(), anyOrNull()) } doReturn backingStateFlow
     }
 
-    val result = savedStateHandle.getSharedFlow(Keys.asyncRequiredInt, this, SharingStarted.Eagerly)
+    val result = savedStateHandle.getStateFlow(Keys.asyncRequiredInt, this, SharingStarted.Eagerly)
     assertThat(result.first()).isNull()
     result.testIn(this)
   }
@@ -132,9 +132,10 @@ class GetStateFlowTest {
     }
 
     launch {
-      val result: SharedFlow<Int?> = savedStateHandle.getSharedFlow(Keys.asyncRequiredInt, this, SharingStarted.Eagerly)
+      val result: SharedFlow<Int?> = savedStateHandle.getStateFlow(Keys.asyncRequiredInt, this, SharingStarted.Eagerly)
 
       result.test {
+        assertThat(awaitItem()).isNull()
         assertThat(awaitItem()).isEqualTo(5)
 
         backingStateFlow.emit("10")

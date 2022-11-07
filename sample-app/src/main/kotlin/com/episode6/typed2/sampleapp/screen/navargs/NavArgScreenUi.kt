@@ -1,3 +1,5 @@
+@file:OptIn(FlowPreview::class)
+
 package com.episode6.typed2.sampleapp.screen.navargs
 
 import androidx.compose.foundation.layout.Column
@@ -14,22 +16,37 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.episode6.typed2.sampleapp.data.KtxSerializable
+import com.episode6.typed2.sampleapp.data.RegularAssDataClass
 import com.episode6.typed2.sampleapp.nav.GoUpNavigator
 import com.episode6.typed2.sampleapp.nav.ScreenRegistration
 import com.episode6.typed2.sampleapp.nav.goUp
 import com.episode6.typed2.sampleapp.ui.theme.AppScaffold
 import com.episode6.typed2.sampleapp.ui.theme.BackButton
 import com.episode6.typed2.sampleapp.ui.theme.TextCard
+import com.episode6.typed2.savedstatehandle.mutableStateFlow
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
+import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.multibindings.IntoSet
+import kotlinx.coroutines.FlowPreview
+import javax.inject.Inject
 
 @Module @InstallIn(ViewModelComponent::class) object NavArgScreenModule {
   @Provides @IntoSet fun screenReg() = ScreenRegistration(NavArgScreen) {
     NavArgScreenUI(viewModel = hiltViewModel(), goUpNavigator = appNavigators.goUp())
   }
+}
+
+@HiltViewModel class NavArgScreenViewModel @Inject constructor(savedStateHandle: SavedStateHandle) : ViewModel() {
+  val stringState = savedStateHandle.mutableStateFlow(NavArgScreen.STRING, viewModelScope)
+  val ktxSerializableState = savedStateHandle.mutableStateFlow(NavArgScreen.KTX_SERIALIZABLE, viewModelScope)
+  val regularDataClassState = savedStateHandle.mutableStateFlow(NavArgScreen.REGULAR_DATA_CLASS, viewModelScope)
 }
 
 @Composable private fun NavArgScreenUI(
@@ -49,25 +66,26 @@ import dagger.multibindings.IntoSet
     )
     Spacer(modifier = Modifier.height(8.dp))
 
-    val state by viewModel.state.collectAsState()
-    state?.run {
-      TextCard(
-        value = string,
-        onValueChange = viewModel::setString,
-        label = "String arg",
-      )
-      Spacer(modifier = Modifier.height(8.dp))
-      TextCard(
-        value = ktxSerializable.content,
-        onValueChange = viewModel::setKtxSerializable,
-        label = "KtxSerializable arg",
-      )
-      Spacer(modifier = Modifier.height(8.dp))
-      TextCard(
-        value = regularDataClassStr,
-        onValueChange = viewModel::setRegularDataClassStr,
-        label = "Regular Data Class arg",
-      )
-    }
+    val string by viewModel.stringState.collectAsState()
+    val ktxSerializable by viewModel.ktxSerializableState.collectAsState()
+    val regularDataClass by viewModel.regularDataClassState.collectAsState()
+
+    TextCard(
+      value = string,
+      onValueChange = { viewModel.stringState.value = it },
+      label = "String arg",
+    )
+    Spacer(modifier = Modifier.height(8.dp))
+    TextCard(
+      value = ktxSerializable?.content ?: "",
+      onValueChange = { viewModel.ktxSerializableState.value = KtxSerializable(it) },
+      label = "KtxSerializable arg",
+    )
+    Spacer(modifier = Modifier.height(8.dp))
+    TextCard(
+      value = regularDataClass?.content ?: "",
+      onValueChange = { viewModel.regularDataClassState.value = RegularAssDataClass(it) },
+      label = "Regular Data Class arg",
+    )
   }
 }
