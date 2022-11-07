@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalCoroutinesApi::class)
+@file:OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
 
 package com.episode6.typed2.sampleapp
 
@@ -46,14 +46,48 @@ class SavedStateHandleFlowLiveDataInstrumentedTest {
     }
   }
 
-  @Test fun testSharedFlow() = runTest {
+  @Test fun testAsyncStateFlow() = runTest {
     launch {
-      handle.getSharedFlow(Keys.asyncString, this + UnconfinedTestDispatcher(), SharingStarted.WhileSubscribed()).test(timeout = 10.seconds) {
+      handle.getStateFlow(Keys.asyncString, this + UnconfinedTestDispatcher(), SharingStarted.WhileSubscribed()).test(timeout = 10.seconds) {
         assertThat(awaitItem()).isEqualTo("default")
 
         handle.set(Keys.asyncString, "newValue")
 
         assertThat(awaitItem()).isEqualTo("newValue")
+      }
+      cancel()
+    }
+  }
+
+
+  @Test fun testStateMutableFlow() = runTest {
+    launch {
+      val stateFlow = handle.mutableStateFlow(Keys.string, this + UnconfinedTestDispatcher())
+
+      assertThat(stateFlow.value).isEqualTo("default")
+
+      stateFlow.test(timeout = 10.seconds) {
+        assertThat(awaitItem()).isEqualTo("default")
+
+        stateFlow.value = "newValue"
+
+        assertThat(awaitItem()).isEqualTo("newValue")
+        assertThat(handle.get(Keys.string)).isEqualTo("newValue")
+      }
+      cancel()
+    }
+  }
+
+  @Test fun testAsyncMutableStateFlow() = runTest {
+    launch {
+      val stateFlow = handle.mutableStateFlow(Keys.asyncString, this + UnconfinedTestDispatcher())
+      stateFlow.test(timeout = 10.seconds) {
+        assertThat(awaitItem()).isEqualTo("default")
+
+        stateFlow.value = "newValue"
+
+        assertThat(awaitItem()).isEqualTo("newValue")
+        assertThat(handle.get(Keys.asyncString)).isEqualTo("newValue")
       }
       cancel()
     }
