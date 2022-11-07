@@ -13,7 +13,6 @@ import com.episode6.typed2.*
 import com.episode6.typed2.sharedprefs.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -186,16 +185,16 @@ class SharedPrefInstrumentedTest {
     }
   }
 
-  @Test fun testStateFlow() = runTest {
+  @Test fun testMutableStateFlow() = runTest {
     launch {
-      val stateFlow = sharedPrefs.stateFlow(Keys.string, this + UnconfinedTestDispatcher(), SharingStarted.WhileSubscribed())
+      val stateFlow = sharedPrefs.mutableStateFlow(Keys.string, this + UnconfinedTestDispatcher())
 
       assertThat(stateFlow.value).isEqualTo("default")
 
       stateFlow.test(timeout = 10.seconds) {
         assertThat(awaitItem()).isEqualTo("default")
 
-        sharedPrefs.edit(true) { set(Keys.string, "newValue") }
+        stateFlow.value = "newValue"
 
         assertThat(awaitItem()).isEqualTo("newValue")
       }
@@ -205,10 +204,12 @@ class SharedPrefInstrumentedTest {
 
   @Test fun testAsyncSharedFlow() = runTest {
     launch {
-      sharedPrefs.sharedFlow(Keys.asyncString, this + UnconfinedTestDispatcher(), SharingStarted.WhileSubscribed()).test(timeout = 10.seconds) {
+      val stateFlow = sharedPrefs.mutableStateFlow(Keys.asyncString, this + UnconfinedTestDispatcher())
+
+      stateFlow.test(timeout = 10.seconds) {
         assertThat(awaitItem()).isEqualTo("default")
 
-        sharedPrefs.edit(true) { set(Keys.asyncString, "newValue") }
+        stateFlow.value = "newValue"
 
         assertThat(awaitItem()).isEqualTo("newValue")
       }

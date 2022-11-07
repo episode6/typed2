@@ -5,11 +5,16 @@ package com.episode6.typed2.sampleapp.ui.theme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import com.episode6.typed2.sampleapp.R
+import com.episode6.typed2.sampleapp.nav.GoUpNavigator
 
 @Composable fun AppScaffold(
   title: String = stringResource(id = R.string.app_name),
@@ -51,4 +56,8 @@ import com.episode6.typed2.sampleapp.R
       },
     )
   }
+}
+
+@Composable fun BackButton(goUpNavigator: GoUpNavigator, tint: Color = MaterialTheme.colorScheme.onPrimary) = IconButton(onClick = goUpNavigator::go) {
+  Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Go Back", tint = tint)
 }

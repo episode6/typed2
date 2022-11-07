@@ -43,6 +43,7 @@ dependencies {
   implementation(project(":saved-state-handle"))
 
   implementation(libs.hilt.android.core)
+  implementation(libs.hilt.nav.compose)
   kapt(libs.hilt.compiler)
   kaptAndroidTest(libs.hilt.compiler)
 

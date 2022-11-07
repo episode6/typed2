@@ -8,8 +8,5 @@ data class AppNavigators(
   val scope: CoroutineScope,
 )
 
-typealias GoUpNavigator = () -> Unit
-
-fun AppNavigators.goUp(): GoUpNavigator {
-  return { navController.navigateUp() }
-}
+fun interface GoUpNavigator { fun go() }
+fun AppNavigators.goUp(): GoUpNavigator = GoUpNavigator { navController.navigateUp() }
