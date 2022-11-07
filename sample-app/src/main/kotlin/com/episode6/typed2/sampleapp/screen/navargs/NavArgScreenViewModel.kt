@@ -3,7 +3,6 @@ package com.episode6.typed2.sampleapp.screen.navargs
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.saveable
 import com.episode6.typed2.bundles.BundleKeyNamespace
 import com.episode6.typed2.kotlinx.serialization.bundlizer.bundlized
 import com.episode6.typed2.sampleapp.data.KtxSerializable
