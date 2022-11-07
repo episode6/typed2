@@ -1,3 +1,5 @@
+@file:OptIn(FlowPreview::class)
+
 package com.episode6.typed2.sampleapp.screen.sharedpref
 
 import android.content.SharedPreferences
@@ -39,8 +41,10 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.multibindings.IntoSet
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.milliseconds
 
 @Module @InstallIn(ViewModelComponent::class) object SharedPrefScreenModule {
   @Provides @IntoSet fun sharedPrefScreen() = ScreenRegistration(SharedPrefScreen) {
@@ -58,9 +62,9 @@ import javax.inject.Inject
     val REGULAR_DATA_CLASS = key("dataClass").gson<RegularAssDataClass>().async()
   }
 
-  val stringState = sharedPrefs.mutableStateFlow(PrefKeys.STRING, viewModelScope)
-  val ktxState = sharedPrefs.mutableStateFlow(PrefKeys.KTX_SERIALIZABLE, viewModelScope)
-  val regularState = sharedPrefs.mutableStateFlow(PrefKeys.REGULAR_DATA_CLASS, viewModelScope)
+  val stringState = sharedPrefs.mutableStateFlow(PrefKeys.STRING, viewModelScope, debounceWrites = 250.milliseconds)
+  val ktxState = sharedPrefs.mutableStateFlow(PrefKeys.KTX_SERIALIZABLE, viewModelScope, debounceWrites = 250.milliseconds)
+  val regularState = sharedPrefs.mutableStateFlow(PrefKeys.REGULAR_DATA_CLASS, viewModelScope, debounceWrites = 250.milliseconds)
 }
 
 @Composable private fun SharedPrefScreenUi(
