@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalCoroutinesApi::class)
+@file:OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
 
 package com.episode6.typed2.sampleapp
 
@@ -11,10 +11,7 @@ import assertk.assertThat
 import assertk.assertions.*
 import com.episode6.typed2.*
 import com.episode6.typed2.sharedprefs.*
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.plus
+import kotlinx.coroutines.*
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.After

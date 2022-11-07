@@ -13,19 +13,45 @@ data class KeyBackingTypeInfo<BACKED_BY : Any?>(val kclass: KClass<*>, val defau
 sealed class OutputDefault<T> {
   internal class Required<T>(val getError: () -> Throwable) : OutputDefault<T>()
   internal class Provider<T>(val get: () -> T) : OutputDefault<T>()
+  internal class SuspendProvider<T>(val get: suspend () -> T) : OutputDefault<T>()
 }
 
 fun <T> OutputDefault<T>.provider(): () -> T = when (this) {
-  is OutputDefault.Required    -> {
+  is OutputDefault.Required           -> {
     { throw getError() }
   }
-  is OutputDefault.Provider<T> -> get
+  is OutputDefault.Provider<T>        -> get
+  is OutputDefault.SuspendProvider<T> -> {
+    { throw SuspendProviderCalledInNonSuspendContext() }
+  }
+}
+
+fun <T> OutputDefault<T>.suspendProvider(): suspend () -> T = when (this) {
+  is OutputDefault.Required           -> {
+    { throw getError() }
+  }
+  is OutputDefault.Provider<T>        -> {
+    { get() }
+  }
+  is OutputDefault.SuspendProvider<T> -> {
+    { get() }
+  }
 }
 
 val KeyDescriptor<*, *>.isRequired: Boolean get() = outputDefault is OutputDefault.Required
 
 @Suppress("UNCHECKED_CAST")
 fun <T, R> OutputDefault<T>.map(mapGet: (T) -> R): OutputDefault<R> = when (this) {
-  is OutputDefault.Required    -> this as OutputDefault.Required<R>
-  is OutputDefault.Provider<T> -> OutputDefault.Provider { mapGet(get()) }
+  is OutputDefault.Required           -> this as OutputDefault.Required<R>
+  is OutputDefault.Provider<T>        -> OutputDefault.Provider { mapGet(get()) }
+  is OutputDefault.SuspendProvider<T> -> OutputDefault.SuspendProvider { mapGet(get()) }
 }
+
+@Suppress("UNCHECKED_CAST")
+fun <T, R> OutputDefault<T>.mapSuspend(mapGet: suspend (T) -> R): OutputDefault<R> = when (this) {
+  is OutputDefault.Required           -> this as OutputDefault.Required<R>
+  is OutputDefault.Provider<T>        -> OutputDefault.SuspendProvider { mapGet(get()) }
+  is OutputDefault.SuspendProvider<T> -> OutputDefault.SuspendProvider { mapGet(get()) }
+}
+
+class SuspendProviderCalledInNonSuspendContext : RuntimeException()

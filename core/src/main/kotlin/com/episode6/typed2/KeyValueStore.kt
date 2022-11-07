@@ -24,7 +24,7 @@ fun <T : Any?, BACKED_BY : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSette
 suspend fun <T : Any?, BACKED_BY : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter> AsyncKey<T, BACKED_BY, GETTER, SETTER>.get(
   getter: GETTER,
 ): T {
-  val default = outputDefault?.provider()
+  val default = outputDefault?.suspendProvider()
   return if (default != null && !getter.contains(name)) default() else mapper.mapGet(backer.getBackingData(getter))
 }
 
