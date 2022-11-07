@@ -33,6 +33,7 @@ import com.episode6.typed2.sampleapp.nav.ScreenRegistration
 import com.episode6.typed2.sampleapp.nav.goUp
 import com.episode6.typed2.sampleapp.ui.theme.AppScaffold
 import com.episode6.typed2.sampleapp.ui.theme.BackButton
+import com.episode6.typed2.sampleapp.ui.theme.TextCard
 import com.episode6.typed2.sampleapp.util.defaultScope
 import com.episode6.typed2.sharedprefs.*
 import com.episode6.typed2.string
@@ -107,15 +108,3 @@ import kotlin.time.Duration.Companion.milliseconds
     )
   }
 }
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable private fun TextCard(
-  value: String,
-  onValueChange: (String) -> Unit,
-  label: String,
-) = OutlinedTextField(
-  value = value,
-  onValueChange = onValueChange,
-  label = { Text(text = label) },
-  keyboardOptions = KeyboardOptions(autoCorrect = false, keyboardType = KeyboardType.Ascii)
-)
