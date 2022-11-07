@@ -7,7 +7,6 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.*
 import androidx.navigation.compose.composable
 import com.episode6.typed2.KeyDescriptor
-import com.episode6.typed2.OutputDefault
 import com.episode6.typed2.isRequired
 import kotlin.reflect.KClass
 import androidx.navigation.compose.NavHost as RawNavHost

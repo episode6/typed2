@@ -12,7 +12,7 @@ class KeyMapper<T : Any?, BACKED_BY : Any?> internal constructor(
 
 class Key<T : Any?, BACKED_BY : Any?, in GETTER : KeyValueGetter, in SETTER : KeyValueSetter> internal constructor(
   override val name: String,
-  override val outputDefault: OutputDefault<T>?,
+  internal val outputDefault: OutputDefault<T>?,
   override val backingTypeInfo: KeyBackingTypeInfo<BACKED_BY>,
   val backer: KeyBacker<BACKED_BY, GETTER, SETTER>,
   val mapper: KeyMapper<T, BACKED_BY>,
