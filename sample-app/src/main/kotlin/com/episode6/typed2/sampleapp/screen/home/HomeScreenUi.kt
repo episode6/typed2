@@ -10,6 +10,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import com.episode6.typed2.sampleapp.nav.ScreenRegistration
+import com.episode6.typed2.sampleapp.screen.navargs.NavArgLauncherScreenNavigator
+import com.episode6.typed2.sampleapp.screen.navargs.NavArgScreenNavigator
+import com.episode6.typed2.sampleapp.screen.navargs.navArgLauncherScreen
+import com.episode6.typed2.sampleapp.screen.navargs.navArgScreen
 import com.episode6.typed2.sampleapp.screen.sharedpref.SharedPrefScreenNavigator
 import com.episode6.typed2.sampleapp.screen.sharedpref.sharedPrefScreen
 import com.episode6.typed2.sampleapp.ui.theme.AppScaffold
@@ -24,13 +28,15 @@ import dagger.multibindings.IntoSet
 object HomeScreenModule {
   @Provides @IntoSet fun homeScreen() = ScreenRegistration(HomeScreen) {
     HomeScreenUI(
-      sharedPrefScreenNavigator = appNavigators.sharedPrefScreen()
+      sharedPrefScreenNavigator = appNavigators.sharedPrefScreen(),
+      navArgLauncherScreenNavigator = appNavigators.navArgLauncherScreen(),
     )
   }
 }
 
 @Composable private fun HomeScreenUI(
   sharedPrefScreenNavigator: SharedPrefScreenNavigator,
+  navArgLauncherScreenNavigator: NavArgLauncherScreenNavigator,
 ) = AppScaffold {
   Column(modifier = Modifier
     .padding(8.dp)
@@ -38,6 +44,8 @@ object HomeScreenModule {
     Text(text = "Hello there", modifier = Modifier
       .padding(8.dp)
       .testTag("TEST_TAG"))
+
     FullWidthButton(text = "Shared Pref Sample", onClick = sharedPrefScreenNavigator::go)
+    FullWidthButton(text = "Nav Arg Sample", onClick = navArgLauncherScreenNavigator::go)
   }
 }
