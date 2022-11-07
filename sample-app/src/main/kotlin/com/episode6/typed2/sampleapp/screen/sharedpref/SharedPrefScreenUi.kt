@@ -33,6 +33,7 @@ import com.episode6.typed2.sampleapp.nav.ScreenRegistration
 import com.episode6.typed2.sampleapp.nav.goUp
 import com.episode6.typed2.sampleapp.ui.theme.AppScaffold
 import com.episode6.typed2.sampleapp.ui.theme.BackButton
+import com.episode6.typed2.sampleapp.util.defaultScope
 import com.episode6.typed2.sharedprefs.*
 import com.episode6.typed2.string
 import dagger.Module
@@ -62,9 +63,9 @@ import kotlin.time.Duration.Companion.milliseconds
     val REGULAR_DATA_CLASS = key("dataClass").gson<RegularAssDataClass>().async()
   }
 
-  val stringState = sharedPrefs.mutableStateFlow(PrefKeys.STRING, viewModelScope, debounceWrites = 250.milliseconds)
-  val ktxState = sharedPrefs.mutableStateFlow(PrefKeys.KTX_SERIALIZABLE, viewModelScope, debounceWrites = 250.milliseconds)
-  val regularState = sharedPrefs.mutableStateFlow(PrefKeys.REGULAR_DATA_CLASS, viewModelScope, debounceWrites = 250.milliseconds)
+  val stringState = sharedPrefs.mutableStateFlow(PrefKeys.STRING, defaultScope, debounceWrites = 250.milliseconds)
+  val ktxState = sharedPrefs.mutableStateFlow(PrefKeys.KTX_SERIALIZABLE, defaultScope, debounceWrites = 250.milliseconds)
+  val regularState = sharedPrefs.mutableStateFlow(PrefKeys.REGULAR_DATA_CLASS, defaultScope, debounceWrites = 250.milliseconds)
 }
 
 @Composable private fun SharedPrefScreenUi(
