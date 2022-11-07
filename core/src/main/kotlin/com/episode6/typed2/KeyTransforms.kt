@@ -11,7 +11,7 @@ fun <T : Any, BACKED_BY : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter
 
 fun <T : Any, BACKED_BY : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter> AsyncKey<T?, BACKED_BY, GETTER, SETTER>.defaultProvider(
   default: suspend () -> T,
-): AsyncKey<T, BACKED_BY, GETTER, SETTER> = withOutputDefault(OutputDefault.SuspendProvider(default))
+): AsyncKey<T, BACKED_BY, GETTER, SETTER> = withOutputDefault(AsyncOutputDefault.Provider(default))
 
 internal fun <T : Any, BACKED_BY : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter> Key<T?, BACKED_BY, GETTER, SETTER>.withOutputDefault(
   default: OutputDefault<T>,
@@ -28,7 +28,7 @@ internal fun <T : Any, BACKED_BY : Any?, GETTER : KeyValueGetter, SETTER : KeyVa
 )
 
 internal fun <T : Any, BACKED_BY : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter> AsyncKey<T?, BACKED_BY, GETTER, SETTER>.withOutputDefault(
-  default: OutputDefault<T>,
+  default: AsyncOutputDefault<T>,
 ): AsyncKey<T, BACKED_BY, GETTER, SETTER> = AsyncKey(
   name = name,
   backingTypeInfo = backingTypeInfo,
@@ -36,7 +36,7 @@ internal fun <T : Any, BACKED_BY : Any?, GETTER : KeyValueGetter, SETTER : KeyVa
   outputDefault = default,
   mapper = AsyncKeyMapper(
     mapSet = mapper.mapSet,
-    mapGet = { mapper.mapGet(it) ?: default.suspendProvider().invoke() }
+    mapGet = { mapper.mapGet(it) ?: default.provider().invoke() }
   ),
   newKeyCallback = newKeyCallback,
 )
@@ -63,7 +63,7 @@ fun <T : Any?, R : Any?, BACKED_BY : Any?, GETTER : KeyValueGetter, SETTER : Key
   name = name,
   backingTypeInfo = backingTypeInfo,
   backer = backer,
-  outputDefault = outputDefault?.mapSuspend(mapGet),
+  outputDefault = outputDefault?.map(mapGet),
   mapper = AsyncKeyMapper(
     mapSet = { mapper.mapSet(mapSet(it)) },
     mapGet = { mapGet(mapper.mapGet(it)) }
@@ -75,7 +75,7 @@ fun <T : Any?, BACKED_BY : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSette
   context: CoroutineContext = Dispatchers.Default,
 ): AsyncKey<T, BACKED_BY, GETTER, SETTER> = AsyncKey(
   name = name,
-  outputDefault = outputDefault,
+  outputDefault = outputDefault?.async(),
   backingTypeInfo = backingTypeInfo,
   backer = backer,
   mapper = mapper.async(context),

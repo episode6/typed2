@@ -6,7 +6,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.asFlow
 import com.episode6.typed2.AsyncKey
 import com.episode6.typed2.Key
-import com.episode6.typed2.provider
+import com.episode6.typed2.outputDefaultProvider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 fun <T, BACKED_BY> SavedStateHandle.getLiveData(key: Key<T, BACKED_BY, *, *>): MutableLiveData<T> {
   val backingLiveData = getLiveData(key.name, key.backingTypeInfo.default)
   val result = MutableMediatorLiveData<T>(onNewValue = { backingLiveData.value = key.mapper.mapSet(it) })
-  backingLiveData.value?.let { result.setValueSkipCallback(key.mapper.mapGet(it)) } ?: key.outputDefault?.provider()?.invoke()?.let {  result.setValueSkipCallback(it) }
+  backingLiveData.value?.let { result.setValueSkipCallback(key.mapper.mapGet(it)) } ?: key.outputDefaultProvider()?.invoke()?.let {  result.setValueSkipCallback(it) }
   result.addSource(backingLiveData) { result.setValueSkipCallback(key.mapper.mapGet(it)) }
   return result
 }
