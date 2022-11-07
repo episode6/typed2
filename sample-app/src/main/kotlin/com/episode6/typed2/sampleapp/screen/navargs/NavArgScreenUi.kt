@@ -50,26 +50,24 @@ import dagger.multibindings.IntoSet
     Spacer(modifier = Modifier.height(8.dp))
 
     val state by viewModel.state.collectAsState()
-    state?.TextCards(viewModel)
+    state?.run {
+      TextCard(
+        value = string,
+        onValueChange = viewModel::setString,
+        label = "String arg",
+      )
+      Spacer(modifier = Modifier.height(8.dp))
+      TextCard(
+        value = ktxSerializable.content,
+        onValueChange = viewModel::setKtxSerializable,
+        label = "KtxSerializable arg",
+      )
+      Spacer(modifier = Modifier.height(8.dp))
+      TextCard(
+        value = regularDataClassStr,
+        onValueChange = viewModel::setRegularDataClassStr,
+        label = "Regular Data Class arg",
+      )
+    }
   }
-}
-
-@Composable private fun NavArgScreenViewModel.ViewState.TextCards(viewModel: NavArgScreenViewModel) {
-  TextCard(
-    value = string,
-    onValueChange = viewModel::setString,
-    label = "String arg",
-  )
-  Spacer(modifier = Modifier.height(8.dp))
-  TextCard(
-    value = ktxSerializable.content,
-    onValueChange = viewModel::setKtxSerializable,
-    label = "KtxSerializable arg",
-  )
-  Spacer(modifier = Modifier.height(8.dp))
-  TextCard(
-    value = regularDataClassStr,
-    onValueChange = viewModel::setRegularDataClassStr,
-    label = "Regular Data Class arg",
-  )
 }
