@@ -5,6 +5,7 @@ plugins {
   id("org.jetbrains.dokka") version (libs.versions.dokka.core.get())
   kotlin("plugin.serialization") version(libs.versions.kotlin.core.get()) apply(false)
   id("com.google.dagger.hilt.android") version(libs.versions.hilt.core.get()) apply(false)
+  id("config-site")
 }
 
 allprojects {
