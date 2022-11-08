@@ -5,6 +5,9 @@ import androidx.core.content.edit
 import com.episode6.typed2.DelegateProperty
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.launch
 
 class TypedSharedPreferences(private val delegate: SharedPreferences) : PrefValueGetter {
@@ -17,6 +20,11 @@ class TypedSharedPreferences(private val delegate: SharedPreferences) : PrefValu
   override fun getStringSet(name: String, defaultValue: Set<String?>?): Set<String?>? = delegate.getStringSet(name, defaultValue)?.toSet()
 
   fun edit(): Editor = Editor(delegate.edit())
+  fun changedKeyNames(): Flow<String> = callbackFlow {
+    val listener = SharedPreferences.OnSharedPreferenceChangeListener { _, name -> trySend(name) }
+    delegate.registerOnSharedPreferenceChangeListener(listener)
+    awaitClose { delegate.unregisterOnSharedPreferenceChangeListener(listener) }
+  }
 
   class Editor(private val delegate: SharedPreferences.Editor) : PrefValueSetter {
     override fun remove(name: String) { delegate.remove(name) }
