@@ -1,7 +1,7 @@
 #!/bin/bash
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-if [ ! -f "$SCRIPT_DIR/launch_docs_site.sh" ]; then
+if [ ! -f "$SCRIPT_DIR/launch_docs_site" ]; then
     SCRIPT_DIR=${0:a:h}
 fi
 
