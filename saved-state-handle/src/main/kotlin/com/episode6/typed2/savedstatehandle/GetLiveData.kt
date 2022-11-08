@@ -14,15 +14,22 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
-fun <T, BACKED_BY> SavedStateHandle.getLiveData(key: Key<T, BACKED_BY, *, *>): MutableLiveData<T> {
+fun <T, BACKED_BY> SavedStateHandle.getLiveData(key: Key<T, BACKED_BY, *, *>): MutableLiveData<T> = typed().getLiveData(key)
+fun <T, BACKED_BY> TypedSavedStateHandle.getLiveData(key: Key<T, BACKED_BY, *, *>): MutableLiveData<T> {
   val backingLiveData = getLiveData(key.name, key.backingTypeInfo.default)
   val result = MutableMediatorLiveData<T>(onNewValue = { backingLiveData.value = key.mapper.mapSet(it) })
-  backingLiveData.value?.let { result.setValueSkipCallback(key.mapper.mapGet(it)) } ?: key.outputDefaultProvider()?.invoke()?.let {  result.setValueSkipCallback(it) }
+  backingLiveData.value?.let { result.setValueSkipCallback(key.mapper.mapGet(it)) } ?: key.outputDefaultProvider()?.invoke()
+    ?.let { result.setValueSkipCallback(it) }
   result.addSource(backingLiveData) { result.setValueSkipCallback(key.mapper.mapGet(it)) }
   return result
 }
 
 fun <T, BACKED_BY> SavedStateHandle.getLiveData(
+  key: AsyncKey<T, BACKED_BY, *, *>,
+  scope: CoroutineScope,
+): MutableLiveData<T> = typed().getLiveData(key = key, scope = scope)
+
+fun <T, BACKED_BY> TypedSavedStateHandle.getLiveData(
   key: AsyncKey<T, BACKED_BY, *, *>,
   scope: CoroutineScope,
 ): MutableLiveData<T> {

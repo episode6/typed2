@@ -7,6 +7,7 @@ import android.util.Size
 import android.util.SizeF
 import android.util.SparseArray
 import androidx.annotation.MainThread
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import com.episode6.typed2.DelegateProperty
 import com.episode6.typed2.bundles.*
@@ -86,6 +87,9 @@ class TypedSavedStateHandle(private val delegate: SavedStateHandle) : BundleValu
 
   @MainThread
   fun <T> getStateFlow(key: String, initialValue: T): StateFlow<T> = delegate.getStateFlow(key, initialValue)
+
+  @MainThread
+  fun <T> getLiveData(key: String, initialValue: T): MutableLiveData<T> = delegate.getLiveData(key, initialValue)
 }
 
 fun SavedStateHandle.typed(): TypedSavedStateHandle = TypedSavedStateHandle(this)
