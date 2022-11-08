@@ -6,9 +6,12 @@ import android.os.Parcelable
 import android.util.Size
 import android.util.SizeF
 import android.util.SparseArray
+import androidx.annotation.MainThread
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import com.episode6.typed2.DelegateProperty
 import com.episode6.typed2.bundles.*
+import kotlinx.coroutines.flow.StateFlow
 import java.io.Serializable
 import kotlin.reflect.KClass
 
@@ -81,6 +84,12 @@ class TypedSavedStateHandle(private val delegate: SavedStateHandle) : BundleValu
   override fun setBoolean(name: String, value: Boolean) { delegate[name] = value }
   override fun setFloat(name: String, value: Float) { delegate[name] = value }
   override fun setLong(name: String, value: Long) { delegate[name] = value }
+
+  @MainThread
+  fun <T> getStateFlow(key: String, initialValue: T): StateFlow<T> = delegate.getStateFlow(key, initialValue)
+
+  @MainThread
+  fun <T> getLiveData(key: String, initialValue: T): MutableLiveData<T> = delegate.getLiveData(key, initialValue)
 }
 
 fun SavedStateHandle.typed(): TypedSavedStateHandle = TypedSavedStateHandle(this)
