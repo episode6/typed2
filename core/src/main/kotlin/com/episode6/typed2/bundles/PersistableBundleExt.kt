@@ -2,8 +2,10 @@ package com.episode6.typed2.bundles
 
 import android.annotation.TargetApi
 import android.os.Build
+import android.os.Bundle
 import android.os.PersistableBundle
 import com.episode6.typed2.DelegateProperty
+import kotlinx.coroutines.CoroutineScope
 
 class TypedPersistableBundle(private val delegate: PersistableBundle) : PersistableBundleValueGetter, PersistableBundleValueSetter {
   override fun getPersistableBundle(name: String): PersistableBundle? = delegate.getPersistableBundle(name)
@@ -60,6 +62,9 @@ fun <T> TypedPersistableBundle.property(key: PersistableBundleKey<T, *>): Delega
   set = { set(key, it) }
 )
 fun <T> PersistableBundle.property(key: PersistableBundleKey<T, *>): DelegateProperty<T> = typed().property(key)
+fun <T> TypedPersistableBundle.property(key: AsyncPersistableBundleKey<T, *>, scope: CoroutineScope): DelegateProperty<T?> =
+  DelegateProperty(mutableStateFlow(key, scope))
+fun <T> PersistableBundle.property(key: AsyncPersistableBundleKey<T, *>, scope: CoroutineScope): DelegateProperty<T?> = typed().property(key, scope)
 
 private fun Int.asBoolean(): Boolean = this > 0
 private fun Boolean.asInt(): Int = if (this) 1 else 0

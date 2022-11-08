@@ -8,6 +8,7 @@ import android.util.Size
 import android.util.SizeF
 import android.util.SparseArray
 import com.episode6.typed2.DelegateProperty
+import kotlinx.coroutines.CoroutineScope
 import java.io.Serializable
 import kotlin.reflect.KClass
 
@@ -116,3 +117,6 @@ fun <T> TypedBundle.property(key: BundleKey<T, *>): DelegateProperty<T> = Delega
   set = { set(key, it) }
 )
 fun <T> Bundle.property(key: BundleKey<T, *>): DelegateProperty<T> = typed().property(key)
+fun <T> TypedBundle.property(key: AsyncBundleKey<T, *>, scope: CoroutineScope): DelegateProperty<T?> =
+  DelegateProperty(mutableStateFlow(key, scope))
+fun <T> Bundle.property(key: AsyncBundleKey<T, *>, scope: CoroutineScope): DelegateProperty<T?> = typed().property(key, scope)

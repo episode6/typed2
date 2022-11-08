@@ -3,6 +3,7 @@ package com.episode6.typed2.bundles
 import android.content.Intent
 import android.os.Bundle
 import com.episode6.typed2.DelegateProperty
+import kotlinx.coroutines.CoroutineScope
 
 
 fun <T> Intent.getExtra(key: BundleKey<T, *>): T = (extras ?: Bundle()).typed().get(key)
@@ -16,4 +17,6 @@ fun <T> Intent.extraProperty(key: BundleKey<T, *>): DelegateProperty<T> = Delega
   get = { getExtra(key) },
   set = { setExtra(key, it) }
 )
+fun <T> Intent.extraProperty(key: AsyncBundleKey<T, *>, scope: CoroutineScope): DelegateProperty<T?> =
+  DelegateProperty(mutableStateFlow(key, scope))
 
