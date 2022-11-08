@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
+@file:OptIn(ExperimentalCoroutinesApi::class)
 
 package com.episode6.typed2
 
