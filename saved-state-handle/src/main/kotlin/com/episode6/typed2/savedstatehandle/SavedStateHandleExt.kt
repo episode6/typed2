@@ -11,6 +11,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import com.episode6.typed2.DelegateProperty
 import com.episode6.typed2.bundles.*
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.StateFlow
 import java.io.Serializable
 import kotlin.reflect.KClass
@@ -106,3 +107,6 @@ fun <T> TypedSavedStateHandle.property(key: BundleKey<T, *>): DelegateProperty<T
   set = { set(key, it) },
 )
 fun <T> SavedStateHandle.property(key: BundleKey<T, *>): DelegateProperty<T> = typed().property(key)
+
+fun <T> TypedSavedStateHandle.property(key: AsyncBundleKey<T, *>, scope: CoroutineScope): DelegateProperty<T?> = DelegateProperty(mutableStateFlow(key, scope))
+fun <T> SavedStateHandle.property(key: AsyncBundleKey<T, *>, scope: CoroutineScope): DelegateProperty<T?> = typed().property(key, scope)

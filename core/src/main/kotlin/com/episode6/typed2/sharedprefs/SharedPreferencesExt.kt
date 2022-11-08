@@ -56,6 +56,9 @@ fun <T> TypedSharedPreferences.property(key: PrefKey<T, *>): DelegateProperty<T>
 )
 fun <T> SharedPreferences.property(key: PrefKey<T, *>): DelegateProperty<T> = typed().property(key)
 
+fun <T> TypedSharedPreferences.property(key: AsyncPrefKey<T, *>, scope: CoroutineScope): DelegateProperty<T?> = DelegateProperty(mutableStateFlow(key, scope))
+fun <T> SharedPreferences.property(key: AsyncPrefKey<T, *>, scope: CoroutineScope): DelegateProperty<T?> = typed().property(key, scope)
+
 inline fun TypedSharedPreferences.edit(
   commit: Boolean = false,
   action: TypedSharedPreferences.Editor.() -> Unit,
