@@ -10,6 +10,8 @@ import kotlin.reflect.KProperty
 import kotlin.time.Duration
 
 class DelegateProperty<T : Any?>(val get: () -> T, val set: (T) -> Unit) {
+  constructor(mutableStateFlow: MutableStateFlow<T>) : this(get = { mutableStateFlow.value }, set = { mutableStateFlow.value = it })
+
   operator fun getValue(thisRef: Any?, property: KProperty<*>): T = get()
   operator fun setValue(thisRef: Any?, property: KProperty<*>, value: T) = set(value)
 }
