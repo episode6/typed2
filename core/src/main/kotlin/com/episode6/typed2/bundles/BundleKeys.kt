@@ -11,7 +11,6 @@ import kotlin.reflect.KClass
 
 typealias BundleKey<T, BACKED_BY> = Key<T, BACKED_BY, BundleValueGetter, BundleValueSetter>
 typealias AsyncBundleKey<T, BACKED_BY> = AsyncKey<T, BACKED_BY, BundleValueGetter, BundleValueSetter>
-typealias BundleProperty<T> = KeyValueDelegate<T, in BundleValueGetter, in BundleValueSetter>
 
 interface BundleKeyBuilder : BaseBundleKeyBuilder
 open class BundleKeyNamespace(private val prefix: String = "") : RequiredEnabledKeyNamespace {

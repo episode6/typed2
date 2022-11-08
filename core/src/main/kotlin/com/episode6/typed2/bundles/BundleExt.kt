@@ -7,7 +7,7 @@ import android.os.Parcelable
 import android.util.Size
 import android.util.SizeF
 import android.util.SparseArray
-import com.episode6.typed2.KeyValueDelegate
+import com.episode6.typed2.DelegateProperty
 import java.io.Serializable
 import kotlin.reflect.KClass
 
@@ -111,5 +111,8 @@ suspend fun <T> Bundle.get(key: AsyncBundleKey<T, *>): T = typed().get(key)
 suspend fun <T> Bundle.set(key: AsyncBundleKey<T, *>, value: T) = typed().set(key, value)
 fun Bundle.remove(key: AsyncBundleKey<*, *>) = typed().remove(key)
 
-fun <T> TypedBundle.property(key: BundleKey<T, *>): BundleProperty<T> = KeyValueDelegate(key, { this }, { this })
-fun <T> Bundle.property(key: BundleKey<T, *>): BundleProperty<T> = typed().property(key)
+fun <T> TypedBundle.property(key: BundleKey<T, *>): DelegateProperty<T> = DelegateProperty(
+  get = { get(key) },
+  set = { set(key, it) }
+)
+fun <T> Bundle.property(key: BundleKey<T, *>): DelegateProperty<T> = typed().property(key)

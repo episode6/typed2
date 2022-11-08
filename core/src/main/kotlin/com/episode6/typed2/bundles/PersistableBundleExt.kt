@@ -3,7 +3,7 @@ package com.episode6.typed2.bundles
 import android.annotation.TargetApi
 import android.os.Build
 import android.os.PersistableBundle
-import com.episode6.typed2.KeyValueDelegate
+import com.episode6.typed2.DelegateProperty
 
 class TypedPersistableBundle(private val delegate: PersistableBundle) : PersistableBundleValueGetter, PersistableBundleValueSetter {
   override fun getPersistableBundle(name: String): PersistableBundle? = delegate.getPersistableBundle(name)
@@ -55,8 +55,11 @@ suspend fun <T> PersistableBundle.get(key: AsyncPersistableBundleKey<T, *>): T =
 suspend fun <T> PersistableBundle.set(key: AsyncPersistableBundleKey<T, *>, value: T) = typed().set(key, value)
 fun PersistableBundle.remove(key: AsyncPersistableBundleKey<*, *>) = typed().remove(key)
 
-fun <T> TypedPersistableBundle.property(key: PersistableBundleKey<T, *>): PersistableBundleProperty<T> = KeyValueDelegate(key, { this }, { this })
-fun <T> PersistableBundle.property(key: PersistableBundleKey<T, *>): PersistableBundleProperty<T> = typed().property(key)
+fun <T> TypedPersistableBundle.property(key: PersistableBundleKey<T, *>): DelegateProperty<T> = DelegateProperty(
+  get = { get(key) },
+  set = { set(key, it) }
+)
+fun <T> PersistableBundle.property(key: PersistableBundleKey<T, *>): DelegateProperty<T> = typed().property(key)
 
 private fun Int.asBoolean(): Boolean = this > 0
 private fun Boolean.asInt(): Int = if (this) 1 else 0

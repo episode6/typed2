@@ -7,7 +7,7 @@ import android.util.Size
 import android.util.SizeF
 import android.util.SparseArray
 import androidx.lifecycle.SavedStateHandle
-import com.episode6.typed2.KeyValueDelegate
+import com.episode6.typed2.DelegateProperty
 import com.episode6.typed2.bundles.*
 import java.io.Serializable
 import kotlin.reflect.KClass
@@ -92,5 +92,8 @@ suspend fun <T> SavedStateHandle.get(key: AsyncBundleKey<T, *>): T = typed().get
 suspend fun <T> SavedStateHandle.set(key: AsyncBundleKey<T, *>, value: T) = typed().set(key, value)
 fun SavedStateHandle.remove(key: AsyncBundleKey<*, *>) { remove<Any>(key.name) }
 
-fun <T> TypedSavedStateHandle.property(key: BundleKey<T, *>): BundleProperty<T> = KeyValueDelegate(key, { this }, { this })
-fun <T> SavedStateHandle.property(key: BundleKey<T, *>): BundleProperty<T> = typed().property(key)
+fun <T> TypedSavedStateHandle.property(key: BundleKey<T, *>): DelegateProperty<T> = DelegateProperty(
+  get = { get(key) },
+  set = { set(key, it) },
+)
+fun <T> SavedStateHandle.property(key: BundleKey<T, *>): DelegateProperty<T> = typed().property(key)
