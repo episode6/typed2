@@ -2,6 +2,8 @@ package com.episode6.typed2.sharedprefs
 
 import android.content.SharedPreferences
 import androidx.core.content.edit
+import com.episode6.typed2.PropertyDelegate
+import com.episode6.typed2.bundles.BundleKey
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -40,6 +42,12 @@ fun SharedPreferences.Editor.remove(key: PrefKey<*, *>) = typed().remove(key)
 suspend fun <T> SharedPreferences.get(key: AsyncPrefKey<T, *>): T = typed().get(key)
 suspend fun <T> SharedPreferences.Editor.set(key: AsyncPrefKey<T, *>, value: T) = typed().set(key, value)
 fun SharedPreferences.Editor.remove(key: AsyncPrefKey<*, *>) = typed().remove(key)
+
+fun <T> TypedSharedPreferences.property(key: PrefKey<T, *>): PropertyDelegate<T> = PropertyDelegate<T>(
+  get = { get(key) },
+  set = { edit { set(key, it) } }
+)
+fun <T> SharedPreferences.property(key: PrefKey<T, *>): PropertyDelegate<T> = typed().property(key)
 
 inline fun TypedSharedPreferences.edit(
   commit: Boolean = false,
