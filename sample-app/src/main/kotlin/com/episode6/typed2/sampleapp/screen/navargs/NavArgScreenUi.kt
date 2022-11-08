@@ -1,5 +1,3 @@
-@file:OptIn(FlowPreview::class)
-
 package com.episode6.typed2.sampleapp.screen.navargs
 
 import androidx.compose.foundation.layout.Column
@@ -34,7 +32,6 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.multibindings.IntoSet
-import kotlinx.coroutines.FlowPreview
 import javax.inject.Inject
 
 @Module @InstallIn(ViewModelComponent::class) object NavArgScreenModule {
