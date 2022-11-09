@@ -1,0 +1,17 @@
+$dokka.format:html-v1
+$dokka.linkExtension:html
+
+module:core
+com.episode6.typed2
+com.episode6.typed2.bundles
+com.episode6.typed2.sharedprefs
+module:gson
+com.episode6.typed2.gson
+module:kotlinx-serialization-bundlizer
+com.episode6.typed2.kotlinx.serialization.bundlizer
+module:kotlinx-serialization-json
+com.episode6.typed2.kotlinx.serialization.json
+module:navigation-compose
+com.episode6.typed2.navigation.compose
+module:saved-state-handle
+com.episode6.typed2.savedstatehandle
