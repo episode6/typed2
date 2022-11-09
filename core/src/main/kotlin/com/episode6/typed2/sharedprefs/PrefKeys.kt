@@ -20,7 +20,7 @@ fun PrefKeyBuilder.stringSet(): PrefKey<Set<String>?, Set<String?>?> = nullableS
   mapSet = { it }
 )
 
-fun PrefKeyBuilder.nullableStringSet(): PrefKey<Set<String?>?, Set<String?>?> = nativeKey(
+private fun PrefKeyBuilder.nullableStringSet(): PrefKey<Set<String?>?, Set<String?>?> = nativeKey(
   get = { getStringSet(name, null) },
   set = { setStringSet(name, it) },
 )
