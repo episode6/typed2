@@ -30,6 +30,7 @@ class Config {
         version: ${project.version}
         docsDir: https://episode6.github.io/typed2/docs/${if (Maven.isReleaseBuild(project)) "v${project.version}" else "main"}
         kotlinVersion: ${project.libs.versions.kotlin.core.get()}
+        coroutineVersion: ${project.libs.versions.kotlinx.coroutines.get()}
 """.stripIndent()
     }
   }
