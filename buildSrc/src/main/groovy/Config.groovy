@@ -21,7 +21,18 @@ class Config {
   class Ktx {
     static String[] compilerArgs = []
   }
-
+  class Site {
+    static String generateJekyllConfig(Project project) {
+      return """
+        theme: jekyll-theme-cayman
+        title: typed2
+        description: ${project.rootProject.description}
+        version: ${project.version}
+        docsDir: https://episode6.github.io/typed2/docs/${if (Maven.isReleaseBuild(project)) "v${project.version}" else "main"}
+        kotlinVersion: ${project.libs.versions.kotlin.core.get()}
+""".stripIndent()
+    }
+  }
   class Maven {
     static void applyPomConfig(Project project, MavenPom pom) {
       pom.with {
