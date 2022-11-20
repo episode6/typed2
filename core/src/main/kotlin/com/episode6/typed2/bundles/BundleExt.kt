@@ -8,7 +8,6 @@ import android.util.Size
 import android.util.SizeF
 import android.util.SparseArray
 import com.episode6.typed2.DelegateProperty
-import com.episode6.typed2.sharedprefs.*
 import kotlinx.coroutines.CoroutineScope
 import java.io.Serializable
 import kotlin.reflect.KClass
