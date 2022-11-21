@@ -1,6 +1,6 @@
 # ChangeLog
 
-### v2.0.0-alpha02 - Unreleased
+### v2.0.0-alpha02 - Released 11/20/2022
 
  - Add `update(Key)` method to all supported Key/Value stores. 
 
