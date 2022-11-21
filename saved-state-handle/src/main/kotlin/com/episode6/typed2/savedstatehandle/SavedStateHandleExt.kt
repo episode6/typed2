@@ -110,3 +110,14 @@ fun <T> SavedStateHandle.property(key: BundleKey<T, *>): DelegateProperty<T> = t
 
 fun <T> TypedSavedStateHandle.property(key: AsyncBundleKey<T, *>, scope: CoroutineScope): DelegateProperty<T?> = DelegateProperty(mutableStateFlow(key, scope))
 fun <T> SavedStateHandle.property(key: AsyncBundleKey<T, *>, scope: CoroutineScope): DelegateProperty<T?> = typed().property(key, scope)
+
+inline fun <T> TypedSavedStateHandle.update(key: BundleKey<T, *>, reducer: (T)->T) {
+  set(key, reducer(get(key)))
+}
+
+suspend inline fun <T> TypedSavedStateHandle.update(key: AsyncBundleKey<T, *>, reducer: (T)->T) {
+  set(key, reducer(get(key)))
+}
+
+inline fun <T> SavedStateHandle.update(key: BundleKey<T, *>, reducer: (T)->T) = typed().update(key, reducer)
+suspend inline fun <T> SavedStateHandle.update(key: AsyncBundleKey<T, *>, reducer: (T)->T) = typed().update(key, reducer)

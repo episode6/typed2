@@ -50,6 +50,21 @@ suspend fun <T> SharedPreferences.get(key: AsyncPrefKey<T, *>): T = typed().get(
 suspend fun <T> SharedPreferences.Editor.set(key: AsyncPrefKey<T, *>, value: T) = typed().set(key, value)
 fun SharedPreferences.Editor.remove(key: AsyncPrefKey<*, *>) = typed().remove(key)
 
+inline fun <T> TypedSharedPreferences.update(key: PrefKey<T, *>, commit: Boolean = false, reducer: (T)->T) {
+  edit(commit = commit) {
+    set(key, reducer(get(key)))
+  }
+}
+
+suspend inline fun <T> TypedSharedPreferences.update(key: AsyncPrefKey<T, *>, commit: Boolean = false, reducer: (T)->T) {
+  edit(commit = commit) {
+    set(key, reducer(get(key)))
+  }
+}
+
+inline fun <T> SharedPreferences.update(key: PrefKey<T, *>, commit: Boolean = false, reducer: (T)->T) = typed().update(key, commit, reducer)
+suspend inline fun <T> SharedPreferences.update(key: AsyncPrefKey<T, *>, commit: Boolean = false, reducer: (T)->T) = typed().update(key, commit, reducer)
+
 fun <T> TypedSharedPreferences.property(key: PrefKey<T, *>): DelegateProperty<T> = DelegateProperty<T>(
   get = { get(key) },
   set = { edit { set(key, it) } }

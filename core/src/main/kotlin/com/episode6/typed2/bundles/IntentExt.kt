@@ -20,3 +20,10 @@ fun <T> Intent.extraProperty(key: BundleKey<T, *>): DelegateProperty<T> = Delega
 fun <T> Intent.extraProperty(key: AsyncBundleKey<T, *>, scope: CoroutineScope): DelegateProperty<T?> =
   DelegateProperty(mutableStateFlow(key, scope))
 
+inline fun <T> Intent.updateExtra(key: BundleKey<T, *>, reducer: (T)->T) {
+  setExtra(key, reducer(getExtra(key)))
+}
+
+suspend inline fun <T> Intent.updateExtra(key: AsyncBundleKey<T, *>, reducer: (T)->T) {
+  setExtra(key, reducer(getExtra(key)))
+}

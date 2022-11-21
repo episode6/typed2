@@ -2,7 +2,6 @@ package com.episode6.typed2.bundles
 
 import android.annotation.TargetApi
 import android.os.Build
-import android.os.Bundle
 import android.os.PersistableBundle
 import com.episode6.typed2.DelegateProperty
 import kotlinx.coroutines.CoroutineScope
@@ -65,6 +64,17 @@ fun <T> PersistableBundle.property(key: PersistableBundleKey<T, *>): DelegatePro
 fun <T> TypedPersistableBundle.property(key: AsyncPersistableBundleKey<T, *>, scope: CoroutineScope): DelegateProperty<T?> =
   DelegateProperty(mutableStateFlow(key, scope))
 fun <T> PersistableBundle.property(key: AsyncPersistableBundleKey<T, *>, scope: CoroutineScope): DelegateProperty<T?> = typed().property(key, scope)
+
+inline fun <T> TypedPersistableBundle.update(key: PersistableBundleKey<T, *>, reducer: (T)->T) {
+  set(key, reducer(get(key)))
+}
+
+suspend inline fun <T> TypedPersistableBundle.update(key: AsyncPersistableBundleKey<T, *>, reducer: (T)->T) {
+  set(key, reducer(get(key)))
+}
+
+inline fun <T> PersistableBundle.update(key: PersistableBundleKey<T, *>, reducer: (T)->T) = typed().update(key, reducer)
+suspend inline fun <T> PersistableBundle.update(key: AsyncPersistableBundleKey<T, *>, reducer: (T)->T) = typed().update(key, reducer)
 
 private fun Int.asBoolean(): Boolean = this > 0
 private fun Boolean.asInt(): Int = if (this) 1 else 0
