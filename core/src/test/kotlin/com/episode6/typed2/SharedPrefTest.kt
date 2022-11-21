@@ -48,6 +48,19 @@ class SharedPrefTest {
   }
 
   @Test
+  fun testUpdateInt() {
+    sharedPrefs.stub {
+      on { getInt("com.prefix.intKey", 42) } doReturn 24
+    }
+
+    sharedPrefs.update(Keys.myInt) { it + 1 }
+
+    verify(sharedPrefs).getInt("com.prefix.intKey", 42)
+    verify(editor).putInt("com.prefix.intKey", 25)
+  }
+
+
+  @Test
   fun testGetNullableInt() {
     sharedPrefs.stub {
       on { contains("com.prefix.nullableInt") } doReturn true
