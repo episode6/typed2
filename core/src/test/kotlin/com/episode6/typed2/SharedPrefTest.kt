@@ -112,6 +112,17 @@ class SharedPrefTest {
     assertThat(result).isEqualTo("happyString")
   }
 
+  @OptIn(ExperimentalCoroutinesApi::class)
+  @Test fun testUpdateAsyncString() = runTest {
+    sharedPrefs.stub {
+      on { getString("com.prefix.asyncString", null) } doReturn "happyString"
+    }
+
+    sharedPrefs.update(Keys.myAsyncString) { it + sharedPrefs.get(Keys.myAsyncString) }
+
+    verify(editor).putString("com.prefix.asyncString", "happyStringhappyString")
+  }
+
   @Test fun testEditExt() {
     sharedPrefs.edit {
       set(Keys.myInt, 343)
