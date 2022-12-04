@@ -1,6 +1,5 @@
 package com.episode6.typed2
 
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlin.coroutines.CoroutineContext
 
@@ -72,8 +71,8 @@ fun <T : Any?, R : Any?, BACKED_BY : Any?, GETTER : KeyValueGetter, SETTER : Key
 )
 
 fun <T : Any?, BACKED_BY : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter> Key<T, BACKED_BY, GETTER, SETTER>.async(
-  mapperContext: CoroutineContext? = Dispatchers.Default,
-  backerContext: CoroutineContext? = null,
+  mapperContext: CoroutineContext,
+  backerContext: CoroutineContext,
 ): AsyncKey<T, BACKED_BY, GETTER, SETTER> = AsyncKey(
   name = name,
   outputDefault = outputDefault?.async(),
@@ -83,22 +82,14 @@ fun <T : Any?, BACKED_BY : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSette
   newKeyCallback = newKeyCallback,
 )
 
-private fun <T : Any?, BACKED_BY : Any?> KeyMapper<T, BACKED_BY>.async(context: CoroutineContext?) = AsyncKeyMapper<T, BACKED_BY>(
-  mapGet = { withNullableContext(context) { mapGet(it) } },
-  mapSet = { withNullableContext(context) { mapSet(it) } },
+private fun <T : Any?, BACKED_BY : Any?> KeyMapper<T, BACKED_BY>.async(context: CoroutineContext) = AsyncKeyMapper<T, BACKED_BY>(
+  mapGet = { withContext(context) { mapGet(it) } },
+  mapSet = { withContext(context) { mapSet(it) } },
 )
 
 private fun <BACKED_BY : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter> KeyBacker<BACKED_BY, GETTER, SETTER>.async(
-  context: CoroutineContext?,
+  context: CoroutineContext,
 ) = AsyncKeyBacker<BACKED_BY, GETTER, SETTER>(
-  getBackingData = { withNullableContext(context) { getBackingData(it) } },
-  setBackingData = { setter, backedBy -> withNullableContext(context) { setBackingData(setter, backedBy) } }
+  getBackingData = { withContext(context) { getBackingData(it) } },
+  setBackingData = { setter, backedBy -> withContext(context) { setBackingData(setter, backedBy) } }
 )
-
-private suspend fun <T> withNullableContext(
-  context: CoroutineContext?,
-  block: suspend () -> T,
-): T = when (context) {
-  null -> block()
-  else -> withContext(context) { block() }
-}

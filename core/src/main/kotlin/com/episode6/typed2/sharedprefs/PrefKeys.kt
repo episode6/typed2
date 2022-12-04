@@ -6,7 +6,7 @@ typealias PrefKey<T, BACKED_BY> = Key<T, BACKED_BY, PrefValueGetter, PrefValueSe
 typealias AsyncPrefKey<T, BACKED_BY> = AsyncKey<T, BACKED_BY, PrefValueGetter, PrefValueSetter>
 
 interface PrefKeyBuilder : PrimitiveKeyBuilder
-open class PrefKeyNamespace(private val prefix: String = "") {
+open class PrefKeyNamespace(private val prefix: String = "") : AsyncMappingInlineBackingNamespace {
   private class Builder(override val name: String) : PrefKeyBuilder
 
   protected fun key(name: String): PrefKeyBuilder = Builder(prefix + name)
