@@ -55,6 +55,59 @@ object NativeKeys {
     get = get,
     set = set,
   )
+
+  fun <T : Any, GETTER : KeyValueGetter, SETTER : KeyValueSetter> createAsync(
+    keyBuilder: KeyBuilder,
+    backingDefault: T,
+    backingClass: KClass<T>,
+    get: suspend GETTER.() -> T,
+    set: suspend SETTER.(T) -> Unit,
+  ): AsyncKey<T, T, GETTER, SETTER> = AsyncKey(
+    name = keyBuilder.name,
+    outputDefault = null,
+    backingTypeInfo = KeyBackingTypeInfo(kclass = backingClass, default = backingDefault),
+    backer = AsyncKeyBacker(getBackingData = get, setBackingData = set),
+    mapper = AsyncKeyMapper({ it }, { it }),
+    newKeyCallback = keyBuilder.newKeyCallback
+  )
+
+  fun <T : Any, GETTER : KeyValueGetter, SETTER : KeyValueSetter> createAsync(
+    keyBuilder: KeyBuilder,
+    backingClass: KClass<T>,
+    get: suspend GETTER.() -> T?,
+    set: suspend SETTER.(T?) -> Unit,
+  ): AsyncKey<T?, T?, GETTER, SETTER> = AsyncKey(
+    name = keyBuilder.name,
+    outputDefault = null,
+    backingTypeInfo = KeyBackingTypeInfo(kclass = backingClass, default = null),
+    backer = AsyncKeyBacker(getBackingData = get, setBackingData = set),
+    mapper = AsyncKeyMapper({ it }, { it }),
+    newKeyCallback = keyBuilder.newKeyCallback
+  )
+
+  inline fun <reified T : Any, GETTER : KeyValueGetter, SETTER : KeyValueSetter> createAsync(
+    keyBuilder: KeyBuilder,
+    backingDefault: T,
+    noinline get: suspend GETTER.() -> T,
+    noinline set: suspend SETTER.(T) -> Unit,
+  ): AsyncKey<T, T, GETTER, SETTER> = createAsync(
+    keyBuilder,
+    backingDefault = backingDefault,
+    backingClass = T::class,
+    get = get,
+    set = set,
+  )
+
+  inline fun <reified T : Any, GETTER : KeyValueGetter, SETTER : KeyValueSetter> createAsync(
+    keyBuilder: KeyBuilder,
+    noinline get: suspend GETTER.() -> T?,
+    noinline set: suspend SETTER.(T?) -> Unit,
+  ): AsyncKey<T?, T?, GETTER, SETTER> = createAsync(
+    keyBuilder,
+    backingClass = T::class,
+    get = get,
+    set = set,
+  )
 }
 
 internal inline fun <reified T : Any, GETTER : KeyValueGetter, SETTER : KeyValueSetter> KeyBuilder.nativeKey(

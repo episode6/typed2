@@ -7,7 +7,6 @@ import assertk.assertAll
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isNull
-import com.episode6.typed2.async
 import com.episode6.typed2.bundles.BundleKeyNamespace
 import com.episode6.typed2.bundles.getExtra
 import com.episode6.typed2.bundles.setExtra
