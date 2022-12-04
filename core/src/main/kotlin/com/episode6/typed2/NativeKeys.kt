@@ -129,3 +129,23 @@ internal inline fun <reified T : Any, GETTER : KeyValueGetter, SETTER : KeyValue
   get = get,
   set = set,
 )
+
+internal inline fun <reified T : Any, GETTER : KeyValueGetter, SETTER : KeyValueSetter> KeyBuilder.nativeAsyncKey(
+  noinline get: suspend GETTER.() -> T,
+  noinline set: suspend SETTER.(T) -> Unit,
+  backingDefault: T,
+): AsyncKey<T, T, GETTER, SETTER> = NativeKeys.createAsync(
+  this,
+  backingDefault = backingDefault,
+  get = get,
+  set = set,
+)
+
+internal inline fun <reified T : Any, GETTER : KeyValueGetter, SETTER : KeyValueSetter> KeyBuilder.nativeAsyncKey(
+  noinline get: suspend GETTER.() -> T?,
+  noinline set: suspend SETTER.(T?) -> Unit,
+): AsyncKey<T?, T?, GETTER, SETTER> = NativeKeys.createAsync(
+  this,
+  get = get,
+  set = set,
+)
