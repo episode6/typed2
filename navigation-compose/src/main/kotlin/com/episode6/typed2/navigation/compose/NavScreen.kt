@@ -7,7 +7,7 @@ typealias NavArg<T, BACKED_BY> = Key<T, BACKED_BY, PrimitiveKeyValueGetter, Prim
 typealias AsyncNavArg<T, BACKED_BY> = AsyncKey<T, BACKED_BY, PrimitiveKeyValueGetter, PrimitiveKeyValueSetter>
 
 interface NavArgBuilder : PrimitiveKeyBuilder
-open class NavScreen(val name: String, private val argPrefix: String = "") : RequiredEnabledKeyNamespace, AsyncMappingInlineBackingNamespace {
+open class NavScreen(val name: String, private val argPrefix: String = "") : RequiredEnabledKeyNamespace {
 
   private val _args = LinkedHashMap<String, KeyDescriptor<*, *>>()
   internal val args: List<KeyDescriptor<*, *>> get() = _args.values.toList()

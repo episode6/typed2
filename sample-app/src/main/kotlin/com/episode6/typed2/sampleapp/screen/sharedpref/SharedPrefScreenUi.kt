@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
+import com.episode6.typed2.async
 import com.episode6.typed2.gson.gson
 import com.episode6.typed2.kotlinx.serialization.json.json
 import com.episode6.typed2.sampleapp.data.KtxSerializable

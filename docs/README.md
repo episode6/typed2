@@ -99,8 +99,8 @@ val navController: NavController = TODO()
 
 fun main() {
   // can pull nav arguments from either SavedStateHandles or Bundles
-  val someInt: Int = savedStateHandle.get(MyScreen.MY_INT)
-  val someString: String? = savedStateHandle.get(MyScreen.MY_STRING)
+  val someInt: Int = savedStateHandle.get(Arguments.MY_INT)
+  val someString: String? = savedStateHandle.get(Arguments.MY_STRING)
 
   // type-safe navigation arguments
   navController.navigateTo(MyScreen) {

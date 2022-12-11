@@ -8,7 +8,7 @@ typealias PersistableBundleKey<T, BACKED_BY> = Key<T, BACKED_BY, PersistableBund
 typealias AsyncPersistableBundleKey<T, BACKED_BY> = AsyncKey<T, BACKED_BY, PersistableBundleValueGetter, PersistableBundleValueSetter>
 
 interface PersistableBundleKeyBuilder : BaseBundleKeyBuilder
-open class PersistableBundleKeyNamespace(private val prefix: String = "") : RequiredEnabledKeyNamespace, AsyncMappingInlineBackingNamespace {
+open class PersistableBundleKeyNamespace(private val prefix: String = "") : RequiredEnabledKeyNamespace {
   private class Builder(override val name: String) : PersistableBundleKeyBuilder
 
   protected fun key(name: String): PersistableBundleKeyBuilder = Builder(prefix + name)
