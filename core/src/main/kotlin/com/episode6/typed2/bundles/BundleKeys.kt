@@ -13,7 +13,7 @@ typealias BundleKey<T, BACKED_BY> = Key<T, BACKED_BY, BundleValueGetter, BundleV
 typealias AsyncBundleKey<T, BACKED_BY> = AsyncKey<T, BACKED_BY, BundleValueGetter, BundleValueSetter>
 
 interface BundleKeyBuilder : BaseBundleKeyBuilder
-open class BundleKeyNamespace(private val prefix: String = "") : RequiredEnabledKeyNamespace, AsyncMappingInlineBackingNamespace {
+open class BundleKeyNamespace(private val prefix: String = "") : RequiredEnabledKeyNamespace {
   private class Builder(override val name: String) : BundleKeyBuilder
 
   protected fun key(name: String): BundleKeyBuilder = Builder(prefix + name)

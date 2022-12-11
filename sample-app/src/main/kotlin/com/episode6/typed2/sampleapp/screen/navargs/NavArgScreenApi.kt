@@ -1,5 +1,6 @@
 package com.episode6.typed2.sampleapp.screen.navargs
 
+import com.episode6.typed2.async
 import com.episode6.typed2.gson.gson
 import com.episode6.typed2.kotlinx.serialization.json.json
 import com.episode6.typed2.navigation.compose.NavScreen
