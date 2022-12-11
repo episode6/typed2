@@ -2,6 +2,7 @@ package com.episode6.typed2
 
 import kotlinx.coroutines.withContext
 import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.EmptyCoroutineContext
 
 
 fun <T : Any, BACKED_BY : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter> Key<T?, BACKED_BY, GETTER, SETTER>.defaultProvider(
@@ -82,12 +83,36 @@ fun <T : Any?, BACKED_BY : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSette
   newKeyCallback = newKeyCallback,
 )
 
+fun <T : Any?, BACKED_BY : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter> AsyncKey<T, BACKED_BY, GETTER, SETTER>.asyncContext(
+  mapperContext: CoroutineContext = EmptyCoroutineContext,
+  backerContext: CoroutineContext = EmptyCoroutineContext,
+): AsyncKey<T, BACKED_BY, GETTER, SETTER> = AsyncKey(
+  name = name,
+  outputDefault = outputDefault,
+  backingTypeInfo = backingTypeInfo,
+  backer = backer.async(backerContext),
+  mapper = mapper.async(mapperContext),
+  newKeyCallback = newKeyCallback,
+)
+
 private fun <T : Any?, BACKED_BY : Any?> KeyMapper<T, BACKED_BY>.async(context: CoroutineContext) = AsyncKeyMapper<T, BACKED_BY>(
   mapGet = { withContext(context) { mapGet(it) } },
   mapSet = { withContext(context) { mapSet(it) } },
 )
 
 private fun <BACKED_BY : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter> KeyBacker<BACKED_BY, GETTER, SETTER>.async(
+  context: CoroutineContext,
+) = AsyncKeyBacker<BACKED_BY, GETTER, SETTER>(
+  getBackingData = { withContext(context) { getBackingData(it) } },
+  setBackingData = { setter, backedBy -> withContext(context) { setBackingData(setter, backedBy) } }
+)
+
+private fun <T : Any?, BACKED_BY : Any?> AsyncKeyMapper<T, BACKED_BY>.async(context: CoroutineContext) = AsyncKeyMapper<T, BACKED_BY>(
+  mapGet = { withContext(context) { mapGet(it) } },
+  mapSet = { withContext(context) { mapSet(it) } },
+)
+
+private fun <BACKED_BY : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter> AsyncKeyBacker<BACKED_BY, GETTER, SETTER>.async(
   context: CoroutineContext,
 ) = AsyncKeyBacker<BACKED_BY, GETTER, SETTER>(
   getBackingData = { withContext(context) { getBackingData(it) } },

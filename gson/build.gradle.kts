@@ -12,6 +12,7 @@ android {
 dependencies {
   api(project(":core"))
   implementation(libs.gson.core)
+  implementation(libs.kotlinx.coroutines.core)
 
   testImplementation(libs.bundles.test.support)
 }
