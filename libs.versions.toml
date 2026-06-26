@@ -1,7 +1,7 @@
 [versions]
 gradle-core = "9.5.1"
 kotlin-core = "2.3.21"
-android-gradle = "8.9.1"
+android-gradle = "8.12.3"
 dokka-core = "2.2.0"
 kotlinx-coroutines = "1.9.0"
 androidx-lifecycle = "2.8.7"
