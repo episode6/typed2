@@ -21,7 +21,7 @@ class TypedSharedPreferences(private val delegate: SharedPreferences) : PrefValu
 
   fun edit(): Editor = Editor(delegate.edit())
   fun changedKeyNames(): Flow<String> = callbackFlow {
-    val listener = SharedPreferences.OnSharedPreferenceChangeListener { _, name -> trySend(name) }
+    val listener = SharedPreferences.OnSharedPreferenceChangeListener { _, name -> name?.let { trySend(it) } }
     delegate.registerOnSharedPreferenceChangeListener(listener)
     awaitClose { delegate.unregisterOnSharedPreferenceChangeListener(listener) }
   }
