@@ -1,6 +1,7 @@
 package com.episode6.typed2.navigation.compose
 
 import androidx.annotation.VisibleForTesting
+import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -34,7 +35,7 @@ fun NavHost(
 fun NavGraphBuilder.composableScreen(
   screen: NavScreen,
   deepLinks: List<NavDeepLink> = emptyList(),
-  content: @Composable (NavBackStackEntry) -> Unit,
+  content: @Composable AnimatedContentScope.(NavBackStackEntry) -> Unit,
 ) {
   composable(
     route = screen.makeRouteDefinition(),
