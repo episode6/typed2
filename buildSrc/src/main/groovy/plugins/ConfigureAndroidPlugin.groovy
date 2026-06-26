@@ -30,10 +30,10 @@ class ConfigureAndroidPlugin implements Plugin<Project> {
 
         kotlinOptions {
           jvmTarget = Config.Jvm.name
-          freeCompilerArgs = Config.Ktx.compilerArgs
+          freeCompilerArgs += [Config.Kotlin.compilerArgs]
         }
 
-        packagingOptions {
+        packaging {
           resources {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
           }

@@ -1,10 +1,11 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 plugins {
-  id("com.android.library") version(libs.versions.android.gradle.get()) apply(false)
-  kotlin("android") version(libs.versions.kotlin.core.get()) apply(false)
-  id("org.jetbrains.dokka") version (libs.versions.dokka.core.get())
-  kotlin("plugin.serialization") version(libs.versions.kotlin.core.get()) apply(false)
-  id("com.google.dagger.hilt.android") version(libs.versions.hilt.core.get()) apply(false)
+  alias(libs.plugins.android.library) apply false
+  alias(libs.plugins.kotlin.android) apply false
+  alias(libs.plugins.kotlin.serialization) apply false
+  alias(libs.plugins.kotlin.compose) apply false
+  alias(libs.plugins.hilt) apply false
+  alias(libs.plugins.dokka)
   id("config-site")
 }
 
