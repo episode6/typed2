@@ -9,7 +9,7 @@ mockito-core = "4.11.0"
 nav-core = "2.8.9"
 kotlinx-serialization = "1.7.3"
 compose-core = "1.7.8"
-hilt-core = "2.51.1"
+hilt-core = "2.60"
 ksp-core = "2.3.9"
 
 [libraries]
