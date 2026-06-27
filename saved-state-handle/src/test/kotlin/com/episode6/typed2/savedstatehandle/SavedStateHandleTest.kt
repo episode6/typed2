@@ -4,7 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import assertk.assertThat
 import assertk.assertions.hasClass
 import assertk.assertions.isEqualTo
-import assertk.assertions.isFailure
+import assertk.assertFailure
 import assertk.assertions.isNull
 import com.episode6.typed2.RequiredKeyMissingException
 import com.episode6.typed2.bundles.BundleKeyNamespace

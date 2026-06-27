@@ -5,7 +5,7 @@ package com.episode6.typed2.navigation.compose
 import androidx.navigation.NavController
 import assertk.assertThat
 import assertk.assertions.hasMessage
-import assertk.assertions.isFailure
+import assertk.assertFailure
 import assertk.assertions.isInstanceOf
 import com.episode6.typed2.set
 import kotlinx.coroutines.ExperimentalCoroutinesApi

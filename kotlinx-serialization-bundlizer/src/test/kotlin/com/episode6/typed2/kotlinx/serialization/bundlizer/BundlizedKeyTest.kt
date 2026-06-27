@@ -2,6 +2,7 @@ package com.episode6.typed2.kotlinx.serialization.bundlizer
 
 import android.os.Bundle
 import assertk.Assert
+import assertk.assertFailure
 import assertk.assertThat
 import assertk.assertions.*
 import com.episode6.typed2.RequiredKeyMissingException

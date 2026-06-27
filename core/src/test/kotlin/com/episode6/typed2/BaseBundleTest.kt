@@ -5,7 +5,7 @@ import android.os.PersistableBundle
 import assertk.assertThat
 import assertk.assertions.hasClass
 import assertk.assertions.isEqualTo
-import assertk.assertions.isFailure
+import assertk.assertFailure
 import assertk.assertions.isNull
 import com.episode6.typed2.bundles.*
 import org.junit.Test
