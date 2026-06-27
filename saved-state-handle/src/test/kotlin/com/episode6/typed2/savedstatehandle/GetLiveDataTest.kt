@@ -165,13 +165,19 @@ class GetLiveDataTest {
     }
 
     // kotlinx-coroutines-test 1.9+ wraps child-coroutine exceptions in AssertionError when
-    // using runTest, so use a plain scope with CoroutineExceptionHandler instead.
+    // using runTest. Use a shared scheduler for both Dispatchers.Main and the scope so that
+    // asFlow()'s withContext(Dispatchers.Main.immediate) resolves on the same dispatcher,
+    // then advance the scheduler to trigger the exception.
+    val scheduler = TestCoroutineScheduler()
+    val dispatcher = StandardTestDispatcher(scheduler)
+    Dispatchers.setMain(dispatcher)
+
     var caught: Throwable? = null
     val scope = CoroutineScope(
-      UnconfinedTestDispatcher() + CoroutineExceptionHandler { _, e -> caught = e }
+      dispatcher + CoroutineExceptionHandler { _, e -> caught = e }
     )
     savedStateHandle.getLiveData(Keys.asyncRequiredInt, scope)
-    scope.cancel()
+    scheduler.advanceUntilIdle()
 
     assertThat(caught!!).hasClass(RequiredKeyMissingException::class)
   }
