@@ -74,8 +74,7 @@ class BaseBundleTest {
       on { getString("requiredInt", null) } doReturn null
     }
 
-    assertThat<Int> { bundle.get(Keys.myRequiredInt) }
-      .isFailure()
+    assertFailure { bundle.get(Keys.myRequiredInt) }
       .hasClass(RequiredKeyMissingException::class)
   }
 
@@ -85,8 +84,7 @@ class BaseBundleTest {
       on { getString("requiredInt", null) } doReturn null
     }
 
-    assertThat<Int> { persistableBundle.get(Keys.myRequiredInt) }
-      .isFailure()
+    assertFailure { persistableBundle.get(Keys.myRequiredInt) }
       .hasClass(RequiredKeyMissingException::class)
   }
 
@@ -98,8 +96,7 @@ class BaseBundleTest {
 
     val result: Int by bundle.property(Keys.myRequiredInt)
 
-    assertThat<Int> { result }
-      .isFailure()
+    assertFailure { result }
       .hasClass(RequiredKeyMissingException::class)
   }
 
@@ -111,8 +108,7 @@ class BaseBundleTest {
 
     val result: Int by persistableBundle.property(Keys.myRequiredInt)
 
-    assertThat<Int> { result }
-      .isFailure()
+    assertFailure { result }
       .hasClass(RequiredKeyMissingException::class)
   }
 
@@ -122,8 +118,7 @@ class BaseBundleTest {
       on { getString("requiredInt", null) } doReturn null
     }
 
-    assertThat<Int> { bundle.get(Keys.myRequiredInt) }
-      .isFailure()
+    assertFailure { bundle.get(Keys.myRequiredInt) }
       .hasClass(RequiredKeyMissingException::class)
   }
 
@@ -133,8 +128,7 @@ class BaseBundleTest {
       on { getString("requiredInt", null) } doReturn null
     }
 
-    assertThat<Int> { persistableBundle.get(Keys.myRequiredInt) }
-      .isFailure()
+    assertFailure { persistableBundle.get(Keys.myRequiredInt) }
       .hasClass(RequiredKeyMissingException::class)
   }
 

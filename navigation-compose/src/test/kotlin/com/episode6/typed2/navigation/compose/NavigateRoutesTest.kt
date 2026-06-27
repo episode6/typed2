@@ -39,12 +39,11 @@ class NavigateRoutesTest {
   }
 
   @Test fun navScreenWithRequiredArgs_fail() {
-    assertThat {
+    assertFailure {
       navController.navigateTo(ScreenWithRequiredArgs) {
         set(ScreenWithRequiredArgs.IntArg, 42)
       }
-    }.isFailure()
-      .isInstanceOf(MissingRequiredArgumentException::class)
+    }.isInstanceOf(MissingRequiredArgumentException::class)
       .hasMessage("Missing required argument \"stringArg\" when navigating to screen \"required_args\"")
   }
 
@@ -83,13 +82,12 @@ class NavigateRoutesTest {
   }
 
   @Test fun navScreenWithAllArgTypes_fail() {
-    assertThat {
+    assertFailure {
       navController.navigateTo(ScreenWithAllArgTypes) {
         set(ScreenWithAllArgTypes.NullArg, "notNullThisTime")
         set(ScreenWithAllArgTypes.DefaultArg, 65)
       }
-    }.isFailure()
-      .isInstanceOf(MissingRequiredArgumentException::class)
+    }.isInstanceOf(MissingRequiredArgumentException::class)
       .hasMessage("Missing required argument \"stringArg\" when navigating to screen \"all_args\"")
   }
 
@@ -116,15 +114,14 @@ class NavigateRoutesTest {
   }
 
   @Test fun navScreenWithAsyncArgTypes_fail() = runTest {
-    assertThat {
+    assertFailure {
       withContext(UnconfinedTestDispatcher()) {
         navController.navigateTo(ScreenWithAsyncArgTypes) {
           set(ScreenWithAsyncArgTypes.NullArg, "notNullThisTime")
           set(ScreenWithAsyncArgTypes.DefaultArg, 65)
         }
       }
-    }.isFailure()
-      .isInstanceOf(MissingRequiredArgumentException::class)
+    }.isInstanceOf(MissingRequiredArgumentException::class)
       .hasMessage("Missing required argument \"stringArg\" when navigating to screen \"all_args\"")
   }
 }

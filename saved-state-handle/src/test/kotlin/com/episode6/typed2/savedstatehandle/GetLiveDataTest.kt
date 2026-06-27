@@ -119,8 +119,8 @@ class GetLiveDataTest {
       onGeneric { getLiveData<String?>(any(), anyOrNull()) } doReturn backingLiveData
     }
 
-    assertThat { savedStateHandle.getLiveData(Keys.requiredInt) }
-      .isFailure().hasClass(RequiredKeyMissingException::class)
+    assertFailure { savedStateHandle.getLiveData(Keys.requiredInt) }
+      .hasClass(RequiredKeyMissingException::class)
   }
 
   @Test fun testRequiredIntStateFlow_hasValue() = runTest {

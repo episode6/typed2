@@ -51,8 +51,7 @@ class PersistableBundleTest {
       on { getString("requiredInt", null) } doReturn null
     }
 
-    assertThat<Int> { bundle.get(Keys.myRequiredInt) }
-      .isFailure()
+    assertFailure { bundle.get(Keys.myRequiredInt) }
       .hasClass(RequiredKeyMissingException::class)
   }
 
@@ -64,8 +63,7 @@ class PersistableBundleTest {
 
     val result: Int by bundle.property(Keys.myRequiredInt)
 
-    assertThat<Int> { result }
-      .isFailure()
+    assertFailure { result }
       .hasClass(RequiredKeyMissingException::class)
   }
 
@@ -75,8 +73,7 @@ class PersistableBundleTest {
       on { getString("requiredInt", null) } doReturn null
     }
 
-    assertThat<Int> { bundle.get(Keys.myRequiredInt) }
-      .isFailure()
+    assertFailure { bundle.get(Keys.myRequiredInt) }
       .hasClass(RequiredKeyMissingException::class)
   }
 

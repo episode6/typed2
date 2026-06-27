@@ -59,8 +59,8 @@ class SavedStateHandleTest {
       onGeneric { get<String>("requiredInt") } doAnswer { null }
     }
 
-    assertThat { savedStateHandle.get(Keys.requiredInt) }
-      .isFailure().hasClass(RequiredKeyMissingException::class)
+    assertFailure { savedStateHandle.get(Keys.requiredInt) }
+      .hasClass(RequiredKeyMissingException::class)
   }
 }
 

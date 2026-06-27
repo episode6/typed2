@@ -79,8 +79,8 @@ class BundlizedKeyTest {
   }
 
   @Test fun testRequired_get_missing() {
-    assertThat { bundle.get(Keys.requiredData) }
-      .isFailure().hasClass(RequiredKeyMissingException::class)
+    assertFailure { bundle.get(Keys.requiredData) }
+      .hasClass(RequiredKeyMissingException::class)
   }
 
   @Test fun testRequired_get_present() {

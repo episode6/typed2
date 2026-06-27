@@ -86,8 +86,8 @@ class GetStateFlowTest {
       onGeneric { getStateFlow<String?>(any(), anyOrNull()) } doReturn backingStateFlow
     }
 
-    assertThat { savedStateHandle.getStateFlow(Keys.requiredInt, this, SharingStarted.Eagerly) }
-      .isFailure().hasClass(RequiredKeyMissingException::class)
+    assertFailure { savedStateHandle.getStateFlow(Keys.requiredInt, this, SharingStarted.Eagerly) }
+      .hasClass(RequiredKeyMissingException::class)
   }
 
   @Test fun testRequiredIntStateFlow_hasValue() = runTest {
