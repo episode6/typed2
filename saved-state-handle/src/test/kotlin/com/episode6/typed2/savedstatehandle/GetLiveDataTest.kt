@@ -12,6 +12,7 @@ import assertk.assertThat
 import assertk.assertions.hasClass
 import assertk.assertions.isEqualTo
 import assertk.assertFailure
+import assertk.assertions.isNotNull
 import assertk.assertions.isNull
 import com.episode6.typed2.RequiredKeyMissingException
 import com.episode6.typed2.async
