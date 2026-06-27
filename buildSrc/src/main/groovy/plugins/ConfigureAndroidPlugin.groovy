@@ -12,7 +12,7 @@ class ConfigureAndroidPlugin implements Plugin<Project> {
   void apply(Project target) {
     target.with {
       kotlin {
-        def jvmTargetClass = rootProject.class.classLoader.loadClass("org.jetbrains.kotlin.gradle.dsl.JvmTarget")
+        def jvmTargetClass = it.class.classLoader.loadClass("org.jetbrains.kotlin.gradle.dsl.JvmTarget")
         compilerOptions {
           jvmTarget.set(jvmTargetClass.fromTarget(Config.Jvm.name))
           freeCompilerArgs.add(Config.Kotlin.compilerArgs)
