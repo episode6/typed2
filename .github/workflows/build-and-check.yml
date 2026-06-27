@@ -11,7 +11,7 @@ jobs:
     runs-on: macos-latest
     strategy:
       matrix:
-        api-level: [ 21 ]
+        api-level: [ 34 ]
     steps:
     - uses: actions/checkout@v6
     - name: Set up JDK 23
