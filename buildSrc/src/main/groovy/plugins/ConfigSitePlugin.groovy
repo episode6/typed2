@@ -33,8 +33,10 @@ class ConfigSitePlugin implements Plugin<Project> {
 
       dependencies {
         subprojects.each { sub ->
-          // In Dokka 2, aggregation is done by adding subprojects as 'dokka' dependencies
-          dokka(sub)
+          if (sub.name != 'sample-app') {
+            // In Dokka 2, aggregation is done by adding subprojects as 'dokka' dependencies
+            dokka(sub)
+          }
         }
       }
 
