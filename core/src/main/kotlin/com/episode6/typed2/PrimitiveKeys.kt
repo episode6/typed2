@@ -75,5 +75,5 @@ fun PrimitiveKeyBuilder.string(): PrimitiveKey<String?, String?> =
 
 fun PrimitiveKeyBuilder.double(): PrimitiveKey<Double?, String?> = string().mapType(
   mapGet = { it?.let { BigDecimal(it).toDouble() } },
-  mapSet = { it?.toBigDecimal()?.toPlainString() },
+  mapSet = { it?.let { BigDecimal(it).toPlainString() } },
 )
