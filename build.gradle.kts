@@ -11,7 +11,7 @@ alias(libs.plugins.kotlin.serialization) apply false
 
 allprojects {
   group = "com.episode6.typed2"
-  version = "2.0.0-SNAPSHOT"
+  version = "1.9.9.1"
 }
 description = "Type-safe keys for obnoxious key-value stores."
 
