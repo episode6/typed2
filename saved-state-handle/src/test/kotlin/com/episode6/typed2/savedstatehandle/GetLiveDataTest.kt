@@ -17,11 +17,10 @@ import com.episode6.typed2.RequiredKeyMissingException
 import com.episode6.typed2.async
 import com.episode6.typed2.bundles.BundleKeyNamespace
 import com.episode6.typed2.int
-import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.*
 import org.junit.After
@@ -158,26 +157,26 @@ class GetLiveDataTest {
   }
 
   @Test
-  fun testRequiredAsyncIntStateFlow_noValue() {
+  fun testRequiredAsyncIntStateFlow_noValue() = runTest {
+    // LiveData.asFlow() uses withContext(Dispatchers.Main.immediate). Share runTest's
+    // scheduler with Dispatchers.Main so both use the same TestCoroutineScheduler,
+    // then coroutineScope propagates RequiredKeyMissingException from the child coroutine.
+    Dispatchers.setMain(StandardTestDispatcher(testScheduler))
     val backingLiveData: MutableLiveData<String?> = MutableLiveData(Keys.asyncRequiredInt.backingTypeInfo.default)
     savedStateHandle.stub {
       onGeneric { getLiveData<String?>(any(), anyOrNull()) } doReturn backingLiveData
     }
 
-    // kotlinx-coroutines-test 1.9+ wraps child-coroutine exceptions in AssertionError when
-    // using runTest. LiveData.asFlow() uses withContext(Dispatchers.Main.immediate); using
-    // UnconfinedTestDispatcher for both Main and the scope makes that call a no-op so the
-    // exception propagates synchronously to the CoroutineExceptionHandler.
-    val dispatcher = UnconfinedTestDispatcher()
-    Dispatchers.setMain(dispatcher)
+    var caught: RequiredKeyMissingException? = null
+    try {
+      coroutineScope {
+        savedStateHandle.getLiveData(Keys.asyncRequiredInt, this)
+      }
+    } catch (e: RequiredKeyMissingException) {
+      caught = e
+    }
 
-    var caught: Throwable? = null
-    val scope = CoroutineScope(
-      dispatcher + CoroutineExceptionHandler { _, e -> caught = e }
-    )
-    savedStateHandle.getLiveData(Keys.asyncRequiredInt, scope)
-
-    assertThat(caught!!).hasClass(RequiredKeyMissingException::class)
+    assertThat(caught).isNotNull()
   }
 
   @Test fun testRequiredAsyncIntStateFlow_hasValue() = runTest {
