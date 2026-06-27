@@ -1,6 +1,6 @@
 # ChangeLog
 
-### v2.0.0-alpha03 - Unreleased
+### v2.0.0-alpha03 - Released 06/27/2026
 
 - Modernize build infrastructure: Kotlin 2.3.21, Gradle 9.5.1, Dokka 2.2.0, AGP 9.2.1, JVM target 17
 - Update GitHub Actions: checkout@v6, setup-java@v5, gradle/actions/setup-gradle@v6, JDK 23
