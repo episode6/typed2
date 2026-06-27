@@ -155,7 +155,7 @@ class GetLiveDataTest {
     }
   }
 
-  @Test(expected = RequiredKeyMissingException::class) // catches exception in other coroutine
+  @Test
   fun testRequiredAsyncIntStateFlow_noValue() = runTest(UnconfinedTestDispatcher()) {
     val backingLiveData: MutableLiveData<String?> = MutableLiveData(Keys.asyncRequiredInt.backingTypeInfo.default)
     savedStateHandle.stub {
@@ -164,7 +164,9 @@ class GetLiveDataTest {
 
     val result = savedStateHandle.getLiveData(Keys.asyncRequiredInt, this)
     assertThat(result.value).isNull()
-    result.asFlow().testIn(this)
+    result.asFlow().test {
+      assertThat(awaitError()).hasClass(RequiredKeyMissingException::class)
+    }
   }
 
   @Test fun testRequiredAsyncIntStateFlow_hasValue() = runTest {
