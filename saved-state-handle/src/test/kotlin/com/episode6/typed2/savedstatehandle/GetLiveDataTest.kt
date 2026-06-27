@@ -17,6 +17,8 @@ import com.episode6.typed2.RequiredKeyMissingException
 import com.episode6.typed2.async
 import com.episode6.typed2.bundles.BundleKeyNamespace
 import com.episode6.typed2.int
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
@@ -162,12 +164,16 @@ class GetLiveDataTest {
       onGeneric { getLiveData<String?>(any(), anyOrNull()) } doReturn backingLiveData
     }
 
-    assertFailure {
-      runTest(UnconfinedTestDispatcher()) {
-        val result = savedStateHandle.getLiveData(Keys.asyncRequiredInt, this)
-        result.asFlow().testIn(this)
-      }
-    }.hasClass(RequiredKeyMissingException::class)
+    // kotlinx-coroutines-test 1.9+ wraps child-coroutine exceptions in AssertionError when
+    // using runTest, so use a plain scope with CoroutineExceptionHandler instead.
+    var caught: Throwable? = null
+    val scope = CoroutineScope(
+      UnconfinedTestDispatcher() + CoroutineExceptionHandler { _, e -> caught = e }
+    )
+    savedStateHandle.getLiveData(Keys.asyncRequiredInt, scope)
+    scope.cancel()
+
+    assertThat(caught!!).hasClass(RequiredKeyMissingException::class)
   }
 
   @Test fun testRequiredAsyncIntStateFlow_hasValue() = runTest {
