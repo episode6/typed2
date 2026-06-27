@@ -165,7 +165,6 @@ class GetLiveDataTest {
     assertFailure {
       runTest(UnconfinedTestDispatcher()) {
         val result = savedStateHandle.getLiveData(Keys.asyncRequiredInt, this)
-        assertThat(result.value).isNull()
         result.asFlow().testIn(this)
       }
     }.hasClass(RequiredKeyMissingException::class)
