@@ -44,11 +44,11 @@ public fun SharedPreferences.typed(): TypedSharedPreferences = TypedSharedPrefer
 public fun SharedPreferences.Editor.typed(): TypedSharedPreferences.Editor = TypedSharedPreferences.Editor(this)
 
 public fun <T> SharedPreferences.get(key: PrefKey<T, *>): T = typed().get(key)
-public fun <T> SharedPreferences.Editor.set(key: PrefKey<T, *>, value: T) = typed().set(key, value)
-public fun SharedPreferences.Editor.remove(key: PrefKey<*, *>) = typed().remove(key)
+public fun <T> SharedPreferences.Editor.set(key: PrefKey<T, *>, value: T): Unit = typed().set(key, value)
+public fun SharedPreferences.Editor.remove(key: PrefKey<*, *>): Unit = typed().remove(key)
 public suspend fun <T> SharedPreferences.get(key: AsyncPrefKey<T, *>): T = typed().get(key)
-public suspend fun <T> SharedPreferences.Editor.set(key: AsyncPrefKey<T, *>, value: T) = typed().set(key, value)
-public fun SharedPreferences.Editor.remove(key: AsyncPrefKey<*, *>) = typed().remove(key)
+public suspend fun <T> SharedPreferences.Editor.set(key: AsyncPrefKey<T, *>, value: T): Unit = typed().set(key, value)
+public fun SharedPreferences.Editor.remove(key: AsyncPrefKey<*, *>): Unit = typed().remove(key)
 
 public inline fun <T> TypedSharedPreferences.update(key: PrefKey<T, *>, commit: Boolean = false, reducer: (T)->T) {
   edit(commit = commit) {
@@ -62,8 +62,8 @@ public suspend inline fun <T> TypedSharedPreferences.update(key: AsyncPrefKey<T,
   }
 }
 
-public inline fun <T> SharedPreferences.update(key: PrefKey<T, *>, commit: Boolean = false, reducer: (T)->T) = typed().update(key, commit, reducer)
-public suspend inline fun <T> SharedPreferences.update(key: AsyncPrefKey<T, *>, commit: Boolean = false, reducer: (T)->T) = typed().update(key, commit, reducer)
+public inline fun <T> SharedPreferences.update(key: PrefKey<T, *>, commit: Boolean = false, reducer: (T)->T): Unit = typed().update(key, commit, reducer)
+public suspend inline fun <T> SharedPreferences.update(key: AsyncPrefKey<T, *>, commit: Boolean = false, reducer: (T)->T): Unit = typed().update(key, commit, reducer)
 
 public fun <T> TypedSharedPreferences.property(key: PrefKey<T, *>): DelegateProperty<T> = DelegateProperty<T>(
   get = { get(key) },

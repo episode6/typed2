@@ -13,7 +13,7 @@ public class DelegateProperty<T : Any?>(public val get: () -> T, public val set:
   public constructor(mutableStateFlow: MutableStateFlow<T>) : this(get = { mutableStateFlow.value }, set = { mutableStateFlow.value = it })
 
   public operator fun getValue(thisRef: Any?, property: KProperty<*>): T = get()
-  public operator fun setValue(thisRef: Any?, property: KProperty<*>, value: T) = set(value)
+  public operator fun setValue(thisRef: Any?, property: KProperty<*>, value: T): Unit = set(value)
 }
 
 @Suppress("FunctionName")

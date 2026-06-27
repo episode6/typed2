@@ -61,8 +61,8 @@ public interface BundleValueSetter : BaseBundleValueSetter {
 }
 
 public fun <T> BundleValueGetter.get(key: BundleKey<T, *>): T = key.get(this)
-public fun <T> BundleValueSetter.set(key: BundleKey<T, *>, value: T) = key.set(this, value)
-public fun BundleValueSetter.remove(key: BundleKey<*, *>) = remove(key.name)
+public fun <T> BundleValueSetter.set(key: BundleKey<T, *>, value: T): Unit = key.set(this, value)
+public fun BundleValueSetter.remove(key: BundleKey<*, *>): Unit = remove(key.name)
 public suspend fun <T> BundleValueGetter.get(key: AsyncBundleKey<T, *>): T = key.get(this)
-public suspend fun <T> BundleValueSetter.set(key: AsyncBundleKey<T, *>, value: T) = key.set(this, value)
-public fun BundleValueSetter.remove(key: AsyncBundleKey<*, *>) = remove(key.name)
+public suspend fun <T> BundleValueSetter.set(key: AsyncBundleKey<T, *>, value: T): Unit = key.set(this, value)
+public fun BundleValueSetter.remove(key: AsyncBundleKey<*, *>): Unit = remove(key.name)

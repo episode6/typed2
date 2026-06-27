@@ -96,10 +96,10 @@ public class TypedSavedStateHandle(private val delegate: SavedStateHandle) : Bun
 public fun SavedStateHandle.typed(): TypedSavedStateHandle = TypedSavedStateHandle(this)
 
 public fun <T> SavedStateHandle.get(key: BundleKey<T, *>): T = typed().get(key)
-public fun <T> SavedStateHandle.set(key: BundleKey<T, *>, value: T) = typed().set(key, value)
+public fun <T> SavedStateHandle.set(key: BundleKey<T, *>, value: T): Unit = typed().set(key, value)
 public fun SavedStateHandle.remove(key: BundleKey<*,*>) { remove<Any>(key.name) }
 public suspend fun <T> SavedStateHandle.get(key: AsyncBundleKey<T, *>): T = typed().get(key)
-public suspend fun <T> SavedStateHandle.set(key: AsyncBundleKey<T, *>, value: T) = typed().set(key, value)
+public suspend fun <T> SavedStateHandle.set(key: AsyncBundleKey<T, *>, value: T): Unit = typed().set(key, value)
 public fun SavedStateHandle.remove(key: AsyncBundleKey<*, *>) { remove<Any>(key.name) }
 
 public fun <T> TypedSavedStateHandle.property(key: BundleKey<T, *>): DelegateProperty<T> = DelegateProperty(
@@ -119,5 +119,5 @@ public suspend inline fun <T> TypedSavedStateHandle.update(key: AsyncBundleKey<T
   set(key, reducer(get(key)))
 }
 
-public inline fun <T> SavedStateHandle.update(key: BundleKey<T, *>, reducer: (T)->T) = typed().update(key, reducer)
-public suspend inline fun <T> SavedStateHandle.update(key: AsyncBundleKey<T, *>, reducer: (T)->T) = typed().update(key, reducer)
+public inline fun <T> SavedStateHandle.update(key: BundleKey<T, *>, reducer: (T)->T): Unit = typed().update(key, reducer)
+public suspend inline fun <T> SavedStateHandle.update(key: AsyncBundleKey<T, *>, reducer: (T)->T): Unit = typed().update(key, reducer)

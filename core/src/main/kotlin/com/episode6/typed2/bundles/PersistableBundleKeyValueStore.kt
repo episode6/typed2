@@ -16,8 +16,8 @@ public interface PersistableBundleValueSetter : BaseBundleValueSetter {
 }
 
 public fun <T> PersistableBundleValueGetter.get(key: PersistableBundleKey<T, *>): T = key.get(this)
-public fun <T> PersistableBundleValueSetter.set(key: PersistableBundleKey<T, *>, value: T) = key.set(this, value)
-public fun PersistableBundleValueSetter.remove(key: PersistableBundleKey<*, *>) = remove(key.name)
+public fun <T> PersistableBundleValueSetter.set(key: PersistableBundleKey<T, *>, value: T): Unit = key.set(this, value)
+public fun PersistableBundleValueSetter.remove(key: PersistableBundleKey<*, *>): Unit = remove(key.name)
 public suspend fun <T> PersistableBundleValueGetter.get(key: AsyncPersistableBundleKey<T, *>): T = key.get(this)
-public suspend fun <T> PersistableBundleValueSetter.set(key: AsyncPersistableBundleKey<T, *>, value: T) = key.set(this, value)
-public fun PersistableBundleValueSetter.remove(key: AsyncPersistableBundleKey<*, *>) = remove(key.name)
+public suspend fun <T> PersistableBundleValueSetter.set(key: AsyncPersistableBundleKey<T, *>, value: T): Unit = key.set(this, value)
+public fun PersistableBundleValueSetter.remove(key: AsyncPersistableBundleKey<*, *>): Unit = remove(key.name)

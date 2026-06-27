@@ -28,7 +28,7 @@ public class TypedPersistableBundle(private val delegate: PersistableBundle) : P
   override fun setPersistableBundle(name: String, value: PersistableBundle?) { delegate.putPersistableBundle(name, value) }
   @TargetApi(22)
   override fun setBooleanArray(name: String, value: BooleanArray?) { delegate.putBooleanArray(name, value) }
-  override fun remove(name: String) = delegate.remove(name)
+  override fun remove(name: String): Unit = delegate.remove(name)
   override fun setBoolean(name: String, value: Boolean) {
     if (Build.VERSION.SDK_INT >= 22) {
       delegate.putBoolean(name, value)
@@ -38,8 +38,8 @@ public class TypedPersistableBundle(private val delegate: PersistableBundle) : P
   }
   override fun setFloat(name: String, value: Float) { delegate.putDouble(name, value.toDouble()) }
   override fun setLong(name: String, value: Long) { delegate.putLong(name, value) }
-  override fun setString(name: String, value: String?) = delegate.putString(name, value)
-  override fun setInt(name: String, value: Int) = delegate.putInt(name, value)
+  override fun setString(name: String, value: String?): Unit = delegate.putString(name, value)
+  override fun setInt(name: String, value: Int): Unit = delegate.putInt(name, value)
   override fun setDouble(name: String, value: Double) { delegate.putDouble(name, value) }
   override fun setDoubleArray(name: String, value: DoubleArray?) { delegate.putDoubleArray(name, value) }
   override fun setIntArray(name: String, value: IntArray?) { delegate.putIntArray(name, value) }
@@ -50,11 +50,11 @@ public class TypedPersistableBundle(private val delegate: PersistableBundle) : P
 public fun PersistableBundle.typed(): TypedPersistableBundle = TypedPersistableBundle(this)
 
 public fun <T> PersistableBundle.get(key: PersistableBundleKey<T, *>): T = typed().get(key)
-public fun <T> PersistableBundle.set(key: PersistableBundleKey<T, *>, value: T) = typed().set(key, value)
-public fun PersistableBundle.remove(key: PersistableBundleKey<*, *>) = typed().remove(key)
+public fun <T> PersistableBundle.set(key: PersistableBundleKey<T, *>, value: T): Unit = typed().set(key, value)
+public fun PersistableBundle.remove(key: PersistableBundleKey<*, *>): Unit = typed().remove(key)
 public suspend fun <T> PersistableBundle.get(key: AsyncPersistableBundleKey<T, *>): T = typed().get(key)
-public suspend fun <T> PersistableBundle.set(key: AsyncPersistableBundleKey<T, *>, value: T) = typed().set(key, value)
-public fun PersistableBundle.remove(key: AsyncPersistableBundleKey<*, *>) = typed().remove(key)
+public suspend fun <T> PersistableBundle.set(key: AsyncPersistableBundleKey<T, *>, value: T): Unit = typed().set(key, value)
+public fun PersistableBundle.remove(key: AsyncPersistableBundleKey<*, *>): Unit = typed().remove(key)
 
 public fun <T> TypedPersistableBundle.property(key: PersistableBundleKey<T, *>): DelegateProperty<T> = DelegateProperty(
   get = { get(key) },
@@ -73,8 +73,8 @@ public suspend inline fun <T> TypedPersistableBundle.update(key: AsyncPersistabl
   set(key, reducer(get(key)))
 }
 
-public inline fun <T> PersistableBundle.update(key: PersistableBundleKey<T, *>, reducer: (T)->T) = typed().update(key, reducer)
-public suspend inline fun <T> PersistableBundle.update(key: AsyncPersistableBundleKey<T, *>, reducer: (T)->T) = typed().update(key, reducer)
+public inline fun <T> PersistableBundle.update(key: PersistableBundleKey<T, *>, reducer: (T)->T): Unit = typed().update(key, reducer)
+public suspend inline fun <T> PersistableBundle.update(key: AsyncPersistableBundleKey<T, *>, reducer: (T)->T): Unit = typed().update(key, reducer)
 
 private fun Int.asBoolean(): Boolean = this > 0
 private fun Boolean.asInt(): Int = if (this) 1 else 0

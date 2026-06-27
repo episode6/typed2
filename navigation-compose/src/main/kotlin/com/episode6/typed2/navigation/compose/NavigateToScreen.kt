@@ -62,10 +62,10 @@ public class ComposeNavArgBuilder : PrimitiveKeyValueSetter {
   override fun remove(name: String) { argMap.remove(name) }
 }
 
-public fun <T> ComposeNavArgBuilder.set(key: NavArg<T, *>, value: T) = key.set(this, value)
-public fun ComposeNavArgBuilder.remove(key: NavArg<*, *>) = remove(key.name)
-public suspend fun <T> ComposeNavArgBuilder.set(key: AsyncNavArg<T, *>, value: T) = key.set(this, value)
-public fun ComposeNavArgBuilder.remove(key: AsyncNavArg<*, *>) = remove(key.name)
+public fun <T> ComposeNavArgBuilder.set(key: NavArg<T, *>, value: T): Unit = key.set(this, value)
+public fun ComposeNavArgBuilder.remove(key: NavArg<*, *>): Unit = remove(key.name)
+public suspend fun <T> ComposeNavArgBuilder.set(key: AsyncNavArg<T, *>, value: T): Unit = key.set(this, value)
+public fun ComposeNavArgBuilder.remove(key: AsyncNavArg<*, *>): Unit = remove(key.name)
 
 public class MissingRequiredArgumentException(arg: KeyDescriptor<*, *>, screen: NavScreen) : IllegalArgumentException(
   "Missing required argument \"${arg.name}\" when navigating to screen \"${screen.name}\""

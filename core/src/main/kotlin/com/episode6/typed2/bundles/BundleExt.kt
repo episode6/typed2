@@ -68,14 +68,14 @@ public class TypedBundle(private val delegate: Bundle) : BundleValueGetter, Bund
   override fun getLongArray(name: String): LongArray? = delegate.getLongArray(name)
   override fun getStringArray(name: String): Array<String>? = delegate.getStringArray(name)
 
-  override fun remove(name: String) = delegate.remove(name)
-  override fun setString(name: String, value: String?) = delegate.putString(name, value)
-  override fun setInt(name: String, value: Int) = delegate.putInt(name, value)
+  override fun remove(name: String): Unit = delegate.remove(name)
+  override fun setString(name: String, value: String?): Unit = delegate.putString(name, value)
+  override fun setInt(name: String, value: Int): Unit = delegate.putInt(name, value)
   override fun setBoolean(name: String, value: Boolean) { delegate.putBoolean(name, value) }
   override fun setFloat(name: String, value: Float) { delegate.putFloat(name, value) }
   override fun setLong(name: String, value: Long) { delegate.putLong(name, value) }
   override fun setBinder(name: String, value: IBinder?) { delegate.putBinder(name, value) }
-  override fun setBundle(name: String, value: Bundle?) = delegate.putBundle(name, value)
+  override fun setBundle(name: String, value: Bundle?): Unit = delegate.putBundle(name, value)
   override fun setByte(name: String, value: Byte) { delegate.putByte(name, value) }
   override fun setByteArray(name: String, value: ByteArray?) { delegate.putByteArray(name, value) }
   override fun setChar(name: String, value: Char) { delegate.putChar(name, value) }
@@ -106,11 +106,11 @@ public class TypedBundle(private val delegate: Bundle) : BundleValueGetter, Bund
 public fun Bundle.typed(): TypedBundle = TypedBundle(this)
 
 public fun <T> Bundle.get(key: BundleKey<T, *>): T = typed().get(key)
-public fun <T> Bundle.set(key: BundleKey<T, *>, value: T) = typed().set(key, value)
-public fun Bundle.remove(key: BundleKey<*, *>) = typed().remove(key)
+public fun <T> Bundle.set(key: BundleKey<T, *>, value: T): Unit = typed().set(key, value)
+public fun Bundle.remove(key: BundleKey<*, *>): Unit = typed().remove(key)
 public suspend fun <T> Bundle.get(key: AsyncBundleKey<T, *>): T = typed().get(key)
-public suspend fun <T> Bundle.set(key: AsyncBundleKey<T, *>, value: T) = typed().set(key, value)
-public fun Bundle.remove(key: AsyncBundleKey<*, *>) = typed().remove(key)
+public suspend fun <T> Bundle.set(key: AsyncBundleKey<T, *>, value: T): Unit = typed().set(key, value)
+public fun Bundle.remove(key: AsyncBundleKey<*, *>): Unit = typed().remove(key)
 
 public fun <T> TypedBundle.property(key: BundleKey<T, *>): DelegateProperty<T> = DelegateProperty(
   get = { get(key) },
@@ -129,5 +129,5 @@ public suspend inline fun <T> TypedBundle.update(key: AsyncBundleKey<T, *>, redu
   set(key, reducer(get(key)))
 }
 
-public inline fun <T> Bundle.update(key: BundleKey<T, *>, reducer: (T)->T) = typed().update(key, reducer)
-public suspend inline fun <T> Bundle.update(key: AsyncBundleKey<T, *>, reducer: (T)->T) = typed().update(key, reducer)
+public inline fun <T> Bundle.update(key: BundleKey<T, *>, reducer: (T)->T): Unit = typed().update(key, reducer)
+public suspend inline fun <T> Bundle.update(key: AsyncBundleKey<T, *>, reducer: (T)->T): Unit = typed().update(key, reducer)

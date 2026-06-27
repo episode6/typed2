@@ -19,7 +19,7 @@ public fun <T : Any?, BACKED_BY : Any?, GETTER : KeyValueGetter, SETTER : KeyVal
 public fun <T : Any?, BACKED_BY : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter> Key<T, BACKED_BY, GETTER, SETTER>.set(
   setter: SETTER,
   value: T,
-) = backer.setBackingData(setter, mapper.mapSet(value))
+): Unit = backer.setBackingData(setter, mapper.mapSet(value))
 
 public suspend fun <T : Any?, BACKED_BY : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter> AsyncKey<T, BACKED_BY, GETTER, SETTER>.get(
   getter: GETTER,
@@ -31,4 +31,4 @@ public suspend fun <T : Any?, BACKED_BY : Any?, GETTER : KeyValueGetter, SETTER 
 public suspend fun <T : Any?, BACKED_BY : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter> AsyncKey<T, BACKED_BY, GETTER, SETTER>.set(
   setter: SETTER,
   value: T,
-) = backer.setBackingData(setter, mapper.mapSet(value))
+): Unit = backer.setBackingData(setter, mapper.mapSet(value))
