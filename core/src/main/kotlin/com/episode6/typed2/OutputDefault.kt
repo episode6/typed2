@@ -1,13 +1,13 @@
 package com.episode6.typed2
 
-val KeyDescriptor<*, *>.isRequired: Boolean
+public val KeyDescriptor<*, *>.isRequired: Boolean
   get() = when (this) {
     is Key<*, *, *, *>      -> outputDefault is OutputDefault.Required
     is AsyncKey<*, *, *, *> -> outputDefault is AsyncOutputDefault.Required
   }
 
-fun <T> Key<T, *, *, *>.outputDefaultProvider(): (() -> T)? = outputDefault?.provider()
-fun <T> AsyncKey<T, *, *, *>.outputDefaultProvider(): (suspend () -> T)? = outputDefault?.provider()
+public fun <T> Key<T, *, *, *>.outputDefaultProvider(): (() -> T)? = outputDefault?.provider()
+public fun <T> AsyncKey<T, *, *, *>.outputDefaultProvider(): (suspend () -> T)? = outputDefault?.provider()
 
 internal sealed class OutputDefault<T> {
   internal class Required<T>(val getError: () -> Throwable) : OutputDefault<T>()

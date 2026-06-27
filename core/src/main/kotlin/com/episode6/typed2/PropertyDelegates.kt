@@ -9,15 +9,15 @@ import kotlinx.coroutines.launch
 import kotlin.reflect.KProperty
 import kotlin.time.Duration
 
-class DelegateProperty<T : Any?>(val get: () -> T, val set: (T) -> Unit) {
-  constructor(mutableStateFlow: MutableStateFlow<T>) : this(get = { mutableStateFlow.value }, set = { mutableStateFlow.value = it })
+public class DelegateProperty<T : Any?>(public val get: () -> T, public val set: (T) -> Unit) {
+  public constructor(mutableStateFlow: MutableStateFlow<T>) : this(get = { mutableStateFlow.value }, set = { mutableStateFlow.value = it })
 
-  operator fun getValue(thisRef: Any?, property: KProperty<*>): T = get()
-  operator fun setValue(thisRef: Any?, property: KProperty<*>, value: T) = set(value)
+  public operator fun getValue(thisRef: Any?, property: KProperty<*>): T = get()
+  public operator fun setValue(thisRef: Any?, property: KProperty<*>, value: T) = set(value)
 }
 
 @Suppress("FunctionName")
-fun <T> DelegateMutableStateFlow(
+public fun <T> DelegateMutableStateFlow(
   scope: CoroutineScope,
   debounceWrites: Duration,
   get: () -> T,
@@ -31,7 +31,7 @@ fun <T> DelegateMutableStateFlow(
 }
 
 @Suppress("FunctionName")
-fun <T> DelegateAsyncMutableStateFlow(
+public fun <T> DelegateAsyncMutableStateFlow(
   scope: CoroutineScope,
   debounceWrites: Duration,
   get: suspend () -> T,

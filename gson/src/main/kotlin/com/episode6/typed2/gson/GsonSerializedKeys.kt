@@ -4,21 +4,21 @@ import com.episode6.typed2.*
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
-object Typed2DefaultGson {
+public object Typed2DefaultGson {
   private val default: Gson by lazy { Gson() }
-  fun gson(): Gson = default
+  public fun gson(): Gson = default
 }
 
-inline fun <reified T : Any> PrimitiveKeyBuilder.gson(
+public inline fun <reified T : Any> PrimitiveKeyBuilder.gson(
   default: T,
   noinline gson: () -> Gson = Typed2DefaultGson::gson,
 ): PrimitiveKey<T, String?> = gson<T>(gson).defaultProvider { default }
 
-inline fun <reified T : Any> PrimitiveKeyBuilder.gson(
+public inline fun <reified T : Any> PrimitiveKeyBuilder.gson(
   noinline gson: () -> Gson = Typed2DefaultGson::gson,
 ): PrimitiveKey<T?, String?> = string().mapType(
   mapGet = { it?.let { gson().fromJson(it, typeToken<T>().type) } },
   mapSet = { it?.let { gson().toJson(it, typeToken<T>().type) } }
 )
 
-inline fun <reified T : Any?> typeToken(): TypeToken<T> = object : TypeToken<T>() {}
+public inline fun <reified T : Any?> typeToken(): TypeToken<T> = object : TypeToken<T>() {}

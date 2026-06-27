@@ -14,7 +14,7 @@ import androidx.navigation.compose.NavHost as RawNavHost
 
 // wrapper for NavHost that takes a startScreen instead of a string
 @Composable
-fun NavHost(
+public fun NavHost(
   navController: NavHostController,
   startScreen: NavScreen,
   modifier: Modifier = Modifier,
@@ -32,7 +32,7 @@ fun NavHost(
 }
 
 // wrapper for composable that takes a string instead of a route and arg list
-fun NavGraphBuilder.composableScreen(
+public fun NavGraphBuilder.composableScreen(
   screen: NavScreen,
   deepLinks: List<NavDeepLink> = emptyList(),
   content: @Composable AnimatedContentScope.(NavBackStackEntry) -> Unit,
@@ -79,7 +79,7 @@ private fun KClass<*>.asNavType(): NavType<*> = when (this) {
   else           -> throw UnexpectedKeyTypeException(this)
 }
 
-class IllegalStartScreenException(screen: NavScreen) :
+public class IllegalStartScreenException(screen: NavScreen) :
   IllegalArgumentException("Illegal start screen used in NavHost definition: ${screen.name} has required arguments.")
 
-class UnexpectedKeyTypeException(type: KClass<*>) : RuntimeException("Unexpected key type: $type")
+public class UnexpectedKeyTypeException(type: KClass<*>) : RuntimeException("Unexpected key type: $type")

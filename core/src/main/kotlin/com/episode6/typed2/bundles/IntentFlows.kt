@@ -7,7 +7,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlin.time.Duration
 
-fun <T> Intent.mutableStateFlow(
+public fun <T> Intent.mutableStateFlow(
   key: BundleKey<T, *>,
   scope: CoroutineScope,
   debounceWrites: Duration = Duration.ZERO,
@@ -18,7 +18,7 @@ fun <T> Intent.mutableStateFlow(
   set = { setExtra(key, it) },
 )
 
-fun <T> Intent.mutableStateFlow(
+public fun <T> Intent.mutableStateFlow(
   key: AsyncBundleKey<T, *>,
   scope: CoroutineScope,
   debounceWrites: Duration = Duration.ZERO,

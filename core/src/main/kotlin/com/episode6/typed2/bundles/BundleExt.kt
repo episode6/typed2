@@ -12,7 +12,7 @@ import kotlinx.coroutines.CoroutineScope
 import java.io.Serializable
 import kotlin.reflect.KClass
 
-class TypedBundle(private val delegate: Bundle) : BundleValueGetter, BundleValueSetter {
+public class TypedBundle(private val delegate: Bundle) : BundleValueGetter, BundleValueSetter {
   override fun contains(name: String): Boolean = delegate.containsKey(name)
   override fun getBoolean(name: String, default: Boolean): Boolean = delegate.getBoolean(name, default)
   override fun getFloat(name: String, default: Float): Float = delegate.getFloat(name, default)
@@ -103,31 +103,31 @@ class TypedBundle(private val delegate: Bundle) : BundleValueGetter, BundleValue
   override fun setStringArray(name: String, value: Array<String>?) { delegate.putStringArray(name, value) }
 }
 
-fun Bundle.typed(): TypedBundle = TypedBundle(this)
+public fun Bundle.typed(): TypedBundle = TypedBundle(this)
 
-fun <T> Bundle.get(key: BundleKey<T, *>): T = typed().get(key)
-fun <T> Bundle.set(key: BundleKey<T, *>, value: T) = typed().set(key, value)
-fun Bundle.remove(key: BundleKey<*, *>) = typed().remove(key)
-suspend fun <T> Bundle.get(key: AsyncBundleKey<T, *>): T = typed().get(key)
-suspend fun <T> Bundle.set(key: AsyncBundleKey<T, *>, value: T) = typed().set(key, value)
-fun Bundle.remove(key: AsyncBundleKey<*, *>) = typed().remove(key)
+public fun <T> Bundle.get(key: BundleKey<T, *>): T = typed().get(key)
+public fun <T> Bundle.set(key: BundleKey<T, *>, value: T) = typed().set(key, value)
+public fun Bundle.remove(key: BundleKey<*, *>) = typed().remove(key)
+public suspend fun <T> Bundle.get(key: AsyncBundleKey<T, *>): T = typed().get(key)
+public suspend fun <T> Bundle.set(key: AsyncBundleKey<T, *>, value: T) = typed().set(key, value)
+public fun Bundle.remove(key: AsyncBundleKey<*, *>) = typed().remove(key)
 
-fun <T> TypedBundle.property(key: BundleKey<T, *>): DelegateProperty<T> = DelegateProperty(
+public fun <T> TypedBundle.property(key: BundleKey<T, *>): DelegateProperty<T> = DelegateProperty(
   get = { get(key) },
   set = { set(key, it) }
 )
-fun <T> Bundle.property(key: BundleKey<T, *>): DelegateProperty<T> = typed().property(key)
-fun <T> TypedBundle.property(key: AsyncBundleKey<T, *>, scope: CoroutineScope): DelegateProperty<T?> =
+public fun <T> Bundle.property(key: BundleKey<T, *>): DelegateProperty<T> = typed().property(key)
+public fun <T> TypedBundle.property(key: AsyncBundleKey<T, *>, scope: CoroutineScope): DelegateProperty<T?> =
   DelegateProperty(mutableStateFlow(key, scope))
-fun <T> Bundle.property(key: AsyncBundleKey<T, *>, scope: CoroutineScope): DelegateProperty<T?> = typed().property(key, scope)
+public fun <T> Bundle.property(key: AsyncBundleKey<T, *>, scope: CoroutineScope): DelegateProperty<T?> = typed().property(key, scope)
 
-inline fun <T> TypedBundle.update(key: BundleKey<T, *>, reducer: (T)->T) {
+public inline fun <T> TypedBundle.update(key: BundleKey<T, *>, reducer: (T)->T) {
   set(key, reducer(get(key)))
 }
 
-suspend inline fun <T> TypedBundle.update(key: AsyncBundleKey<T, *>, reducer: (T)->T) {
+public suspend inline fun <T> TypedBundle.update(key: AsyncBundleKey<T, *>, reducer: (T)->T) {
   set(key, reducer(get(key)))
 }
 
-inline fun <T> Bundle.update(key: BundleKey<T, *>, reducer: (T)->T) = typed().update(key, reducer)
-suspend inline fun <T> Bundle.update(key: AsyncBundleKey<T, *>, reducer: (T)->T) = typed().update(key, reducer)
+public inline fun <T> Bundle.update(key: BundleKey<T, *>, reducer: (T)->T) = typed().update(key, reducer)
+public suspend inline fun <T> Bundle.update(key: AsyncBundleKey<T, *>, reducer: (T)->T) = typed().update(key, reducer)

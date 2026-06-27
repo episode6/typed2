@@ -6,7 +6,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
-fun NavController.navigateTo(screen: NavScreen) {
+public fun NavController.navigateTo(screen: NavScreen) {
   navigate(screen.name)
 }
 
@@ -18,21 +18,21 @@ fun NavController.navigateTo(screen: NavScreen) {
  *   set(Screen.Arg2, 42)
  * }
  */
-inline fun NavController.navigateTo(screen: NavScreen, args: ComposeNavArgBuilder.() -> Unit) {
+public inline fun NavController.navigateTo(screen: NavScreen, args: ComposeNavArgBuilder.() -> Unit) {
   val builder = ComposeNavArgBuilder()
   builder.args()
   navigate(NavScreenRoute.build(screen, builder))
 }
 
-fun NavController.launchNavigateTo(
+public fun NavController.launchNavigateTo(
   screen: NavScreen,
   scope: CoroutineScope,
   args: suspend ComposeNavArgBuilder.() -> Unit,
 ): Job = scope.launch { navigateTo(screen) { args() } }
 
-object NavScreenRoute {
+public object NavScreenRoute {
 
-  fun build(screen: NavScreen, argBuilder: ComposeNavArgBuilder): String = with(screen) {
+  public fun build(screen: NavScreen, argBuilder: ComposeNavArgBuilder): String = with(screen) {
     val argValues = argBuilder.argMap
     if (argValues.isEmpty()) return name
 
@@ -52,7 +52,7 @@ object NavScreenRoute {
   }
 }
 
-class ComposeNavArgBuilder : PrimitiveKeyValueSetter {
+public class ComposeNavArgBuilder : PrimitiveKeyValueSetter {
   internal val argMap: MutableMap<String, Any?> = mutableMapOf()
   override fun setBoolean(name: String, value: Boolean) { argMap[name] = value }
   override fun setFloat(name: String, value: Float) { argMap[name] = value }
@@ -62,11 +62,11 @@ class ComposeNavArgBuilder : PrimitiveKeyValueSetter {
   override fun remove(name: String) { argMap.remove(name) }
 }
 
-fun <T> ComposeNavArgBuilder.set(key: NavArg<T, *>, value: T) = key.set(this, value)
-fun ComposeNavArgBuilder.remove(key: NavArg<*, *>) = remove(key.name)
-suspend fun <T> ComposeNavArgBuilder.set(key: AsyncNavArg<T, *>, value: T) = key.set(this, value)
-fun ComposeNavArgBuilder.remove(key: AsyncNavArg<*, *>) = remove(key.name)
+public fun <T> ComposeNavArgBuilder.set(key: NavArg<T, *>, value: T) = key.set(this, value)
+public fun ComposeNavArgBuilder.remove(key: NavArg<*, *>) = remove(key.name)
+public suspend fun <T> ComposeNavArgBuilder.set(key: AsyncNavArg<T, *>, value: T) = key.set(this, value)
+public fun ComposeNavArgBuilder.remove(key: AsyncNavArg<*, *>) = remove(key.name)
 
-class MissingRequiredArgumentException(arg: KeyDescriptor<*, *>, screen: NavScreen) : IllegalArgumentException(
+public class MissingRequiredArgumentException(arg: KeyDescriptor<*, *>, screen: NavScreen) : IllegalArgumentException(
   "Missing required argument \"${arg.name}\" when navigating to screen \"${screen.name}\""
 )
