@@ -11,7 +11,6 @@ class ConfigureAndroidPlugin implements Plugin<Project> {
   @Override
   void apply(Project target) {
     target.with {
-      plugins.apply("org.jetbrains.kotlin.android")
       android {
         compileSdk Config.Android.compileSdk
 
@@ -28,9 +27,10 @@ class ConfigureAndroidPlugin implements Plugin<Project> {
           targetCompatibility Config.Jvm.targetCompat
         }
 
-        kotlinOptions {
-          jvmTarget = Config.Jvm.name
-          freeCompilerArgs += [Config.Kotlin.compilerArgs]
+        compilerOptions {
+          def jvmTargetClass = rootProject.class.classLoader.loadClass("org.jetbrains.kotlin.gradle.dsl.JvmTarget")
+          jvmTarget = jvmTargetClass.fromTarget(Config.Jvm.name)
+          freeCompilerArgs.add(Config.Kotlin.compilerArgs)
         }
 
         packaging {
