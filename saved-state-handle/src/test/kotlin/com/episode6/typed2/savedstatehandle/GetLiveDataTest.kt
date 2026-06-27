@@ -156,17 +156,19 @@ class GetLiveDataTest {
   }
 
   @Test
-  fun testRequiredAsyncIntStateFlow_noValue() = runTest(UnconfinedTestDispatcher()) {
+  fun testRequiredAsyncIntStateFlow_noValue() {
     val backingLiveData: MutableLiveData<String?> = MutableLiveData(Keys.asyncRequiredInt.backingTypeInfo.default)
     savedStateHandle.stub {
       onGeneric { getLiveData<String?>(any(), anyOrNull()) } doReturn backingLiveData
     }
 
-    val result = savedStateHandle.getLiveData(Keys.asyncRequiredInt, this)
-    assertThat(result.value).isNull()
-    result.asFlow().test {
-      assertThat(awaitError()).hasClass(RequiredKeyMissingException::class)
-    }
+    assertFailure {
+      runTest(UnconfinedTestDispatcher()) {
+        val result = savedStateHandle.getLiveData(Keys.asyncRequiredInt, this)
+        assertThat(result.value).isNull()
+        result.asFlow().testIn(this)
+      }
+    }.hasClass(RequiredKeyMissingException::class)
   }
 
   @Test fun testRequiredAsyncIntStateFlow_hasValue() = runTest {
