@@ -39,11 +39,11 @@ import com.episode6.typed2.sampleapp.nav.GoUpNavigator
   AppTheme {
     Scaffold(
       topBar = {
-        SmallTopAppBar(
+        TopAppBar(
           title = title,
           navigationIcon = navigationIcon,
           actions = actions,
-          colors = TopAppBarDefaults.smallTopAppBarColors(
+          colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.primary,
             titleContentColor = MaterialTheme.colorScheme.onPrimary,
           )
