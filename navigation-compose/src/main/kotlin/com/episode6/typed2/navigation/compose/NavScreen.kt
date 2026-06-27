@@ -3,11 +3,11 @@ package com.episode6.typed2.navigation.compose
 import android.net.Uri
 import com.episode6.typed2.*
 
-typealias NavArg<T, BACKED_BY> = Key<T, BACKED_BY, PrimitiveKeyValueGetter, PrimitiveKeyValueSetter>
-typealias AsyncNavArg<T, BACKED_BY> = AsyncKey<T, BACKED_BY, PrimitiveKeyValueGetter, PrimitiveKeyValueSetter>
+public typealias NavArg<T, BACKED_BY> = Key<T, BACKED_BY, PrimitiveKeyValueGetter, PrimitiveKeyValueSetter>
+public typealias AsyncNavArg<T, BACKED_BY> = AsyncKey<T, BACKED_BY, PrimitiveKeyValueGetter, PrimitiveKeyValueSetter>
 
-interface NavArgBuilder : PrimitiveKeyBuilder
-open class NavScreen(val name: String, private val argPrefix: String = "") : RequiredEnabledKeyNamespace {
+public interface NavArgBuilder : PrimitiveKeyBuilder
+public open class NavScreen(public val name: String, private val argPrefix: String = "") : RequiredEnabledKeyNamespace {
 
   private val _args = LinkedHashMap<String, KeyDescriptor<*, *>>()
   internal val args: List<KeyDescriptor<*, *>> get() = _args.values.toList()

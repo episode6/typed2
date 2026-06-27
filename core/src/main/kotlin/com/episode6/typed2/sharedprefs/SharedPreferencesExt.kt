@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.launch
 
-class TypedSharedPreferences(private val delegate: SharedPreferences) : PrefValueGetter {
+public class TypedSharedPreferences(private val delegate: SharedPreferences) : PrefValueGetter {
   override fun contains(name: String): Boolean = delegate.contains(name)
   override fun getBoolean(name: String, default: Boolean): Boolean = delegate.getBoolean(name, default)
   override fun getFloat(name: String, default: Float): Float = delegate.getFloat(name, default)
@@ -19,14 +19,14 @@ class TypedSharedPreferences(private val delegate: SharedPreferences) : PrefValu
   override fun getString(name: String, default: String?): String? = delegate.getString(name, default)
   override fun getStringSet(name: String, defaultValue: Set<String?>?): Set<String?>? = delegate.getStringSet(name, defaultValue)?.toSet()
 
-  fun edit(): Editor = Editor(delegate.edit())
-  fun changedKeyNames(): Flow<String> = callbackFlow {
-    val listener = SharedPreferences.OnSharedPreferenceChangeListener { _, name -> trySend(name) }
+  public fun edit(): Editor = Editor(delegate.edit())
+  public fun changedKeyNames(): Flow<String> = callbackFlow {
+    val listener = SharedPreferences.OnSharedPreferenceChangeListener { _, name -> name?.let { trySend(it) } }
     delegate.registerOnSharedPreferenceChangeListener(listener)
     awaitClose { delegate.unregisterOnSharedPreferenceChangeListener(listener) }
   }
 
-  class Editor(private val delegate: SharedPreferences.Editor) : PrefValueSetter {
+  public class Editor(private val delegate: SharedPreferences.Editor) : PrefValueSetter {
     override fun remove(name: String) { delegate.remove(name) }
     override fun setString(name: String, value: String?) { delegate.putString(name, value) }
     override fun setInt(name: String, value: Int) { delegate.putInt(name, value) }
@@ -34,47 +34,47 @@ class TypedSharedPreferences(private val delegate: SharedPreferences) : PrefValu
     override fun setFloat(name: String, value: Float) { delegate.putFloat(name, value) }
     override fun setLong(name: String, value: Long) { delegate.putLong(name, value) }
     override fun setStringSet(name: String, value: Set<String?>?) { delegate.putStringSet(name, value) }
-    fun clear() { delegate.clear() }
-    fun commit() { delegate.commit() }
-    fun apply() { delegate.apply() }
+    public fun clear() { delegate.clear() }
+    public fun commit() { delegate.commit() }
+    public fun apply() { delegate.apply() }
   }
 }
 
-fun SharedPreferences.typed(): TypedSharedPreferences = TypedSharedPreferences(this)
-fun SharedPreferences.Editor.typed(): TypedSharedPreferences.Editor = TypedSharedPreferences.Editor(this)
+public fun SharedPreferences.typed(): TypedSharedPreferences = TypedSharedPreferences(this)
+public fun SharedPreferences.Editor.typed(): TypedSharedPreferences.Editor = TypedSharedPreferences.Editor(this)
 
-fun <T> SharedPreferences.get(key: PrefKey<T, *>): T = typed().get(key)
-fun <T> SharedPreferences.Editor.set(key: PrefKey<T, *>, value: T) = typed().set(key, value)
-fun SharedPreferences.Editor.remove(key: PrefKey<*, *>) = typed().remove(key)
-suspend fun <T> SharedPreferences.get(key: AsyncPrefKey<T, *>): T = typed().get(key)
-suspend fun <T> SharedPreferences.Editor.set(key: AsyncPrefKey<T, *>, value: T) = typed().set(key, value)
-fun SharedPreferences.Editor.remove(key: AsyncPrefKey<*, *>) = typed().remove(key)
+public fun <T> SharedPreferences.get(key: PrefKey<T, *>): T = typed().get(key)
+public fun <T> SharedPreferences.Editor.set(key: PrefKey<T, *>, value: T): Unit = typed().set(key, value)
+public fun SharedPreferences.Editor.remove(key: PrefKey<*, *>): Unit = typed().remove(key)
+public suspend fun <T> SharedPreferences.get(key: AsyncPrefKey<T, *>): T = typed().get(key)
+public suspend fun <T> SharedPreferences.Editor.set(key: AsyncPrefKey<T, *>, value: T): Unit = typed().set(key, value)
+public fun SharedPreferences.Editor.remove(key: AsyncPrefKey<*, *>): Unit = typed().remove(key)
 
-inline fun <T> TypedSharedPreferences.update(key: PrefKey<T, *>, commit: Boolean = false, reducer: (T)->T) {
+public inline fun <T> TypedSharedPreferences.update(key: PrefKey<T, *>, commit: Boolean = false, reducer: (T)->T) {
   edit(commit = commit) {
     set(key, reducer(get(key)))
   }
 }
 
-suspend inline fun <T> TypedSharedPreferences.update(key: AsyncPrefKey<T, *>, commit: Boolean = false, reducer: (T)->T) {
+public suspend inline fun <T> TypedSharedPreferences.update(key: AsyncPrefKey<T, *>, commit: Boolean = false, reducer: (T)->T) {
   edit(commit = commit) {
     set(key, reducer(get(key)))
   }
 }
 
-inline fun <T> SharedPreferences.update(key: PrefKey<T, *>, commit: Boolean = false, reducer: (T)->T) = typed().update(key, commit, reducer)
-suspend inline fun <T> SharedPreferences.update(key: AsyncPrefKey<T, *>, commit: Boolean = false, reducer: (T)->T) = typed().update(key, commit, reducer)
+public inline fun <T> SharedPreferences.update(key: PrefKey<T, *>, commit: Boolean = false, reducer: (T)->T): Unit = typed().update(key, commit, reducer)
+public suspend inline fun <T> SharedPreferences.update(key: AsyncPrefKey<T, *>, commit: Boolean = false, reducer: (T)->T): Unit = typed().update(key, commit, reducer)
 
-fun <T> TypedSharedPreferences.property(key: PrefKey<T, *>): DelegateProperty<T> = DelegateProperty<T>(
+public fun <T> TypedSharedPreferences.property(key: PrefKey<T, *>): DelegateProperty<T> = DelegateProperty<T>(
   get = { get(key) },
   set = { edit { set(key, it) } }
 )
-fun <T> SharedPreferences.property(key: PrefKey<T, *>): DelegateProperty<T> = typed().property(key)
+public fun <T> SharedPreferences.property(key: PrefKey<T, *>): DelegateProperty<T> = typed().property(key)
 
-fun <T> TypedSharedPreferences.property(key: AsyncPrefKey<T, *>, scope: CoroutineScope): DelegateProperty<T?> = DelegateProperty(mutableStateFlow(key, scope))
-fun <T> SharedPreferences.property(key: AsyncPrefKey<T, *>, scope: CoroutineScope): DelegateProperty<T?> = typed().property(key, scope)
+public fun <T> TypedSharedPreferences.property(key: AsyncPrefKey<T, *>, scope: CoroutineScope): DelegateProperty<T?> = DelegateProperty(mutableStateFlow(key, scope))
+public fun <T> SharedPreferences.property(key: AsyncPrefKey<T, *>, scope: CoroutineScope): DelegateProperty<T?> = typed().property(key, scope)
 
-inline fun TypedSharedPreferences.edit(
+public inline fun TypedSharedPreferences.edit(
   commit: Boolean = false,
   action: TypedSharedPreferences.Editor.() -> Unit,
 ) {
@@ -84,13 +84,13 @@ inline fun TypedSharedPreferences.edit(
   }
 }
 
-fun SharedPreferences.launchEdit(
+public fun SharedPreferences.launchEdit(
   scope: CoroutineScope,
   commit: Boolean = false,
   action: suspend SharedPreferences.Editor.() -> Unit,
 ): Job = scope.launch { edit(commit = commit) { action() } }
 
-fun TypedSharedPreferences.launchEdit(
+public fun TypedSharedPreferences.launchEdit(
   scope: CoroutineScope,
   commit: Boolean = false,
   action: suspend TypedSharedPreferences.Editor.() -> Unit,

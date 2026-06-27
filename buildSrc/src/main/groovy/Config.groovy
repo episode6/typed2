@@ -9,17 +9,17 @@ import org.gradle.api.publish.maven.MavenPom
 // I'd prefer to do this in kotlin but then its not accessible from our groovy plugins
 class Config {
   class Jvm {
-    static String name = "1.8"
-    static JavaVersion targetCompat = JavaVersion.VERSION_1_8
-    static JavaVersion sourceCompat = JavaVersion.VERSION_1_8
+    static String name = "17"
+    static JavaVersion targetCompat = JavaVersion.VERSION_17
+    static JavaVersion sourceCompat = JavaVersion.VERSION_17
   }
   class Android {
-    static int compileSdk = 33
-    static int targetSdk = 33
+    static int compileSdk = 35
+    static int targetSdk = 35
     static int minSdk = 21
   }
-  class Ktx {
-    static String[] compilerArgs = []
+  class Kotlin {
+    static String compilerArgs = "-opt-in=kotlin.RequiresOptIn"
   }
   class Site {
     static String generateJekyllConfig(Project project) {
@@ -53,9 +53,9 @@ class Config {
           }
         }
         scm {
-          url = "extensible"
-          connection = "scm:https://github.com/episode6/typed2.git"
-          developerConnection = "scm:https://github.com/episode6/typed2.git"
+          url = "https://github.com/episode6/typed2"
+          connection = "scm:git:https://github.com/episode6/typed2.git"
+          developerConnection = "scm:git:ssh://github.com/episode6/typed2.git"
         }
       }
       project.afterEvaluate {
@@ -63,15 +63,15 @@ class Config {
       }
     }
 
-    public static boolean isReleaseBuild(Project project) {
+    static boolean isReleaseBuild(Project project) {
       return project.version.contains("SNAPSHOT") == false
     }
 
     static String getRepoUrl(Project project) {
       if (isReleaseBuild(project)) {
-        return "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+        return "https://ossrh-staging-api.central.sonatype.com/service/local/staging/deploy/maven2/"
       } else {
-        return "https://oss.sonatype.org/content/repositories/snapshots/"
+        return "https://central.sonatype.com/repository/maven-snapshots/"
       }
     }
   }

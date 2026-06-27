@@ -7,13 +7,10 @@ class ConfigureAndroidComposePlugin implements Plugin<Project> {
   @Override
   void apply(Project target) {
     target.with {
+      plugins.apply("org.jetbrains.kotlin.plugin.compose")
       android {
         buildFeatures {
           compose = true
-        }
-
-        composeOptions {
-          kotlinCompilerExtensionVersion = libs.versions.compose.core.get()
         }
       }
     }

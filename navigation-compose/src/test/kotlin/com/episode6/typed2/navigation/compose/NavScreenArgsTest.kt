@@ -1,6 +1,7 @@
 package com.episode6.typed2.navigation.compose
 
 import androidx.lifecycle.SavedStateHandle
+import assertk.assertFailure
 import assertk.assertThat
 import assertk.assertions.*
 import com.episode6.typed2.*
@@ -40,7 +41,7 @@ class NavScreenArgsTest {
   }
 
   @Test fun testRequiredInt() {
-    assertThat { savedStateHandle.get(TestScreen.requiredInt) }
-      .isFailure().hasClass(RequiredKeyMissingException::class)
+    assertFailure { savedStateHandle.get(TestScreen.requiredInt) }
+      .hasClass(RequiredKeyMissingException::class)
   }
 }

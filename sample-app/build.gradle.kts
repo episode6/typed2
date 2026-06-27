@@ -2,7 +2,7 @@ plugins {
   id("com.android.application")
   id("config-android")
   id("config-compose")
-  kotlin("kapt")
+  id("com.google.devtools.ksp")
   kotlin("plugin.serialization")
   id("com.google.dagger.hilt.android")
   id("kotlin-parcelize")
@@ -44,8 +44,8 @@ dependencies {
 
   implementation(libs.hilt.android.core)
   implementation(libs.hilt.nav.compose)
-  kapt(libs.hilt.compiler)
-  kaptAndroidTest(libs.hilt.compiler)
+  ksp(libs.hilt.compiler)
+  kspAndroidTest(libs.hilt.compiler)
 
   androidTestImplementation(libs.androidx.test.ext.junit)
   androidTestImplementation(libs.androidx.espresso.core)

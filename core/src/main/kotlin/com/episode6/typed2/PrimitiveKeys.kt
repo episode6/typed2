@@ -2,59 +2,59 @@ package com.episode6.typed2
 
 import java.math.BigDecimal
 
-typealias PrimitiveKey<T, BACKED_BY> = Key<T, BACKED_BY, PrimitiveKeyValueGetter, PrimitiveKeyValueSetter>
-typealias AsyncPrimitiveKey<T, BACKED_BY> = AsyncKey<T, BACKED_BY, PrimitiveKeyValueGetter, PrimitiveKeyValueSetter>
+public typealias PrimitiveKey<T, BACKED_BY> = Key<T, BACKED_BY, PrimitiveKeyValueGetter, PrimitiveKeyValueSetter>
+public typealias AsyncPrimitiveKey<T, BACKED_BY> = AsyncKey<T, BACKED_BY, PrimitiveKeyValueGetter, PrimitiveKeyValueSetter>
 
-interface PrimitiveKeyBuilder : KeyBuilder {
-  fun String.encode(): String = this
-  fun String.decode(): String = this
+public interface PrimitiveKeyBuilder : KeyBuilder {
+  public fun String.encode(): String = this
+  public fun String.decode(): String = this
 }
 
-fun PrimitiveKeyBuilder.boolean(default: Boolean): PrimitiveKey<Boolean, Boolean> = nativeKey(
+public fun PrimitiveKeyBuilder.boolean(default: Boolean): PrimitiveKey<Boolean, Boolean> = nativeKey(
   get = { getBoolean(name, default) },
   set = { setBoolean(name, it) },
   backingDefault = default
 )
 
-fun PrimitiveKeyBuilder.boolean(): PrimitiveKey<Boolean?, String?> = string().mapType(
+public fun PrimitiveKeyBuilder.boolean(): PrimitiveKey<Boolean?, String?> = string().mapType(
   mapGet = { it?.toBoolean() },
   mapSet = { it?.toString() }
 )
 
-fun PrimitiveKeyBuilder.float(default: Float): PrimitiveKey<Float, Float> = nativeKey(
+public fun PrimitiveKeyBuilder.float(default: Float): PrimitiveKey<Float, Float> = nativeKey(
   get = { getFloat(name, default) },
   set = { setFloat(name, it) },
   backingDefault = default
 )
 
-fun PrimitiveKeyBuilder.float(): PrimitiveKey<Float?, String?> = string().mapType(
+public fun PrimitiveKeyBuilder.float(): PrimitiveKey<Float?, String?> = string().mapType(
   mapGet = { it?.toFloat() },
   mapSet = { it?.toString() }
 )
 
-fun PrimitiveKeyBuilder.int(default: Int): PrimitiveKey<Int, Int> = nativeKey(
+public fun PrimitiveKeyBuilder.int(default: Int): PrimitiveKey<Int, Int> = nativeKey(
   get = { getInt(name, default) },
   set = { setInt(name, it) },
   backingDefault = default
 )
 
-fun PrimitiveKeyBuilder.int(): PrimitiveKey<Int?, String?> = string().mapType(
+public fun PrimitiveKeyBuilder.int(): PrimitiveKey<Int?, String?> = string().mapType(
   mapGet = { it?.toInt() },
   mapSet = { it?.toString() }
 )
 
-fun PrimitiveKeyBuilder.long(default: Long): PrimitiveKey<Long, Long> = nativeKey(
+public fun PrimitiveKeyBuilder.long(default: Long): PrimitiveKey<Long, Long> = nativeKey(
   get = { getLong(name, default) },
   set = { setLong(name, it) },
   backingDefault = default
 )
 
-fun PrimitiveKeyBuilder.long(): PrimitiveKey<Long?, String?> = string().mapType(
+public fun PrimitiveKeyBuilder.long(): PrimitiveKey<Long?, String?> = string().mapType(
   mapGet = { it?.toLong() },
   mapSet = { it?.toString() }
 )
 
-fun PrimitiveKeyBuilder.string(default: String): PrimitiveKey<String, String> =
+public fun PrimitiveKeyBuilder.string(default: String): PrimitiveKey<String, String> =
   nativeKey<String, PrimitiveKeyValueGetter, PrimitiveKeyValueSetter>(
     get = { getString(name, default) ?: default },
     set = { setString(name, it) },
@@ -64,7 +64,7 @@ fun PrimitiveKeyBuilder.string(default: String): PrimitiveKey<String, String> =
     mapSet = { it.encode() },
   )
 
-fun PrimitiveKeyBuilder.string(): PrimitiveKey<String?, String?> =
+public fun PrimitiveKeyBuilder.string(): PrimitiveKey<String?, String?> =
   nativeKey<String, PrimitiveKeyValueGetter, PrimitiveKeyValueSetter>(
     get = { getString(name, null) },
     set = { setString(name, it) },
@@ -73,7 +73,7 @@ fun PrimitiveKeyBuilder.string(): PrimitiveKey<String?, String?> =
     mapSet = { it?.encode() },
   )
 
-fun PrimitiveKeyBuilder.double(): PrimitiveKey<Double?, String?> = string().mapType(
+public fun PrimitiveKeyBuilder.double(): PrimitiveKey<Double?, String?> = string().mapType(
   mapGet = { it?.let { BigDecimal(it).toDouble() } },
-  mapSet = { it?.toBigDecimal()?.toPlainString() },
+  mapSet = { it?.let { BigDecimal(it).toPlainString() } },
 )

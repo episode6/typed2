@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.StateFlow
 import java.io.Serializable
 import kotlin.reflect.KClass
 
-class TypedSavedStateHandle(private val delegate: SavedStateHandle) : BundleValueGetter, BundleValueSetter {
+public class TypedSavedStateHandle(private val delegate: SavedStateHandle) : BundleValueGetter, BundleValueSetter {
   override fun contains(name: String): Boolean = delegate.contains(name)
   override fun getBinder(name: String): IBinder? = delegate[name]
   override fun getBundle(name: String): Bundle? = delegate[name]
@@ -87,37 +87,37 @@ class TypedSavedStateHandle(private val delegate: SavedStateHandle) : BundleValu
   override fun setLong(name: String, value: Long) { delegate[name] = value }
 
   @MainThread
-  fun <T> getStateFlow(key: String, initialValue: T): StateFlow<T> = delegate.getStateFlow(key, initialValue)
+  public fun <T> getStateFlow(key: String, initialValue: T): StateFlow<T> = delegate.getStateFlow(key, initialValue)
 
   @MainThread
-  fun <T> getLiveData(key: String, initialValue: T): MutableLiveData<T> = delegate.getLiveData(key, initialValue)
+  public fun <T> getLiveData(key: String, initialValue: T): MutableLiveData<T> = delegate.getLiveData(key, initialValue)
 }
 
-fun SavedStateHandle.typed(): TypedSavedStateHandle = TypedSavedStateHandle(this)
+public fun SavedStateHandle.typed(): TypedSavedStateHandle = TypedSavedStateHandle(this)
 
-fun <T> SavedStateHandle.get(key: BundleKey<T, *>): T = typed().get(key)
-fun <T> SavedStateHandle.set(key: BundleKey<T, *>, value: T) = typed().set(key, value)
-fun SavedStateHandle.remove(key: BundleKey<*,*>) { remove<Any>(key.name) }
-suspend fun <T> SavedStateHandle.get(key: AsyncBundleKey<T, *>): T = typed().get(key)
-suspend fun <T> SavedStateHandle.set(key: AsyncBundleKey<T, *>, value: T) = typed().set(key, value)
-fun SavedStateHandle.remove(key: AsyncBundleKey<*, *>) { remove<Any>(key.name) }
+public fun <T> SavedStateHandle.get(key: BundleKey<T, *>): T = typed().get(key)
+public fun <T> SavedStateHandle.set(key: BundleKey<T, *>, value: T): Unit = typed().set(key, value)
+public fun SavedStateHandle.remove(key: BundleKey<*,*>) { remove<Any>(key.name) }
+public suspend fun <T> SavedStateHandle.get(key: AsyncBundleKey<T, *>): T = typed().get(key)
+public suspend fun <T> SavedStateHandle.set(key: AsyncBundleKey<T, *>, value: T): Unit = typed().set(key, value)
+public fun SavedStateHandle.remove(key: AsyncBundleKey<*, *>) { remove<Any>(key.name) }
 
-fun <T> TypedSavedStateHandle.property(key: BundleKey<T, *>): DelegateProperty<T> = DelegateProperty(
+public fun <T> TypedSavedStateHandle.property(key: BundleKey<T, *>): DelegateProperty<T> = DelegateProperty(
   get = { get(key) },
   set = { set(key, it) },
 )
-fun <T> SavedStateHandle.property(key: BundleKey<T, *>): DelegateProperty<T> = typed().property(key)
+public fun <T> SavedStateHandle.property(key: BundleKey<T, *>): DelegateProperty<T> = typed().property(key)
 
-fun <T> TypedSavedStateHandle.property(key: AsyncBundleKey<T, *>, scope: CoroutineScope): DelegateProperty<T?> = DelegateProperty(mutableStateFlow(key, scope))
-fun <T> SavedStateHandle.property(key: AsyncBundleKey<T, *>, scope: CoroutineScope): DelegateProperty<T?> = typed().property(key, scope)
+public fun <T> TypedSavedStateHandle.property(key: AsyncBundleKey<T, *>, scope: CoroutineScope): DelegateProperty<T?> = DelegateProperty(mutableStateFlow(key, scope))
+public fun <T> SavedStateHandle.property(key: AsyncBundleKey<T, *>, scope: CoroutineScope): DelegateProperty<T?> = typed().property(key, scope)
 
-inline fun <T> TypedSavedStateHandle.update(key: BundleKey<T, *>, reducer: (T)->T) {
+public inline fun <T> TypedSavedStateHandle.update(key: BundleKey<T, *>, reducer: (T)->T) {
   set(key, reducer(get(key)))
 }
 
-suspend inline fun <T> TypedSavedStateHandle.update(key: AsyncBundleKey<T, *>, reducer: (T)->T) {
+public suspend inline fun <T> TypedSavedStateHandle.update(key: AsyncBundleKey<T, *>, reducer: (T)->T) {
   set(key, reducer(get(key)))
 }
 
-inline fun <T> SavedStateHandle.update(key: BundleKey<T, *>, reducer: (T)->T) = typed().update(key, reducer)
-suspend inline fun <T> SavedStateHandle.update(key: AsyncBundleKey<T, *>, reducer: (T)->T) = typed().update(key, reducer)
+public inline fun <T> SavedStateHandle.update(key: BundleKey<T, *>, reducer: (T)->T): Unit = typed().update(key, reducer)
+public suspend inline fun <T> SavedStateHandle.update(key: AsyncBundleKey<T, *>, reducer: (T)->T): Unit = typed().update(key, reducer)

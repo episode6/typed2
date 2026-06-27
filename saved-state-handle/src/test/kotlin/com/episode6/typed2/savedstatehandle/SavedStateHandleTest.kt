@@ -4,7 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import assertk.assertThat
 import assertk.assertions.hasClass
 import assertk.assertions.isEqualTo
-import assertk.assertions.isFailure
+import assertk.assertFailure
 import assertk.assertions.isNull
 import com.episode6.typed2.RequiredKeyMissingException
 import com.episode6.typed2.bundles.BundleKeyNamespace
@@ -59,8 +59,8 @@ class SavedStateHandleTest {
       onGeneric { get<String>("requiredInt") } doAnswer { null }
     }
 
-    assertThat { savedStateHandle.get(Keys.requiredInt) }
-      .isFailure().hasClass(RequiredKeyMissingException::class)
+    assertFailure { savedStateHandle.get(Keys.requiredInt) }
+      .hasClass(RequiredKeyMissingException::class)
   }
 }
 

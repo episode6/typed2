@@ -4,7 +4,7 @@ import android.os.PersistableBundle
 import assertk.assertThat
 import assertk.assertions.hasClass
 import assertk.assertions.isEqualTo
-import assertk.assertions.isFailure
+import assertk.assertFailure
 import assertk.assertions.isNull
 import com.episode6.typed2.bundles.*
 import org.junit.Test
@@ -51,8 +51,7 @@ class PersistableBundleTest {
       on { getString("requiredInt", null) } doReturn null
     }
 
-    assertThat { bundle.get(Keys.myRequiredInt) }
-      .isFailure()
+    assertFailure { bundle.get(Keys.myRequiredInt) }
       .hasClass(RequiredKeyMissingException::class)
   }
 
@@ -64,8 +63,7 @@ class PersistableBundleTest {
 
     val result: Int by bundle.property(Keys.myRequiredInt)
 
-    assertThat { result }
-      .isFailure()
+    assertFailure { result }
       .hasClass(RequiredKeyMissingException::class)
   }
 
@@ -75,8 +73,7 @@ class PersistableBundleTest {
       on { getString("requiredInt", null) } doReturn null
     }
 
-    assertThat { bundle.get(Keys.myRequiredInt) }
-      .isFailure()
+    assertFailure { bundle.get(Keys.myRequiredInt) }
       .hasClass(RequiredKeyMissingException::class)
   }
 

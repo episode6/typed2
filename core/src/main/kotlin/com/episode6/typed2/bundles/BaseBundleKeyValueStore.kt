@@ -6,18 +6,18 @@ import com.episode6.typed2.get
 import com.episode6.typed2.set
 
 
-interface BaseBundleValueGetter : PrimitiveKeyValueGetter {
-  fun getDouble(name: String, default: Double): Double
-  fun getDoubleArray(name: String): DoubleArray?
-  fun getIntArray(name: String): IntArray?
-  fun getLongArray(name: String): LongArray?
-  fun getStringArray(name: String): Array<String>?
+public interface BaseBundleValueGetter : PrimitiveKeyValueGetter {
+  public fun getDouble(name: String, default: Double): Double
+  public fun getDoubleArray(name: String): DoubleArray?
+  public fun getIntArray(name: String): IntArray?
+  public fun getLongArray(name: String): LongArray?
+  public fun getStringArray(name: String): Array<String>?
 }
 
-interface BaseBundleValueSetter : PrimitiveKeyValueSetter {
-  fun setDouble(name: String, value: Double)
-  fun setDoubleArray(name: String, value: DoubleArray?)
-  fun setIntArray(name: String, value: IntArray?)
-  fun setLongArray(name: String, value: LongArray?)
-  fun setStringArray(name: String, value: Array<String>?)
+public interface BaseBundleValueSetter : PrimitiveKeyValueSetter {
+  public fun setDouble(name: String, value: Double)
+  public fun setDoubleArray(name: String, value: DoubleArray?)
+  public fun setIntArray(name: String, value: IntArray?)
+  public fun setLongArray(name: String, value: LongArray?)
+  public fun setStringArray(name: String, value: Array<String>?)
 }

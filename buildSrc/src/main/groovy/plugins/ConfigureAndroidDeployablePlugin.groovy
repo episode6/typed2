@@ -17,7 +17,10 @@ class ConfigureAndroidDeployablePlugin implements Plugin<Project> {
         publishing {
           singleVariant("release") {
             withSourcesJar()
-            withJavadocJar()
+            // Intentionally NOT withJavadocJar(): AGP's internal javadoc task uses a
+            // legacy bundled Dokka whose ASM can't read Kotlin 2.x sealed-class bytecode
+            // (PermittedSubclasses requires ASM9). We attach our own Dokka 2.x javadoc
+            // jar (the `javadocJar` task from CommonDeployablePlugin) instead.
           }
         }
       }
@@ -27,6 +30,7 @@ class ConfigureAndroidDeployablePlugin implements Plugin<Project> {
           publications {
             release(MavenPublication) {
               from components.release
+              artifact(tasks.named("javadocJar"))
               Config.Maven.applyPomConfig(target, pom)
             }
           }

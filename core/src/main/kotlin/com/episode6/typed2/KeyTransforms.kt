@@ -5,11 +5,11 @@ import kotlinx.coroutines.withContext
 import kotlin.coroutines.CoroutineContext
 
 
-fun <T : Any, BACKED_BY : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter> Key<T?, BACKED_BY, GETTER, SETTER>.defaultProvider(
+public fun <T : Any, BACKED_BY : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter> Key<T?, BACKED_BY, GETTER, SETTER>.defaultProvider(
   default: () -> T,
 ): Key<T, BACKED_BY, GETTER, SETTER> = withOutputDefault(OutputDefault.Provider(default))
 
-fun <T : Any, BACKED_BY : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter> AsyncKey<T?, BACKED_BY, GETTER, SETTER>.defaultProvider(
+public fun <T : Any, BACKED_BY : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter> AsyncKey<T?, BACKED_BY, GETTER, SETTER>.defaultProvider(
   default: suspend () -> T,
 ): AsyncKey<T, BACKED_BY, GETTER, SETTER> = withOutputDefault(AsyncOutputDefault.Provider(default))
 
@@ -41,7 +41,7 @@ internal fun <T : Any, BACKED_BY : Any?, GETTER : KeyValueGetter, SETTER : KeyVa
   newKeyCallback = newKeyCallback,
 )
 
-fun <T : Any?, R : Any?, BACKED_BY : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter> Key<T, BACKED_BY, GETTER, SETTER>.mapType(
+public fun <T : Any?, R : Any?, BACKED_BY : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter> Key<T, BACKED_BY, GETTER, SETTER>.mapType(
   mapGet: (T) -> R,
   mapSet: (R) -> T,
 ): Key<R, BACKED_BY, GETTER, SETTER> = Key(
@@ -56,7 +56,7 @@ fun <T : Any?, R : Any?, BACKED_BY : Any?, GETTER : KeyValueGetter, SETTER : Key
   newKeyCallback = newKeyCallback,
 )
 
-fun <T : Any?, R : Any?, BACKED_BY : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter> AsyncKey<T, BACKED_BY, GETTER, SETTER>.mapType(
+public fun <T : Any?, R : Any?, BACKED_BY : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter> AsyncKey<T, BACKED_BY, GETTER, SETTER>.mapType(
   mapGet: suspend (T) -> R,
   mapSet: suspend (R) -> T,
 ): AsyncKey<R, BACKED_BY, GETTER, SETTER> = AsyncKey(
@@ -71,7 +71,7 @@ fun <T : Any?, R : Any?, BACKED_BY : Any?, GETTER : KeyValueGetter, SETTER : Key
   newKeyCallback = newKeyCallback,
 )
 
-fun <T : Any?, BACKED_BY : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter> Key<T, BACKED_BY, GETTER, SETTER>.async(
+public fun <T : Any?, BACKED_BY : Any?, GETTER : KeyValueGetter, SETTER : KeyValueSetter> Key<T, BACKED_BY, GETTER, SETTER>.async(
   context: CoroutineContext = Dispatchers.Default,
 ): AsyncKey<T, BACKED_BY, GETTER, SETTER> = AsyncKey(
   name = name,

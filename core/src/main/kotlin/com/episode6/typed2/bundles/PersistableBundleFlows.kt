@@ -7,13 +7,13 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlin.time.Duration
 
-fun <T> PersistableBundle.mutableStateFlow(
+public fun <T> PersistableBundle.mutableStateFlow(
   key: PersistableBundleKey<T, *>,
   scope: CoroutineScope,
   debounceWrites: Duration = Duration.ZERO,
 ): MutableStateFlow<T> = typed().mutableStateFlow(key = key, scope = scope, debounceWrites = debounceWrites)
 
-fun <T> TypedPersistableBundle.mutableStateFlow(
+public fun <T> TypedPersistableBundle.mutableStateFlow(
   key: PersistableBundleKey<T, *>,
   scope: CoroutineScope,
   debounceWrites: Duration = Duration.ZERO,
@@ -24,13 +24,13 @@ fun <T> TypedPersistableBundle.mutableStateFlow(
   set = { set(key, it) },
 )
 
-fun <T> PersistableBundle.mutableStateFlow(
+public fun <T> PersistableBundle.mutableStateFlow(
   key: AsyncPersistableBundleKey<T, *>,
   scope: CoroutineScope,
   debounceWrites: Duration = Duration.ZERO,
 ): MutableStateFlow<T?> = typed().mutableStateFlow(key = key, scope = scope, debounceWrites = debounceWrites)
 
-fun <T> TypedPersistableBundle.mutableStateFlow(
+public fun <T> TypedPersistableBundle.mutableStateFlow(
   key: AsyncPersistableBundleKey<T, *>,
   scope: CoroutineScope,
   debounceWrites: Duration = Duration.ZERO,

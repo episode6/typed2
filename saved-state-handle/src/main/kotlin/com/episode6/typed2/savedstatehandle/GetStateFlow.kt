@@ -10,22 +10,22 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.*
 import kotlin.time.Duration
 
-fun <T, BACKED_BY> SavedStateHandle.flow(key: Key<T, BACKED_BY, *, *>): Flow<T> = typed().flow(key)
-fun <T, BACKED_BY> TypedSavedStateHandle.flow(key: Key<T, BACKED_BY, *, *>): Flow<T> = getStateFlow(key.name, key.backingTypeInfo.default)
+public fun <T, BACKED_BY> SavedStateHandle.flow(key: Key<T, BACKED_BY, *, *>): Flow<T> = typed().flow(key)
+public fun <T, BACKED_BY> TypedSavedStateHandle.flow(key: Key<T, BACKED_BY, *, *>): Flow<T> = getStateFlow(key.name, key.backingTypeInfo.default)
   .map { key.mapper.mapGet(it) }
 
-fun <T, BACKED_BY> SavedStateHandle.flow(key: AsyncKey<T, BACKED_BY, *, *>): Flow<T> = typed().flow(key)
-fun <T, BACKED_BY> TypedSavedStateHandle.flow(key: AsyncKey<T, BACKED_BY, *, *>): Flow<T> =
+public fun <T, BACKED_BY> SavedStateHandle.flow(key: AsyncKey<T, BACKED_BY, *, *>): Flow<T> = typed().flow(key)
+public fun <T, BACKED_BY> TypedSavedStateHandle.flow(key: AsyncKey<T, BACKED_BY, *, *>): Flow<T> =
   getStateFlow(key.name, key.backingTypeInfo.default)
     .map { key.mapper.mapGet(it) }
 
-fun <T, BACKED_BY> SavedStateHandle.getStateFlow(
+public fun <T, BACKED_BY> SavedStateHandle.getStateFlow(
   key: Key<T, BACKED_BY, *, *>,
   scope: CoroutineScope,
   started: SharingStarted,
 ): StateFlow<T> = typed().getStateFlow(key = key, scope = scope, started = started)
 
-fun <T, BACKED_BY> TypedSavedStateHandle.getStateFlow(
+public fun <T, BACKED_BY> TypedSavedStateHandle.getStateFlow(
   key: Key<T, BACKED_BY, *, *>,
   scope: CoroutineScope,
   started: SharingStarted,
@@ -33,25 +33,25 @@ fun <T, BACKED_BY> TypedSavedStateHandle.getStateFlow(
   map { key.mapper.mapGet(it) }.stateIn(scope, started, initialValue = key.mapper.mapGet(value))
 }
 
-fun <T, BACKED_BY> SavedStateHandle.getStateFlow(
+public fun <T, BACKED_BY> SavedStateHandle.getStateFlow(
   key: AsyncKey<T, BACKED_BY, *, *>,
   scope: CoroutineScope,
   started: SharingStarted,
 ): StateFlow<T?> = typed().getStateFlow(key = key, scope = scope, started = started)
 
-fun <T, BACKED_BY> TypedSavedStateHandle.getStateFlow(
+public fun <T, BACKED_BY> TypedSavedStateHandle.getStateFlow(
   key: AsyncKey<T, BACKED_BY, *, *>,
   scope: CoroutineScope,
   started: SharingStarted,
 ): StateFlow<T?> = flow(key).stateIn(scope, started, null)
 
-fun <T> SavedStateHandle.mutableStateFlow(
+public fun <T> SavedStateHandle.mutableStateFlow(
   key: BundleKey<T, *>,
   scope: CoroutineScope,
   debounceWrites: Duration = Duration.ZERO,
 ): MutableStateFlow<T> = typed().mutableStateFlow(key = key, scope = scope, debounceWrites = debounceWrites)
 
-fun <T> TypedSavedStateHandle.mutableStateFlow(
+public fun <T> TypedSavedStateHandle.mutableStateFlow(
   key: BundleKey<T, *>,
   scope: CoroutineScope,
   debounceWrites: Duration = Duration.ZERO,
@@ -63,13 +63,13 @@ fun <T> TypedSavedStateHandle.mutableStateFlow(
   updates = flow(key)
 )
 
-fun <T> SavedStateHandle.mutableStateFlow(
+public fun <T> SavedStateHandle.mutableStateFlow(
   key: AsyncBundleKey<T, *>,
   scope: CoroutineScope,
   debounceWrites: Duration = Duration.ZERO,
 ): MutableStateFlow<T?> = typed().mutableStateFlow(key = key, scope = scope, debounceWrites = debounceWrites)
 
-fun <T> TypedSavedStateHandle.mutableStateFlow(
+public fun <T> TypedSavedStateHandle.mutableStateFlow(
   key: AsyncBundleKey<T, *>,
   scope: CoroutineScope,
   debounceWrites: Duration = Duration.ZERO,

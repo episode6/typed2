@@ -17,12 +17,17 @@ class CommonDeployablePlugin implements Plugin<Project> {
         explicitApi()
       }
 
-      task("deploy", dependsOn: tasks.publish)
-      task("install", dependsOn: tasks.publishToMavenLocal)
+      tasks.register("deploy") {
+        dependsOn(tasks.named("publish"))
+      }
+      tasks.register("install") {
+        dependsOn(tasks.named("publishToMavenLocal"))
+      }
 
-      task("javadocJar", type: Jar, dependsOn: tasks.dokkaHtml) {
+      tasks.register("javadocJar", Jar) {
+        dependsOn("dokkaGeneratePublicationHtml")
         archiveClassifier.set('javadoc')
-        from tasks.dokkaHtml
+        from tasks.named("dokkaGeneratePublicationHtml")
       }
 
       signing {
@@ -37,6 +42,7 @@ class CommonDeployablePlugin implements Plugin<Project> {
       publishing {
         repositories {
           maven {
+            name = "sonatype"
             url Config.Maven.getRepoUrl(target)
             credentials {
               username findProperty("nexusUsername")

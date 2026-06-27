@@ -2,8 +2,8 @@ package com.episode6.typed2
 
 import kotlin.reflect.KClass
 
-object NativeKeys {
-  fun <T : Any, GETTER : KeyValueGetter, SETTER : KeyValueSetter> create(
+public object NativeKeys {
+  public fun <T : Any, GETTER : KeyValueGetter, SETTER : KeyValueSetter> create(
     keyBuilder: KeyBuilder,
     backingDefault: T,
     backingClass: KClass<T>,
@@ -18,7 +18,7 @@ object NativeKeys {
     newKeyCallback = keyBuilder.newKeyCallback
   )
 
-  fun <T : Any, GETTER : KeyValueGetter, SETTER : KeyValueSetter> create(
+  public fun <T : Any, GETTER : KeyValueGetter, SETTER : KeyValueSetter> create(
     keyBuilder: KeyBuilder,
     backingClass: KClass<T>,
     get: GETTER.() -> T?,
@@ -32,7 +32,7 @@ object NativeKeys {
     newKeyCallback = keyBuilder.newKeyCallback
   )
 
-  inline fun <reified T : Any, GETTER : KeyValueGetter, SETTER : KeyValueSetter> create(
+  public inline fun <reified T : Any, GETTER : KeyValueGetter, SETTER : KeyValueSetter> create(
     keyBuilder: KeyBuilder,
     backingDefault: T,
     noinline get: GETTER.() -> T,
@@ -45,7 +45,7 @@ object NativeKeys {
     set = set,
   )
 
-  inline fun <reified T : Any, GETTER : KeyValueGetter, SETTER : KeyValueSetter> create(
+  public inline fun <reified T : Any, GETTER : KeyValueGetter, SETTER : KeyValueSetter> create(
     keyBuilder: KeyBuilder,
     noinline get: GETTER.() -> T?,
     noinline set: SETTER.(T?) -> Unit,

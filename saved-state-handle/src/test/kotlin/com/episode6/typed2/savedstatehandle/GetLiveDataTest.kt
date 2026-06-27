@@ -11,7 +11,8 @@ import app.cash.turbine.testIn
 import assertk.assertThat
 import assertk.assertions.hasClass
 import assertk.assertions.isEqualTo
-import assertk.assertions.isFailure
+import assertk.assertFailure
+import assertk.assertions.isNotNull
 import assertk.assertions.isNull
 import com.episode6.typed2.RequiredKeyMissingException
 import com.episode6.typed2.async
@@ -20,6 +21,7 @@ import com.episode6.typed2.int
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.*
 import org.junit.After
@@ -119,8 +121,8 @@ class GetLiveDataTest {
       onGeneric { getLiveData<String?>(any(), anyOrNull()) } doReturn backingLiveData
     }
 
-    assertThat { savedStateHandle.getLiveData(Keys.requiredInt) }
-      .isFailure().hasClass(RequiredKeyMissingException::class)
+    assertFailure { savedStateHandle.getLiveData(Keys.requiredInt) }
+      .hasClass(RequiredKeyMissingException::class)
   }
 
   @Test fun testRequiredIntStateFlow_hasValue() = runTest {
@@ -155,16 +157,27 @@ class GetLiveDataTest {
     }
   }
 
-  @Test(expected = RequiredKeyMissingException::class) // catches exception in other coroutine
-  fun testRequiredAsyncIntStateFlow_noValue() = runTest(UnconfinedTestDispatcher()) {
+  @Test
+  fun testRequiredAsyncIntStateFlow_noValue() = runTest {
+    // LiveData.asFlow() uses withContext(Dispatchers.Main.immediate). Share runTest's
+    // scheduler with Dispatchers.Main so both use the same TestCoroutineScheduler,
+    // then coroutineScope propagates RequiredKeyMissingException from the child coroutine.
+    Dispatchers.setMain(StandardTestDispatcher(testScheduler))
     val backingLiveData: MutableLiveData<String?> = MutableLiveData(Keys.asyncRequiredInt.backingTypeInfo.default)
     savedStateHandle.stub {
       onGeneric { getLiveData<String?>(any(), anyOrNull()) } doReturn backingLiveData
     }
 
-    val result = savedStateHandle.getLiveData(Keys.asyncRequiredInt, this)
-    assertThat(result.value).isNull()
-    result.asFlow().testIn(this)
+    var caught: RequiredKeyMissingException? = null
+    try {
+      coroutineScope {
+        savedStateHandle.getLiveData(Keys.asyncRequiredInt, this)
+      }
+    } catch (e: RequiredKeyMissingException) {
+      caught = e
+    }
+
+    assertThat(caught).isNotNull()
   }
 
   @Test fun testRequiredAsyncIntStateFlow_hasValue() = runTest {

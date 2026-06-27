@@ -10,12 +10,12 @@ import dev.ahmedmourad.bundlizer.bundle
 import dev.ahmedmourad.bundlizer.unbundle
 import kotlinx.serialization.KSerializer
 
-fun <T : Any> BundleKeyBuilder.bundlized(
+public fun <T : Any> BundleKeyBuilder.bundlized(
   default: T,
   serializer: () -> KSerializer<T>,
 ): BundleKey<T, Bundle?> = bundlized(serializer).defaultProvider { default }
 
-fun <T : Any> BundleKeyBuilder.bundlized(
+public fun <T : Any> BundleKeyBuilder.bundlized(
   serializer: () -> KSerializer<T>,
 ): BundleKey<T?, Bundle?> = bundle().mapType(
   mapGet = { it?.unbundle(serializer()) },

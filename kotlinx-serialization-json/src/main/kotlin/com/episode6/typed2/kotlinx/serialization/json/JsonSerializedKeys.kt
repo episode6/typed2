@@ -4,13 +4,13 @@ import com.episode6.typed2.*
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.json.Json
 
-fun <T : Any> PrimitiveKeyBuilder.json(
+public fun <T : Any> PrimitiveKeyBuilder.json(
   default: T,
   serializer: () -> KSerializer<T>,
   json: () -> Json = { Json },
 ): PrimitiveKey<T, String?> = json(serializer, json).defaultProvider { default }
 
-fun <T : Any> PrimitiveKeyBuilder.json(
+public fun <T : Any> PrimitiveKeyBuilder.json(
   serializer: () -> KSerializer<T>,
   json: () -> Json = { Json },
 ): PrimitiveKey<T?, String?> = string().mapType(
