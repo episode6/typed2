@@ -9,9 +9,10 @@ alias(libs.plugins.kotlin.serialization) apply false
   id("config-site")
 }
 
+val selfVersion = self.versions.name.get()
 allprojects {
   group = "com.episode6.typed2"
-  version = "2.0.0-alpha04-SNAPSHOT"
+  version = selfVersion
 }
 description = "Type-safe keys for obnoxious key-value stores."
 
