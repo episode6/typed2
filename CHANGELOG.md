@@ -1,5 +1,10 @@
 # ChangeLog
 
+### v2.0.0-alpha04 - Unreleased
+
+- Move version name source of truth into `self.versions.toml` (build.gradle.kts, `ship-release.py` and release skills now read it from there)
+
+
 ### v2.0.0-alpha03 - Released 06/27/2026
 
 - Modernize build infrastructure: Kotlin 2.3.21, Gradle 9.5.1, Dokka 2.2.0, AGP 9.2.1, JVM target 17

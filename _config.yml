@@ -2,7 +2,7 @@
 theme: jekyll-theme-cayman
 title: typed2
 description: Type-safe keys for obnoxious key-value stores.
-version: 2.0.0-alpha03
-docsDir: https://episode6.github.io/typed2/docs/v2.0.0-alpha03
+version: 2.0.0-alpha04-SNAPSHOT
+docsDir: https://episode6.github.io/typed2/docs/main
 kotlinVersion: 2.3.21
 coroutineVersion: 1.9.0
