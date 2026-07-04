@@ -16,7 +16,7 @@ class Config {
   class Android {
     static int compileSdk = 35
     static int targetSdk = 35
-    static int minSdk = 21
+    static int minSdk = 23
   }
   class Kotlin {
     static String compilerArgs = "-opt-in=kotlin.RequiresOptIn"

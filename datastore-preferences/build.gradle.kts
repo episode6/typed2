@@ -7,9 +7,6 @@ plugins {
 
 android {
   namespace = "com.episode6.typed2.datastore.preferences"
-  defaultConfig {
-    minSdk = 23 // required by androidx.datastore 1.2+
-  }
 }
 
 dependencies {

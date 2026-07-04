@@ -12,7 +12,6 @@ android {
   namespace = "com.episode6.typed2.sampleapp"
   defaultConfig {
     applicationId = "com.episode6.typed2.sampleapp"
-    minSdk = 23 // required by androidx.datastore 1.2+
     versionCode = 1
     versionName = "1.0"
 
