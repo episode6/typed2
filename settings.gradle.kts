@@ -19,6 +19,7 @@ dependencyResolutionManagement {
 rootProject.name = "typed2"
 include(
   ":core",
+  ":datastore-preferences",
   ":gson",
   ":kotlinx-serialization-bundlizer",
   ":kotlinx-serialization-json",

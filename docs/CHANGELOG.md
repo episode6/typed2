@@ -2,6 +2,7 @@
 
 ### v2.0.0-alpha04 - Unreleased
 
+- Add new `datastore-preferences` module: type-safe keys for Jetpack DataStore (Preferences) via `DataStoreKeyNamespace`/`DataStoreKey` (all keys are async; `get`/`set` are suspend functions; mutableStateFlow emissions are wrapped in `DataStoreValue` to distinguish the uninitialized state from an absent key)
 - Move version name source of truth into `self.versions.toml` (build.gradle.kts, `ship-release.py` and release skills now read it from there)
 
 

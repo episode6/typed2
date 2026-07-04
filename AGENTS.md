@@ -22,6 +22,7 @@ A passing build requires exit code 0 with no test failures.
 This is an Android/JVM library providing type-safe keys for key-value stores. Key modules:
 
 - `core/` — core type definitions and extension functions
+- `datastore-preferences/` — Jetpack DataStore (Preferences) integration
 - `saved-state-handle/` — SavedStateHandle integration
 - `navigation-compose/` — Jetpack Navigation Compose integration
 - `kotlinx-serialization-json/` — kotlinx.serialization JSON support
