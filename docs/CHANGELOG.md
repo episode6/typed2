@@ -2,7 +2,8 @@
 
 ### v2.0.0-alpha04 - Unreleased
 
-- Add new `datastore-preferences` module: type-safe keys for Jetpack DataStore (Preferences) via `DataStoreKeyNamespace`/`DataStoreKey` (all keys are async; `get`/`set` are suspend functions; mutableStateFlow emissions are wrapped in `DataStoreValue` to distinguish the uninitialized state from an absent key)
+- Add new `datastore-preferences` module: type-safe keys for Jetpack DataStore (Preferences) via `DataStoreKeyNamespace`/`DataStoreKey` (all keys are async; `get`/`set` are suspend functions; mutableStateFlow emissions are wrapped in `DataStoreValue` to distinguish the uninitialized state from an absent key; requires minSdk 23 to match androidx.datastore 1.2)
+- Add a DataStore screen + instrumented tests to the sample app, and document `flow()` observation support in the usage docs
 - Move version name source of truth into `self.versions.toml` (build.gradle.kts, `ship-release.py` and release skills now read it from there)
 
 

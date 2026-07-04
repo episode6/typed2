@@ -35,7 +35,7 @@ This is an Android/JVM library providing type-safe keys for key-value stores. Ke
 - **Kotlin**: 2.3.21
 - **JVM target**: 17
 - **Gradle**: 9.5.1
-- **Android**: compileSdk 35, minSdk 21
+- **Android**: compileSdk 35, minSdk 21 (except `datastore-preferences` and `sample-app`, which require minSdk 23 to satisfy androidx.datastore 1.2+)
 - **Docs**: Dokka 2.x
 
 ## Key Constraints

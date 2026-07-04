@@ -12,6 +12,7 @@ android {
   namespace = "com.episode6.typed2.sampleapp"
   defaultConfig {
     applicationId = "com.episode6.typed2.sampleapp"
+    minSdk = 23 // required by androidx.datastore 1.2+
     versionCode = 1
     versionName = "1.0"
 
@@ -34,8 +35,10 @@ dependencies {
   implementation(libs.androidx.activity.compose)
   implementation(libs.androidx.nav.compose)
   implementation(libs.kotlinx.serialization.core)
+  implementation(libs.androidx.datastore.preferences)
 
   implementation(project(":core"))
+  implementation(project(":datastore-preferences"))
   implementation(project(":gson"))
   implementation(project(":kotlinx-serialization-bundlizer"))
   implementation(project(":kotlinx-serialization-json"))

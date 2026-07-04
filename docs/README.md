@@ -190,6 +190,17 @@ DataStore keys are inherently async — the primitive builders in a `DataStoreKe
 (and without paying for a dispatcher hop), so `get()` and `set()` are always suspend functions. Only serialization/mapped keys need an
 explicit `async()`, which chooses the dispatcher for their (potentially expensive) mapping.
 
+## Observing Keys as Flows
+
+The observable key-value stores (SharedPreferences, DataStore & SavedStateHandle) include `flow()` extension methods to observe
+individual keys. These flows emit the key's current value on collection, then emit again whenever the underlying value changes.
+
+```kotlin
+val stringFlow: Flow<String?> = sharedPreferences.flow(PrefKeys.MY_STRING)
+val dataIntFlow: Flow<Int> = dataStore.flow(DataKeys.MY_INT)
+val savedStateFlow: Flow<String?> = savedStateHandle.flow(MyScreen.MY_STRING)
+```
+
 ## Properties and MutableStateFlows
 
 All supported key-value stores also include extension methods to generate property delegates and MutableStateFlows
