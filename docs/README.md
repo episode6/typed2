@@ -157,6 +157,12 @@ object PrefKeys : PrefKeyNamespace() {
 object Arguments : BundleKeyNamespace() {
   val MY_VIEW_STATE = key("viewState").bundlized(ViewState::serializer)
 }
+
+// the string-backed serializers also work in a DataStoreKeyNamespace; append async() to make them
+// compatible with the (always async) DataStore APIs and dispatch their mapping off the main thread
+object DataKeys : DataStoreKeyNamespace() {
+  val MY_GSON_OBJ = key("gsonObj").gson<SomeDataClass>().async()
+}
 ```
 
 ## Async Support
@@ -179,6 +185,10 @@ fun main() {
 }
 
 ```
+
+DataStore keys are inherently async — the primitive builders in a `DataStoreKeyNamespace` return AsyncKeys without any `async()` call
+(and without paying for a dispatcher hop), so `get()` and `set()` are always suspend functions. Only serialization/mapped keys need an
+explicit `async()`, which chooses the dispatcher for their (potentially expensive) mapping.
 
 ## Properties and MutableStateFlows
 
