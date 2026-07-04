@@ -1,1 +1,1 @@
-sourceset_dependencies = '{":core/release":[],":kotlinx-serialization-json/release":[],":navigation-compose/release":[],":saved-state-handle/release":[],":gson/release":[],":kotlinx-serialization-bundlizer/release":[]}'
+sourceset_dependencies = '{":core/release":[],":datastore-preferences/release":[],":kotlinx-serialization-json/release":[],":navigation-compose/release":[],":saved-state-handle/release":[],":gson/release":[],":kotlinx-serialization-bundlizer/release":[]}'

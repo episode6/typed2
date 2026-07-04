@@ -5,6 +5,8 @@ module:core
 com.episode6.typed2
 com.episode6.typed2.bundles
 com.episode6.typed2.sharedprefs
+module:datastore-preferences
+com.episode6.typed2.datastore.preferences
 module:gson
 com.episode6.typed2.gson
 module:kotlinx-serialization-bundlizer
