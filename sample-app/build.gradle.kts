@@ -34,8 +34,10 @@ dependencies {
   implementation(libs.androidx.activity.compose)
   implementation(libs.androidx.nav.compose)
   implementation(libs.kotlinx.serialization.core)
+  implementation(libs.androidx.datastore.preferences)
 
   implementation(project(":core"))
+  implementation(project(":datastore-preferences"))
   implementation(project(":gson"))
   implementation(project(":kotlinx-serialization-bundlizer"))
   implementation(project(":kotlinx-serialization-json"))

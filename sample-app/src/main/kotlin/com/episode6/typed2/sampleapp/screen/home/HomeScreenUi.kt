@@ -10,6 +10,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import com.episode6.typed2.sampleapp.nav.ScreenRegistration
+import com.episode6.typed2.sampleapp.screen.datastore.DataStoreScreenNavigator
+import com.episode6.typed2.sampleapp.screen.datastore.dataStoreScreen
 import com.episode6.typed2.sampleapp.screen.navargs.NavArgLauncherScreenNavigator
 import com.episode6.typed2.sampleapp.screen.navargs.NavArgScreenNavigator
 import com.episode6.typed2.sampleapp.screen.navargs.navArgLauncherScreen
@@ -29,6 +31,7 @@ object HomeScreenModule {
   @Provides @IntoSet fun homeScreen() = ScreenRegistration(HomeScreen) {
     HomeScreenUI(
       sharedPrefScreenNavigator = appNavigators.sharedPrefScreen(),
+      dataStoreScreenNavigator = appNavigators.dataStoreScreen(),
       navArgLauncherScreenNavigator = appNavigators.navArgLauncherScreen(),
     )
   }
@@ -36,6 +39,7 @@ object HomeScreenModule {
 
 @Composable private fun HomeScreenUI(
   sharedPrefScreenNavigator: SharedPrefScreenNavigator,
+  dataStoreScreenNavigator: DataStoreScreenNavigator,
   navArgLauncherScreenNavigator: NavArgLauncherScreenNavigator,
 ) = AppScaffold {
   Column(modifier = Modifier
@@ -46,6 +50,7 @@ object HomeScreenModule {
       .testTag("TEST_TAG"))
 
     FullWidthButton(text = "Shared Pref Sample", onClick = sharedPrefScreenNavigator::go)
+    FullWidthButton(text = "DataStore Sample", onClick = dataStoreScreenNavigator::go)
     FullWidthButton(text = "Nav Arg Sample", onClick = navArgLauncherScreenNavigator::go)
   }
 }
