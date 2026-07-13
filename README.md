@@ -16,7 +16,6 @@ dependencies {
   implementation "com.episode6.typed2:core:$typed2Version"
 
   // optional add-on modules
-  implementation "com.episode6.typed2:datastore-preferences:$typed2Version"
   implementation "com.episode6.typed2:saved-state-handle:$typed2Version"
   implementation "com.episode6.typed2:navigation-compose:$typed2Version"
 
@@ -53,35 +52,6 @@ fun main() {
     set(PrefKeys.MY_INT, 42)
     set(PrefKeys.MY_STRING, "answer")
   }
-}
-```
-
-The `datastore-preferences` module adds support for Jetpack DataStore (Preferences). Because DataStore has no synchronous access,
-`DataStoreKey`s are always async — `get()` and `set()` are suspend functions and no `async()` call is needed on primitive keys...
-
-```kotlin
-object DataKeys : DataStoreKeyNamespace(prefix = "com.sample.datakey.") {
-  val MY_INT = key("someInt").int(default = 2)
-  val MY_STRING = key("someString").string()
-
-  // serialization keys work too, their (potentially expensive) mapping is dispatched using async()
-  val MY_GSON_OBJ = key("gsonObj").gson<SomeDataClass>().async()
-}
-
-val dataStore: DataStore<Preferences> = TODO()
-
-suspend fun main() {
-  // types & nullability are enforced by the keys
-  val someInt: Int = dataStore.get(DataKeys.MY_INT)
-  val someString: String? = dataStore.get(DataKeys.MY_STRING)
-
-  dataStore.edit {
-    set(DataKeys.MY_INT, 42)
-    set(DataKeys.MY_STRING, "answer")
-  }
-
-  // every key can also be observed as a Flow
-  val intFlow: Flow<Int> = dataStore.flow(DataKeys.MY_INT)
 }
 ```
 
@@ -157,12 +127,6 @@ object PrefKeys : PrefKeyNamespace() {
 object Arguments : BundleKeyNamespace() {
   val MY_VIEW_STATE = key("viewState").bundlized(ViewState::serializer)
 }
-
-// the string-backed serializers also work in a DataStoreKeyNamespace; append async() to make them
-// compatible with the (always async) DataStore APIs and dispatch their mapping off the main thread
-object DataKeys : DataStoreKeyNamespace() {
-  val MY_GSON_OBJ = key("gsonObj").gson<SomeDataClass>().async()
-}
 ```
 
 ## Async Support
@@ -186,21 +150,6 @@ fun main() {
 
 ```
 
-DataStore keys are inherently async — the primitive builders in a `DataStoreKeyNamespace` return AsyncKeys without any `async()` call
-(and without paying for a dispatcher hop), so `get()` and `set()` are always suspend functions. Only serialization/mapped keys need an
-explicit `async()`, which chooses the dispatcher for their (potentially expensive) mapping.
-
-## Observing Keys as Flows
-
-The observable key-value stores (SharedPreferences, DataStore & SavedStateHandle) include `flow()` extension methods to observe
-individual keys. These flows emit the key's current value on collection, then emit again whenever the underlying value changes.
-
-```kotlin
-val stringFlow: Flow<String?> = sharedPreferences.flow(PrefKeys.MY_STRING)
-val dataIntFlow: Flow<Int> = dataStore.flow(DataKeys.MY_INT)
-val savedStateFlow: Flow<String?> = savedStateHandle.flow(MyScreen.MY_STRING)
-```
-
 ## Properties and MutableStateFlows
 
 All supported key-value stores also include extension methods to generate property delegates and MutableStateFlows
@@ -217,20 +166,4 @@ val stringMutableStateFlow: MutableStateFlow<String> = sharedPreferences.mutable
 
 // when using async keys, mutableStateFlows will always be nullable and use null as an initial value
 val jsonObjMutableStateFLow: MutableStateFlow<SerialDataClass?> = sharedPreferences.mutableStateFlow(PrefKeys.MY_JSON_OBJ, viewModelScope)
-```
-
-Since DataStore keys are always async, DataStore mutableStateFlows can't start with a real value. Their emissions are wrapped in a
-`DataStoreValue` so consumers can distinguish the uninitialized state from a genuine read of an absent key. DataStore properties are
-always nullable, start as null, and setting them to null removes the entry.
-
-```kotlin
-// starts as DataStoreValue.Uninitialized, then emits DataStoreValue.Loaded(value) once read
-// (a Loaded(null) emission means the key is not present in the store)
-val dataIntMutableStateFlow: MutableStateFlow<DataStoreValue<Int>> = dataStore.mutableStateFlow(DataKeys.MY_INT, viewModelScope)
-
-// set DataStoreValue.Loaded values to write back to the store; use .valueOrNull to unwrap emissions
-dataIntMutableStateFlow.value = DataStoreValue.Loaded(42)
-val currentInt: Int? = dataIntMutableStateFlow.value.valueOrNull
-
-var dataInt: Int? by dataStore.property(DataKeys.MY_INT, viewModelScope)
 ```
