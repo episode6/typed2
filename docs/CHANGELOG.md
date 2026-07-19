@@ -2,6 +2,12 @@
 
 ### v2.0.0-alpha04 - Unreleased
 
+- CI: snapshot publishes now use Maven's timestamped unique-snapshot protocol (new
+  `scripts/upload-snapshots.py`, ported from tacita — uploads timestamped filenames and
+  re-PUTs each module's `maven-metadata.xml` with an incremented buildNumber). The
+  previous plain PUTs of non-unique snapshot filenames only registered on a version's
+  first publish; sonatype central accepted but never served later republishes, so a
+  republished `-SNAPSHOT` version kept serving its first build's bytes
 - Add new `datastore-preferences` module: type-safe keys for Jetpack DataStore (Preferences) via `DataStoreKeyNamespace`/`DataStoreKey` (all keys are async; `get`/`set` are suspend functions; mutableStateFlow emissions are wrapped in `DataStoreValue` to distinguish the uninitialized state from an absent key)
 - Raise minSdk from 21 to 23 (Android 6.0) across all modules (required by androidx.datastore 1.2)
 - Add a DataStore screen + instrumented tests to the sample app, and document `flow()` observation support in the usage docs
