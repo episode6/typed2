@@ -12,6 +12,7 @@
 - Raise minSdk from 21 to 23 (Android 6.0) across all modules (required by androidx.datastore 1.2)
 - Add a DataStore screen + instrumented tests to the sample app, and document `flow()` observation support in the usage docs
 - Move version name source of truth into `self.versions.toml` (build.gradle.kts, `ship-release.py` and release skills now read it from there)
+- Add `project-icon.svg` (chrome T2 "Judgment Day" monogram), shown as the repo's sidebar icon in agent-session managers that support it
 
 
 ### v2.0.0-alpha03 - Released 06/27/2026
