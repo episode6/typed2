@@ -1,6 +1,8 @@
 # ChangeLog
 
-### v2.0.0-alpha04 - Unreleased
+### v2.0.0-alpha05 - Unreleased
+
+### v2.0.0-alpha04 - Released 08/16/2026
 
 - Release artifacts are now signed with a dedicated RSA 4096 signing subkey (`3EBBA2410EE1077E`) at SHA-512, instead of the release key's 2048-bit primary. The key itself is unchanged — same fingerprint `44ECBAD7477AB9D83840B17230B38AEA76ADCF72`, same identity — so `gpg --verify` names the same signer and every previously published signature still verifies; only the subkey id differs. If verification reports a missing public key, refresh your copy from `keyserver.ubuntu.com` or `keys.openpgp.org`
 - CI: snapshot publishes now use Maven's timestamped unique-snapshot protocol (new
