@@ -1,5 +1,21 @@
 # ChangeLog
 
+### v2.0.0-alpha04 - Released 08/16/2026
+
+- Release artifacts are now signed with a dedicated RSA 4096 signing subkey (`3EBBA2410EE1077E`) at SHA-512, instead of the release key's 2048-bit primary. The key itself is unchanged — same fingerprint `44ECBAD7477AB9D83840B17230B38AEA76ADCF72`, same identity — so `gpg --verify` names the same signer and every previously published signature still verifies; only the subkey id differs. If verification reports a missing public key, refresh your copy from `keyserver.ubuntu.com` or `keys.openpgp.org`
+- CI: snapshot publishes now use Maven's timestamped unique-snapshot protocol (new
+  `scripts/upload-snapshots.py`, ported from tacita — uploads timestamped filenames and
+  re-PUTs each module's `maven-metadata.xml` with an incremented buildNumber). The
+  previous plain PUTs of non-unique snapshot filenames only registered on a version's
+  first publish; sonatype central accepted but never served later republishes, so a
+  republished `-SNAPSHOT` version kept serving its first build's bytes
+- Add new `datastore-preferences` module: type-safe keys for Jetpack DataStore (Preferences) via `DataStoreKeyNamespace`/`DataStoreKey` (all keys are async; `get`/`set` are suspend functions; mutableStateFlow emissions are wrapped in `DataStoreValue` to distinguish the uninitialized state from an absent key)
+- Raise minSdk from 21 to 23 (Android 6.0) across all modules (required by androidx.datastore 1.2)
+- Add a DataStore screen + instrumented tests to the sample app, and document `flow()` observation support in the usage docs
+- Move version name source of truth into `self.versions.toml` (build.gradle.kts, `ship-release.py` and release skills now read it from there)
+- Add `project-icon.svg` (chrome T2 "Judgment Day" monogram), shown as the repo's sidebar icon in agent-session managers that support it
+
+
 ### v2.0.0-alpha03 - Released 06/27/2026
 
 - Modernize build infrastructure: Kotlin 2.3.21, Gradle 9.5.1, Dokka 2.2.0, AGP 9.2.1, JVM target 17
